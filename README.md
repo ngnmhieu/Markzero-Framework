@@ -17,6 +17,7 @@ Pictures aggregation from photo sharing platforms.
   - Platform: Instagram
   - Search for a hashtag & keyword and get back a straem of pictures
   - Get newer update through ajax
+
 *What is needed*
   - PHP for querying Instagram API
   - Javascript for front-end and pull new updates

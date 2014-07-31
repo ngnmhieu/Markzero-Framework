@@ -1,5 +1,5 @@
 <?php
-class UserController extends ApplicationController {
+class UserController extends AppController {
   function index() {
     echo "Hello\n";
   }

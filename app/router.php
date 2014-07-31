@@ -2,12 +2,9 @@
 /**
  * 
  */
-class router {
+class Router {
   static $request = array();
 
-  /**
-   * 
-   */
   public function __construct() {
   }
 
@@ -20,12 +17,16 @@ class router {
     //       Default action to index
     //       In this version, index.php controller and action must be given in url
     preg_match('/index.php\/([a-zA-Z]*)\/*([a-zA-Z]*)/', $request_uri, $matches);
-    $controller_name = ucfirst($matches[1]) . 'Controller';
-    $action = $matches[2];
+    $controller_name = ucfirst(strtolower($matches[1])) . 'Controller';
+    $action = strtolower($matches[2]);
 
     // call action on controller
     $controller = new $controller_name();
-    $controller->{$action}();
+    if (is_callable(array($controller, $action))) {
+      $controller->{$action}();
+    } else {
+      // TODO: display error;
+    }
 
     // echo "<pre>";
     // echo $controller . " \n";

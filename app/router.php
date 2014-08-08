@@ -9,14 +9,15 @@ class Router {
   }
 
   static function route() {
-    $request_uri = self::extract_uri();
+    $path = $_SERVER['PATH_INFO']; #self::extract_uri();
 
-    // extract controller and action name from uri
-    $matches = array();
     // TODO: Need lots of care to this, with and without index.php
     //       Default action to index
     //       In this version, index.php controller and action must be given in url
-    preg_match('/index.php\/([a-zA-Z]*)\/*([a-zA-Z]*)/', $request_uri, $matches);
+
+    // extract controller and action name from uri
+    $matches = array();
+    preg_match('/\/([a-zA-Z]*)\/([a-zA-Z]*)/', $path, $matches);
     $controller_name = ucfirst(strtolower($matches[1])) . 'Controller';
     $action = strtolower($matches[2]);
 
@@ -27,10 +28,6 @@ class Router {
     } else {
       // TODO: display error;
     }
-
-    // echo "<pre>";
-    // echo $controller . " \n";
-    // echo $action . " \n ";
   }
 
   static function extract_uri() {

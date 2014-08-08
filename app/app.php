@@ -14,6 +14,8 @@ class Application {
     self::$APP_PATH = realpath('../');
     require_once(self::$APP_PATH. "/app/router.php");
 
+    require_once(self::$APP_PATH. "/config/database.php");
+
     // Load base controller and model
     require_once(self::$APP_PATH. "/app/base/AppController.php"); // hardcoding need to fix somehow
     require_once(self::$APP_PATH. "/app/base/AppModel.php"); // hardcoding need to fix somehow

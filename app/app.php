@@ -11,8 +11,9 @@ class Application {
     self::$APP_PATH = realpath('../');
 
     self::load_classes();
-    Router::route();
     self::$db = new Database();
+
+    Router::route();
   }
 
   private static function load_classes() { 

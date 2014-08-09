@@ -9,25 +9,29 @@ class Database {
   private $host = DB_HOST; // 'localhost' cause error
   private $database = DB_NAME;
   private $password = DB_PASS;
-  private $cnx;
+  private $options = array(
+    PDO::ATTR_PERSISTENT => true, 
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+  );
+  private $connection;
 
   public function __construct() {
     $this->connect();
   }
 
-  public function connect() {
-    // TODO: This should be moved to somewhere else, may in config file
-    $options = array(
-      PDO::ATTR_PERSISTENT => true, 
-      PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-    );
-
+  private function connect() {
     $dsn = "mysql:dbname={$this->database};host={$this->host}";
     try {
-      $this->cnx = new PDO($dsn, $this->user, $this->password, $options);
+      $this->connection = new PDO($dsn, $this->user, $this->password, $this->options);
     } catch(PDOException $e) {
       // TODO: Need better way to handle database exception, we need a system
       echo 'Connection Failed:' . $e->getMessage();
     }
   } 
+
+  // the connection is closed automatically
+  // when database object is set to null
+  function __destruct() {
+    $this->connection = null;
+  }
 }

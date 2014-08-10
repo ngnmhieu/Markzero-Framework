@@ -19,6 +19,11 @@ class Database {
     $this->connect();
   }
 
+  public function prepare($query) {
+    return $this->connection->prepare($query);
+  }
+
+
   private function connect() {
     $dsn = "mysql:dbname={$this->database};host={$this->host}";
     try {
@@ -28,6 +33,7 @@ class Database {
       echo 'Connection Failed:' . $e->getMessage();
     }
   } 
+
 
   // the connection is closed automatically
   // when database object is set to null

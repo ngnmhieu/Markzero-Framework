@@ -1,6 +1,9 @@
 <?php
 class UserController extends AppController {
   function index() {
-    echo "Hello\n";
+    $users = UserModel::query("SELECT * FROM user");
+    foreach ($users as $user) {
+      echo $user->name . "<br>";
+    }
   }
 }

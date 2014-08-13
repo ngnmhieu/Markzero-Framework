@@ -37,7 +37,7 @@ class Application {
     // Load other models
     $model_dir = self::$APP_PATH . "/app/models/";
     foreach (scandir($model_dir) as $file) {
-      if (preg_match('/^[A-Z][a-z]*Model\.php$/', $file)) {
+      if (preg_match('/^[A-Z][a-z]*\.php$/', $file)) {
         require_once($model_dir . $file);
       }
     }

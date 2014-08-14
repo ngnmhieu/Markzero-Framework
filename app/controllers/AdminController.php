@@ -2,10 +2,14 @@
 
 class AdminController extends AppController {
   function index() {
-    $this->redirect(array('controller' => 'user'));
-    # $this->render();
+    if (!App::$session->is_logged_in()) {
+      $this->redirect(array('action' => 'login'));
+      return;
+    }
+    $this->render();
   }
 
   function login() {
+    $this->render();
   }
 }

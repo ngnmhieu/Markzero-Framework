@@ -15,7 +15,7 @@ class AppController {
     preg_match("/([a-zA-Z]+)Controller/",get_called_class(), $matches);
     $controller = strtolower($matches[1]);
 
-    $template_file = Application::$VIEWS_DIR.$controller.'/'.$template.".tpl.php";
+    $template_file = App::$VIEWS_DIR.$controller.'/'.$template.".tpl.php";
     if (file_exists($template_file)) {
       include($template_file);
     } else {
@@ -23,15 +23,22 @@ class AppController {
       die("Template file not found: " . $template_file);
     }
   }
-  
+
+  protected function current_controller(){
+    preg_match("/([a-zA-Z]+)Controller/", get_class($this), $matches);
+    $controller = strtolower($matches[1]);
+    return $controller;
+  } 
+
   protected function redirect($to = array()) {
-    if (isset($to['controller'])) {
-      $action = isset($to['action']) ? $to['action'] : "index";
-      $location = '/'.strtolower($to['controller']).'/'.$action;
-      header('Location: '.$location);  
-    } else {
+    if (!isset($to['controller']) && !isset($to['action'])) {
       die("No controller specified. Don't know where to redirect");
     }
+
+    $controller = isset($to['controller']) ? strtolower($to['controller']) : $this->current_controller(); 
+    $action = isset($to['action']) ? strtolower($to['action']) : "index";
+    $location = "/$controller/$action";
+    header('Location: '.$location);  
   }
 
 }

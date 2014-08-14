@@ -29,7 +29,7 @@ class User extends AppModel {
    * Return an array of model object which represent the result
    **/
   public static function query($query, $bindings = array()) { 
-    $stmt = Application::$db->prepare($query);
+    $stmt = App::$db->prepare($query);
     foreach($bindings as $field => $value) {
       self::bind($stmt, $field, $value);
     }

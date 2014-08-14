@@ -32,7 +32,7 @@ class Router {
 
 
     $filename = ucfirst($controller_name).".php";
-    $controllers_dir = Application::$CONTROLLERS_DIR;
+    $controllers_dir = App::$CONTROLLERS_DIR;
     if (file_exists($controllers_dir.$filename)) {
       require_once($controllers_dir . $filename);
     } else {

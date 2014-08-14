@@ -1,5 +1,5 @@
 <?php
-require_once(Application::$APP_PATH. "/config/db.php");
+require_once(App::$APP_PATH. "/config/db.php");
 
 /**
  * Database class initiates connection with MySQL servers

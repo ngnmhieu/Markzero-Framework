@@ -2,18 +2,20 @@
 /**
  * Central class of the system
  */
-class Application {
+class App {
   static $APP_PATH;
   static $PUBLIC_DIR;
   static $CONTROLLERS_DIR;
   static $MODELS_DIR;
   static $VIEWS_DIR;
   static $db;
+  static $session;
 
   static function bootstrap() {
     self::initialize();
     self::load_classes();
     self::$db = new Database();
+    self::$session = new Session();
 
     Router::route();
   }
@@ -29,9 +31,11 @@ class Application {
 
   private static function load_classes() { 
     # Router finds and call the right controller and action for a specific uri
-    require_once(self::$APP_PATH. "app/router.php");
+    require_once(self::$APP_PATH. "includes/router.php");
     # database class handle database connection
     require_once(self::$APP_PATH. "includes/database.php");
+    # session class manage user session
+    require_once(self::$APP_PATH. "includes/session.php");
 
     # Load base controller and model
     require_once(self::$APP_PATH. "app/base/AppController.php");

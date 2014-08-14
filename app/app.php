@@ -19,26 +19,26 @@ class Application {
   }
 
   private static function initialize() {
-    // self::$APP_PATH = "/Users/hieusun/Work/programming/webserver/favopic/";
+    # self::$APP_PATH = "/Users/hieusun/Work/programming/webserver/favopic/";
     self::$APP_PATH = realpath("../").'/';
     self::$CONTROLLERS_DIR = self::$APP_PATH."app/controllers/";
     self::$MODELS_DIR = self::$APP_PATH . "app/models/";
     self::$VIEWS_DIR = self::$APP_PATH . "app/views/";
-    self::$PUBLIC_DIR = 'public';
+    self::$PUBLIC_DIR = 'public/';
   }
 
   private static function load_classes() { 
-    // Router finds and call the right controller and action for a specific uri
+    # Router finds and call the right controller and action for a specific uri
     require_once(self::$APP_PATH. "app/router.php");
-    // database class handle database connection
+    # database class handle database connection
     require_once(self::$APP_PATH. "includes/database.php");
 
-    // Load base controller and model
+    # Load base controller and model
     require_once(self::$APP_PATH. "app/base/AppController.php");
     require_once(self::$APP_PATH. "app/base/AppModel.php");
     
-    // Load other models
-    $model_dir = self::$APP_PATH . "app/models/";
+    # Load other models
+    $model_dir = self::$MODELS_DIR;
     foreach (scandir($model_dir) as $file) {
       if (preg_match('/^[A-Z][a-z]*\.php$/', $file)) {
         require_once($model_dir . $file);

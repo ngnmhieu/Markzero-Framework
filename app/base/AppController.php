@@ -23,6 +23,15 @@ class AppController {
       die("Template file not found: " . $template_file);
     }
   }
-
+  
+  protected function redirect($to = array()) {
+    if (isset($to['controller'])) {
+      $action = isset($to['action']) ? $to['action'] : "index";
+      $location = '/'.strtolower($to['controller']).'/'.$action;
+      header('Location: '.$location);  
+    } else {
+      die("No controller specified. Don't know where to redirect");
+    }
+  }
 
 }

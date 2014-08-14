@@ -19,7 +19,7 @@ class Router {
     // extract controller and action name from uri
     // action default to "index" if not provided
     $matches = array();
-    if(preg_match('/\/([a-zA-Z]*)\/([a-zA-Z]*)\/?/', $path, $matches)) {
+    if(preg_match('/\/([a-zA-Z]+)\/([a-zA-Z]+)\/?/', $path, $matches)) {
       $controller_name = ucfirst(strtolower($matches[1])) . 'Controller';
       $action = strtolower($matches[2]);
     } else if( preg_match('/\/([a-zA-Z]*)\/?/', $path, $matches)) {

@@ -3,11 +3,11 @@
  * Central class of the system
  */
 class Application {
-  // TODO: should we hardcode application path like this, 
-  //       or initialize in bootstrap static method?
   static $APP_PATH;
   static $PUBLIC_DIR;
   static $CONTROLLERS_DIR;
+  static $MODELS_DIR;
+  static $VIEWS_DIR;
   static $db;
 
   static function bootstrap() {
@@ -19,9 +19,11 @@ class Application {
   }
 
   private static function initialize() {
-    // self::$APP_PATH = realpath("../");
-    self::$APP_PATH = "/Users/hieusun/Work/programming/webserver/favopic/";
+    // self::$APP_PATH = "/Users/hieusun/Work/programming/webserver/favopic/";
+    self::$APP_PATH = realpath("../").'/';
     self::$CONTROLLERS_DIR = self::$APP_PATH."app/controllers/";
+    self::$MODELS_DIR = self::$APP_PATH . "app/models/";
+    self::$VIEWS_DIR = self::$APP_PATH . "app/views/";
     self::$PUBLIC_DIR = 'public';
   }
 
@@ -42,16 +44,6 @@ class Application {
         require_once($model_dir . $file);
       }
     }
-
-    // Load other controllers
-    // TODO: should we load the controllers all at once?
-    //       or should we load at dispatch
-    // $controller_dir = self::$APP_PATH . "app/controllers/";
-    // foreach (scandir($controller_dir) as $file) {
-    //   if (preg_match('/^[A-Z][a-z]*Controller\.php$/', $file)) {
-    //     require_once($controller_dir . $file);
-    //   }
-    // }
 
   }
 }

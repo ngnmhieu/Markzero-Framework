@@ -5,6 +5,7 @@ class UserController extends AppController {
     foreach ($users as $user) {
       var_dump($user);
     }
+    $this->render();
   }
 
   function login() {

@@ -10,15 +10,12 @@ class AppController {
       $template = $method;
     }
 
-    // directory containing views
-    $views_dir = Application::$APP_PATH."app/views/";
-
     // get controller name
     $matches = array();
     preg_match("/([a-zA-Z]+)Controller/",get_called_class(), $matches);
     $controller = strtolower($matches[1]);
 
-    $template_file = $views_dir.$controller.'/'.$template.".tpl.php";
+    $template_file = Application::$VIEWS_DIR.$controller.'/'.$template.".tpl.php";
     if (file_exists($template_file)) {
       include($template_file);
     } else {
@@ -26,4 +23,6 @@ class AppController {
       die("Template file not found: " . $template_file);
     }
   }
+
+
 }

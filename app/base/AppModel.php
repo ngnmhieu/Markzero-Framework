@@ -1,7 +1,7 @@
 <?php
 class AppModel {
 
-  private $data = array();
+  // private $data = array();
 
   // function __construct($data) {
   //   $this->data = $data;

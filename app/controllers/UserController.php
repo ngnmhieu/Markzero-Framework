@@ -9,6 +9,9 @@ class UserController extends AppController {
     $this->render();
   }
 
+  function show($id) {
+  }
+
   function login() {
     echo "Login please";
   }

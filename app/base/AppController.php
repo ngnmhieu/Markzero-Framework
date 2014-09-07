@@ -5,7 +5,7 @@ class AppController {
 
     // default to method name as template name
     if ($template == "")  {
-      list(,$caller) = debug_backtrace(false); // false for performance php5.3
+      list(,$caller) = debug_backtrace(false); // `false` for performance php5.3
       $method = $caller['function'];
       $template = $method;
     }
@@ -24,7 +24,7 @@ class AppController {
     }
   }
 
-  protected function current_controller(){
+  protected function current_controller() {
     preg_match("/([a-zA-Z]+)Controller/", get_class($this), $matches);
     $controller = strtolower($matches[1]);
     return $controller;

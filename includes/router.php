@@ -5,10 +5,20 @@
  */
 class Router {
   
-  private $routes = array();
+  /*
+   * $routes have the following form:
+   * array(
+   *  ['GET' => array([:controller => 'user', :action => 'index'], [...])]
+   *  ['POST' => array([:controller => 'user', :action => 'insert'], [...])]
+   *  ['PUT' => array([:controller => 'user', :action => 'update'], [...])]
+   *  ['DELETE' => array([:controller => 'user', :action => 'delete'], [...])]
+   * );
+   * add new routes to $routes with map() method. (config/routes.php)
+   */
+  private $_routes = array();
 
   function __construct() {
-    $routes = array(
+    $this->_routes = array(
       'GET' => array(),
       'PUT' => array(),
       'POST' => array(),
@@ -18,19 +28,22 @@ class Router {
 
   public function dispatch() {
     $path = $_SERVER['PATH_INFO'];
-    $method = $_SERVER['REQUEST_METHOD']; 
-    $mappings = $this->routes[$method];
-    $destination = null;
-    $args = array(); // contains URI arguments
+    $http_method = $_SERVER['REQUEST_METHOD']; 
+
+    // load mappings in configuration file, according to HTTP method
+    $mappings = $this->_routes[$http_method]; 
+    $destination = array();
+    $args = array(); // will contain URI arguments
     foreach ($mappings as $pattern => $dest) {
-      if($args = $this->match_path($pattern, $path)) {
+      $args = $this->match_path($pattern, $path);
+      if($args !== false) {
         $destination = $dest;
         break;
       }
     }
 
-    // TODO: handles no mapping found
-    if ($destination == null) {
+    if (empty($destination)) {
+      // TODO: handles no mapping found
       die("no mapping found"); 
     }
 
@@ -45,8 +58,8 @@ class Router {
   private function match_path($pattern, $path) {
     // TODO: extract arguments in a better way
     $matches = array();
-    preg_match($pattern, $path, $matches);
-    return empty($matches) ? false : array_slice($matches, 1);
+    $result = preg_match($pattern, $path, $matches);
+    return $result ? array_slice($matches, 1) : false;
   }
 
   /*
@@ -54,16 +67,17 @@ class Router {
    * @param array $args Arguments that are passed to controller method
    */
   private function route(array $destination, array $args = array()) {
+    // normalize controller and action name
     $controller_name = ucfirst(strtolower($destination[':controller'])) . 'Controller';
     $action = strtolower($destination[':action']);
 
-    // call the right controller
+    // call the appropriate controller
     $filename = $controller_name.".php";
     $controllers_dir = App::$CONTROLLERS_DIR;
     if (file_exists($controllers_dir.$filename)) {
       require_once($controllers_dir . $filename);
     } else {
-      // TODO: Error;
+      // TODO: Error handling
       die("Cannot find $controller_name in {$controllers_dir}{$filename}");
     }
 
@@ -92,10 +106,17 @@ class Router {
       die('illegal destination');
     }
 
-    // construct pattern, which will later be matched with user-input path 
-    $pattern = '~^'.$route_string.'$~';
+    $pattern = $route_string;
 
-    $this->routes[strtoupper($method)][$pattern] = array(
+    // add '/?' to the end of $pattern
+    // so that both uri '/user/' and '/user' works
+    $pattern .= !preg_match("~.*/$~", $pattern) ? '/?' : '?';
+
+    // construct pattern, which will later be matched with user-input path 
+    $pattern = '~^'.$pattern.'$~';
+
+    // save the route information
+    $this->_routes[strtoupper($method)][$pattern] = array(
       ':controller' => $controller, 
       ':action' => $action
     ); 
@@ -110,15 +131,19 @@ class Router {
     $this->map("POST", "/", $dest);
   }
   
-  /*
+  /* TODO:
    * resources() method defines default RESTful routes
    * for the application
    */  
   public function resources() {
   }
 
-  /* draw() method serves as DSL (Domain Specific Language) */  
-  public function draw($func) {
+  /* 
+   * draw() method serves as DSL (Domain Specific Language) 
+   * @param callable $func "draws" routes for application, 
+   *        $func takes a Router object
+   */  
+  public function draw(callable $func) {
     $func($this);
   }
 }

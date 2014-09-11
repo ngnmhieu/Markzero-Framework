@@ -10,6 +10,7 @@ class UserController extends AppController {
   }
 
   function show($id) {
+    echo "Hello".$id;
   }
 
   function login() {

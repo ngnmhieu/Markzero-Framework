@@ -7,7 +7,7 @@ class UserController extends AppController {
   }
 
   function show($id) {
-    $this->render(['id' => $id]); 
+    $this->render(['id' => $id], "", "sublayout/test"); 
   }
 
   function login() {

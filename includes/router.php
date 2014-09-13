@@ -73,7 +73,7 @@ class Router {
 
     // call the appropriate controller
     $filename = $controller_name.".php";
-    $controller_file = App::$CONTROLLERS_DIR.'/'.$filename;
+    $controller_file = App::$CONTROLLER_DIR.'/'.$filename;
     if (file_exists($controller_file)) {
       require_once($controller_file);
     } else {

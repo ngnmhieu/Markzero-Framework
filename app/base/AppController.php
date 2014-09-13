@@ -6,7 +6,7 @@ class AppController {
    * if it has its own constructor
    */
   function __construct() {
-    $this->_appview = new AppView();
+    $this->_appview = new AppView(App::$VIEW_DIR);
   }
 
   /*
@@ -16,7 +16,7 @@ class AppController {
    * @param strign $layout default to "layouts/default"
    * TODO: forced default layout or let user decide default layout?
    */   
-  protected function render($data = array(), $template = "", $layout = "layouts/default") {
+  protected function render($data = array(), $template = "", $layout = "default") {
     // template default to action name
     if ($template == "")  {
       list(,$caller) = debug_backtrace(false); // `false` for performance php5.3

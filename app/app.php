@@ -5,15 +5,15 @@
 class App {
   static $APP_PATH;
   static $PUBLIC_DIR;
-  static $CONTROLLERS_DIR;
-  static $MODELS_DIR;
-  static $VIEWS_DIR;
+  static $CONTROLLER_DIR;
+  static $MODEL_DIR;
+  static $VIEW_DIR;
   static $db;
   static $session;
   static $router;
 
   /*
-   * This method has the responsibility of
+   * This method has these responsibilities:
    * - initializing constants
    * - loading classes
    * - loading configurations
@@ -33,10 +33,10 @@ class App {
 
   private static function initialize() {
     self::$APP_PATH = realpath("../").'/';
-    self::$CONTROLLERS_DIR = self::$APP_PATH."app/controllers";
-    self::$MODELS_DIR = self::$APP_PATH . "app/models";
-    self::$VIEWS_DIR = self::$APP_PATH . "app/views";
-    self::$PUBLIC_DIR = 'public/';
+    self::$CONTROLLER_DIR = self::$APP_PATH."app/controllers";
+    self::$MODEL_DIR = self::$APP_PATH."app/models";
+    self::$VIEW_DIR = self::$APP_PATH."app/views";
+    self::$PUBLIC_DIR = self::$APP_PATH."public/";
   }
 
   private static function load_config() {
@@ -60,7 +60,7 @@ class App {
     require_once(self::$APP_PATH. "app/base/AppView.php");
     
     // Load other models
-    $model_dir = self::$MODELS_DIR;
+    $model_dir = self::$MODEL_DIR;
     foreach (scandir($model_dir) as $file) {
       if (preg_match('/^[A-Z][a-z]*\.php$/', $file)) {
         require_once($model_dir.'/'.$file);

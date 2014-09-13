@@ -12,6 +12,13 @@ class App {
   static $session;
   static $router;
 
+  /*
+   * This method has the responsibility of
+   * - initializing constants
+   * - loading classes
+   * - loading configurations
+   * - and dispatch the request from client
+   */
   static function bootstrap() {
     self::initialize();
     self::load_classes();
@@ -26,9 +33,9 @@ class App {
 
   private static function initialize() {
     self::$APP_PATH = realpath("../").'/';
-    self::$CONTROLLERS_DIR = self::$APP_PATH."app/controllers/";
-    self::$MODELS_DIR = self::$APP_PATH . "app/models/";
-    self::$VIEWS_DIR = self::$APP_PATH . "app/views/";
+    self::$CONTROLLERS_DIR = self::$APP_PATH."app/controllers";
+    self::$MODELS_DIR = self::$APP_PATH . "app/models";
+    self::$VIEWS_DIR = self::$APP_PATH . "app/views";
     self::$PUBLIC_DIR = 'public/';
   }
 
@@ -47,15 +54,16 @@ class App {
     // session class manage user session
     require_once(self::$APP_PATH. "includes/session.php");
 
-    // Load base controller and model
+    // Load base controller, model and view
     require_once(self::$APP_PATH. "app/base/AppController.php");
     require_once(self::$APP_PATH. "app/base/AppModel.php");
+    require_once(self::$APP_PATH. "app/base/AppView.php");
     
     // Load other models
     $model_dir = self::$MODELS_DIR;
     foreach (scandir($model_dir) as $file) {
       if (preg_match('/^[A-Z][a-z]*\.php$/', $file)) {
-        require_once($model_dir . $file);
+        require_once($model_dir.'/'.$file);
       }
     }
 

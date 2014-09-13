@@ -73,12 +73,12 @@ class Router {
 
     // call the appropriate controller
     $filename = $controller_name.".php";
-    $controllers_dir = App::$CONTROLLERS_DIR;
-    if (file_exists($controllers_dir.$filename)) {
-      require_once($controllers_dir . $filename);
+    $controller_file = App::$CONTROLLERS_DIR.'/'.$filename;
+    if (file_exists($controller_file)) {
+      require_once($controller_file);
     } else {
       // TODO: Error handling
-      die("Cannot find $controller_name in {$controllers_dir}{$filename}");
+      die("Cannot find $controller_name in $controller_file");
     }
 
     // call action on controller

@@ -10,5 +10,7 @@ App::$router->draw(function($r) {
   $r->map('get', '/user', 'user#index');
   $r->map('get', '/user/login', 'user#login');
   $r->map('get', '/user/show/([0-9]+)', 'user#show');
+  // TODO: add scope and domain, subfolder for controller
+  $r->map('get', '/admin/user/', 'admin::user#index');
 });
 

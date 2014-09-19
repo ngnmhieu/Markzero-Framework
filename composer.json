@@ -1,0 +1,7 @@
+{
+  "require": {
+    "tumblr/tumblr": "dev-master",
+    "eher/oauth": "1.0.7",
+    "guzzle/guzzle": "3.9.2"
+  }
+}

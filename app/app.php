@@ -4,7 +4,7 @@
  */
 class App {
   static $APP_PATH;
-  static $PUBLIC_DIR;
+  static $PUBLIC;
   static $CONTROLLER_DIR;
   static $MODEL_DIR;
   static $VIEW_DIR;
@@ -40,7 +40,7 @@ class App {
     self::$CONTROLLER_DIR = self::$APP_PATH."app/controllers";
     self::$MODEL_DIR = self::$APP_PATH."app/models";
     self::$VIEW_DIR = self::$APP_PATH."app/views";
-    self::$PUBLIC_DIR = self::$APP_PATH."public/";
+    self::$PUBLIC = self::$APP_PATH."public/";
   }
 
   private static function load_config() {

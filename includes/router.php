@@ -27,7 +27,7 @@ class Router {
   }
 
   public function dispatch() {
-    $path = $_SERVER['PATH_INFO'];
+    $path = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : '/';
     $http_method = $_SERVER['REQUEST_METHOD']; 
 
     // load mappings in configuration file, according to HTTP method

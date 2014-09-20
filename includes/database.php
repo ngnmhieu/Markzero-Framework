@@ -1,21 +1,27 @@
 <?php
-require_once(App::$APP_PATH. "/config/db.php");
-
 /**
  * Database class initiates connection with MySQL servers
+ * TODO: should database information be mixed with application static data?
+ * if it's isolated, it's better
+ * should it be initialized with data in app.php?
  */
 class Database {
-  private $user = DB_USER;
-  private $host = DB_HOST; // 'localhost' cause error
-  private $database = DB_NAME;
-  private $password = DB_PASS;
+  private $user;
+  private $host; // TODO: 'localhost' cause error, why?
+  private $database;
+  private $password;
   private $options = array(
     PDO::ATTR_PERSISTENT => true, 
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
   );
   private $connection;
 
-  public function __construct() {
+  public function __construct($user, $host, $pass, $dbname) {
+    $this->user = $user;
+    $this->host = $host;
+    $this->password = $pass;
+    $this->database = $dbname;
+
     $this->connect();
   }
 
@@ -24,6 +30,10 @@ class Database {
   }
 
 
+  /*
+   * Connect to the database with given credentials
+   * In this version, connect() only works with mysql
+   */
   private function connect() {
     $dsn = "mysql:dbname={$this->database};host={$this->host}";
     try {
@@ -35,8 +45,10 @@ class Database {
   } 
 
 
-  // the connection is closed automatically
-  // when database object is set to null
+  /*
+   * The connection is closed automatically
+   * when database object is set to null
+   */
   function __destruct() {
     $this->connection = null;
   }

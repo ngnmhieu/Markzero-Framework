@@ -35,6 +35,7 @@ class AppController {
     return $controller;
   } 
 
+  // TODO: should be move to helper functions
   protected function redirect($to = array()) {
     if (!isset($to['controller']) && !isset($to['action'])) {
       die("No controller specified. Don't know where to redirect.");

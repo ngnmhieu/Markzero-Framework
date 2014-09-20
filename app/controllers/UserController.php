@@ -1,13 +1,14 @@
 <?php
 class UserController extends AppController {
   function index() {
-    $users = User::find_all();
-    
-    $this->render();
+    var_dump(App::$data);
+    foreach (Tumblr::getShuffledPhotos() as $photo) {
+      echo "<img src='$photo->url' /> "; 
+    }
   }
 
   function show($id) {
-    $this->render(['id' => $id], "", "sublayout/test"); 
+    $this->render(['id' => $id]); 
   }
 
   function login() {

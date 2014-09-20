@@ -1,2 +1,5 @@
 *.swp
+test.php
+test.json
 vendor/
+data/**/*.json

@@ -1,8 +1,7 @@
 <?php
 /**
  * Static data are stored in JSON files.
- * Data of the application is represented 
- * in like directory structure.
+ * Data is represented like directory structure.
  * e.g: "database/info.json" => $data->database->info
  *      "tumblr/api/key.json" => $data->tumblr->api->key
  */
@@ -21,21 +20,19 @@ class StaticData {
    * and load any .json file encountered
    * @param string $dir | directory where data are stored
    * @return mixed $result | result of json_decode a json file
-   *                         or associative array that contain json_decode result
+   *                         or a stdClass object that contain json_decoded result
    */
   private function recursive_load_data($dir) {
     $result = new stdClass(); 
 
     $cdir = scandir($dir); 
     foreach ($cdir as $node) { 
-      if (!in_array($node,array(".",".."))) { // normal node name - not . or ..
-        if (is_dir($dir.'/'.$node)) { 
+      if (!in_array($node,array(".",".."))) { // normal node name - not `.` or `..`
+        if (is_dir($dir.'/'.$node)) { // if current node is dir, load recursively in it
           $result->{$node} = $this->recursive_load_data($dir.'/'.$node); 
-        } else { 
-          if (preg_match('/^(.*)\.json$/', $node, $matches)) {
-            $json = file_get_contents($dir.'/'.$node);
-            $result->{$matches[1]} = json_decode($json); 
-          }
+        } else if (preg_match('/^(.*)\.json$/', $node, $matches)) {
+          $json = file_get_contents($dir.'/'.$node);
+          $result->{$matches[1]} = json_decode($json); 
         } 
       } 
     } 

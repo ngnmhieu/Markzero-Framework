@@ -9,6 +9,7 @@ class App {
   static $MODEL_DIR;
   static $VIEW_DIR;
 
+  static $config; // application configurations
   static $db; // database connection
   static $session; // manage user sessions
   static $router; // handling
@@ -22,34 +23,58 @@ class App {
    * - and dispatch the request from client
    */
   static function bootstrap() {
-    self::initialize();
+    self::init_path();
     self::load_classes();
-    self::$session = new Session();
-    self::$router = new Router();
-    // TODO: input developement or production in app.php
-    $db = App::$data->database->development;
-    self::$db = new Database($db->user, $db->host, $db->pass, $db->dbname);
-    
     self::load_config();
+    self::load_static_data();
+    self::init_classes();
 
+    self::load_routes();
     self::$router->dispatch();
   }
 
-  private static function initialize() {
-    self::$APP_PATH = realpath("../").'/';
+  /*
+   * initializes the paths in the application
+   */
+  private static function init_path() {
+    self::$APP_PATH       = realpath("../").'/';
     self::$CONTROLLER_DIR = self::$APP_PATH."app/controllers";
-    self::$MODEL_DIR = self::$APP_PATH."app/models";
-    self::$VIEW_DIR = self::$APP_PATH."app/views";
-    self::$PUBLIC = self::$APP_PATH."public/";
+    self::$MODEL_DIR      = self::$APP_PATH."app/models";
+    self::$VIEW_DIR       = self::$APP_PATH."app/views";
+    self::$PUBLIC         = self::$APP_PATH."public/";
   }
 
+  /*
+   * loads important classes for the application
+   * like Session, Router, Database,...
+   */
+  private static function init_classes() {
+    $db = self::$config->database->{self::$config->app->env};
+    self::$db = new Database($db->user, $db->host, $db->pass, $db->dbname);
+    self::$session = new Session();
+    self::$router = new Router();
+  }
+
+  /*
+   * loads application and environment specific configuration.
+   * configurations are located in config/ directory.
+   * important configurations are among others: application wide config, database,...
+   */
   private static function load_config() {
-    // base.php defines neccessary constants
-    require_once(self::$APP_PATH. "config/base.php");
-    // routes.php defines routes for the router
+    $config_dir = self::$APP_PATH."config";
+    self::$config = new StaticData($config_dir);
+  }
+
+  /*
+   * routes.php defines routes for the Router
+   */
+  private static function load_routes() {
     require_once(self::$APP_PATH. "config/routes.php");
   }
 
+  /*
+   * loads files that contain important classes
+   */
   private static function load_classes() { 
     // Router finds and call the right controller and action for a specific uri
     require_once(self::$APP_PATH. "includes/router.php");
@@ -60,12 +85,12 @@ class App {
     // static data class keep all static data in one places
     require_once(self::$APP_PATH. "includes/static_data.php");
 
-    // Load base controller, model and view
+    // load base controller, model and view
     require_once(self::$APP_PATH. "app/base/AppController.php");
     require_once(self::$APP_PATH. "app/base/AppModel.php");
     require_once(self::$APP_PATH. "app/base/AppView.php");
     
-    // Load other models
+    // load other models
     $model_dir = self::$MODEL_DIR;
     foreach (scandir($model_dir) as $file) {
       if (preg_match('/^[A-Z][a-z]*\.php$/', $file)) {
@@ -75,23 +100,11 @@ class App {
 
     // autoload third-party libraries
     require_once(self::$APP_PATH. "vendor/autoload.php");
-
-    // load required data
-    $data_dir = self::$APP_PATH."data";
-    foreach (scandir($data_dir) as $file) {
-      if (preg_match('/^.*\.php$/', $file)) {
-        require_once($data_dir.'/'.$file);
-      }
-    }
-
-    self::load_static_data();
-
   }
 
   /* 
-   * Load static data like database connections, api keys,...
-   * Data are in yaml formats
-   * TODO: should there be nested data?
+   * load application specific static data 
+   * data is in json formats
    */
   private static function load_static_data() {
     $data_dir = self::$APP_PATH."data";

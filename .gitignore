@@ -3,3 +3,4 @@ test.php
 test.json
 vendor/
 data/**/*.json
+config/**/*.json

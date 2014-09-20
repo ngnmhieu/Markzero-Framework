@@ -8,9 +8,11 @@ class App {
   static $CONTROLLER_DIR;
   static $MODEL_DIR;
   static $VIEW_DIR;
-  static $db;
-  static $session;
-  static $router;
+
+  static $db; // database connection
+  static $session; // manage user sessions
+  static $router; // handling
+  static $data; // store static data of the application
 
   /*
    * This method has these responsibilities:
@@ -22,9 +24,11 @@ class App {
   static function bootstrap() {
     self::initialize();
     self::load_classes();
-    self::$db = new Database();
     self::$session = new Session();
     self::$router = new Router();
+    // TODO: input developement or production in app.php
+    $db = App::$data->database->development;
+    self::$db = new Database($db->user, $db->host, $db->pass, $db->dbname);
     
     self::load_config();
 
@@ -53,6 +57,8 @@ class App {
     require_once(self::$APP_PATH. "includes/database.php");
     // session class manage user session
     require_once(self::$APP_PATH. "includes/session.php");
+    // static data class keep all static data in one places
+    require_once(self::$APP_PATH. "includes/static_data.php");
 
     // Load base controller, model and view
     require_once(self::$APP_PATH. "app/base/AppController.php");
@@ -67,7 +73,31 @@ class App {
       }
     }
 
+    // autoload third-party libraries
+    require_once(self::$APP_PATH. "vendor/autoload.php");
+
+    // load required data
+    $data_dir = self::$APP_PATH."data";
+    foreach (scandir($data_dir) as $file) {
+      if (preg_match('/^.*\.php$/', $file)) {
+        require_once($data_dir.'/'.$file);
+      }
+    }
+
+    self::load_static_data();
+
   }
+
+  /* 
+   * Load static data like database connections, api keys,...
+   * Data are in yaml formats
+   * TODO: should there be nested data?
+   */
+  private static function load_static_data() {
+    $data_dir = self::$APP_PATH."data";
+    self::$data = new StaticData($data_dir);
+  }   
+
 }
 
 ?>

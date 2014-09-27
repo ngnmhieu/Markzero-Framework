@@ -2,6 +2,7 @@
   "require": {
     "tumblr/tumblr": "dev-master",
     "eher/oauth": "1.0.7",
-    "guzzle/guzzle": "3.9.2"
+    "guzzle/guzzle": "3.9.2",
+    "php-activerecord/php-activerecord": "dev-master"
   }
 }

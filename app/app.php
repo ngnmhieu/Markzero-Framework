@@ -10,7 +10,7 @@ class App {
   static $VIEW_DIR;
 
   static $config; // application configurations
-  static $db; // database connection
+  // static $db; // database connection
   static $session; // manage user sessions
   static $router; // handling
   static $data; // store static data of the application
@@ -49,8 +49,9 @@ class App {
    * like Session, Router, Database,...
    */
   private static function init_classes() {
-    $db = self::$config->database->{self::$config->app->env};
-    self::$db = new Database($db->user, $db->host, $db->pass, $db->dbname);
+    // TODO: to be deleted because we use ActiveRecord
+    // $db = self::$config->database->{self::$config->app->env};
+    // self::$db = new Database($db->user, $db->host, $db->pass, $db->dbname);
     self::$session = new Session();
     self::$router = new Router();
   }
@@ -61,8 +62,11 @@ class App {
    * important configurations are among others: application wide config, database,...
    */
   private static function load_config() {
+    // global application configurations
     $config_dir = self::$APP_PATH."config";
     self::$config = new StaticData($config_dir);
+    // database configurations
+    require_once(self::$APP_PATH. "includes/database.php");
   }
 
   /*
@@ -76,10 +80,10 @@ class App {
    * loads files that contain important classes
    */
   private static function load_classes() { 
-    // Router finds and call the right controller and action for a specific uri
+    // autoload third-party libraries
+    require_once(self::$APP_PATH. "vendor/autoload.php");
+    // router finds and call the right controller and action for a specific uri
     require_once(self::$APP_PATH. "includes/router.php");
-    // database class handle database connection
-    require_once(self::$APP_PATH. "includes/database.php");
     // session class manage user session
     require_once(self::$APP_PATH. "includes/session.php");
     // static data class keep all static data in one places
@@ -97,9 +101,6 @@ class App {
         require_once($model_dir.'/'.$file);
       }
     }
-
-    // autoload third-party libraries
-    require_once(self::$APP_PATH. "vendor/autoload.php");
   }
 
   /* 

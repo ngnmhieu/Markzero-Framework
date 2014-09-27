@@ -14,10 +14,10 @@ Pictures aggregation from photo sharing platforms.
 
 # Version 0 
 *Functionalities*
-  - Platform: Instagram
+  - Platform: Instagram, Tumblr, Twitter ...
   - Search for a hashtag & keyword and get back a straem of pictures
   - Get newer update through ajax
 
 *What is needed*
-  - PHP for querying Instagram API
+  - PHP for querying Instagram, Tumblr, Twitter API
   - Javascript for front-end and pull new updates

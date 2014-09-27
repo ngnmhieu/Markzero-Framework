@@ -1,7 +1,7 @@
 <?php
 class Tumblr extends AppModel {
   private static $client; // returned by self::getClient()
-  private static $blog_list;
+  private static $blog_list; // returned by self::getBlogs();
 
   public static function getShuffledPhotos($limit = 10) {
     $photos = self::getPhotos($limit);
@@ -23,6 +23,27 @@ class Tumblr extends AppModel {
     }
 
     return $photos;
+  }
+
+  public static function searchTaggedPhoto($tag = "") {
+    $client = self::getClient();
+
+    date_default_timezone_set('Europe/Berlin');
+    // $time = mktime(0,0,0, 8, 30, 2014);
+    $time = time();
+    $posts = $client->getTaggedPosts($tag, ['before' => $time]);
+    $photo_posts = array_filter($posts, function($post) {
+      return $post->type == "photo";
+    });
+
+
+    // put all the photos into an array and return it
+    return array_reduce($photo_posts, function ($result, $post) {
+      foreach ($post->photos as $photo) 
+        $result[] = $photo->original_size;
+      return $result;
+    }, array());
+
   }
 
   /*

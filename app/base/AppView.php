@@ -3,20 +3,17 @@
 /*
  * Manages the organizing and loading of layouts and templates (or views).
  * AppView works in conjunction with Controller, in order to render the appropriate views.
- * 
- * Usage:
- *
  */
 class AppView {
-  private $_view_dir;
-  private $_layout_dir;
+  private $view_dir;
+  private $layout_dir;
 
   /*
    * @param string $views_dir directory contains all views and layout
    */
   function __construct($view_dir) {
-    $this->_view_dir = $view_dir;
-    $this->_layout_dir = "$this->_view_dir/layouts";
+    $this->view_dir = $view_dir;
+    $this->layout_dir = "$this->view_dir/layouts";
   }
 
   /*
@@ -25,7 +22,7 @@ class AppView {
    * @param callable $main ouput of main content
    */
   protected function layout($name, callable $main) {
-      $layout_file = "$this->_layout_dir/$name.layout.php";
+      $layout_file = "$this->layout_dir/$name.layout.php";
       include($layout_file);
   }
 
@@ -36,7 +33,7 @@ class AppView {
    * @param string $layout name of layout
    */
   public function render($data, $name, $layout) {
-    $view_dir = $this->_view_dir;
+    $view_dir = $this->view_dir;
     $template_file = "$view_dir/$name.tpl.php";
 
     // include template file in anonymous function

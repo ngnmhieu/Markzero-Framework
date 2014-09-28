@@ -63,29 +63,44 @@ class Router {
   }
 
   /*
+   * actually call the appropriate method in appropriate controller
    * @param array $destination [':controller' => "controller", ':action' => "action"]
    * @param array $args Arguments that are passed to controller method
    */
   private function route(array $destination, array $args = array()) {
-    // normalize controller and action name
-    $controller_name = ucfirst(strtolower($destination[':controller'])) . 'Controller';
+    // extract controller name and its filename
+    $dest_ctrl = $destination[':controller'];
+    $dir_separator_pos = strpos($dest_ctrl, '/');
+    $subdir = "";
+    if ($dir_separator_pos !== false) { // check if the controller lies in subdirectory
+      $subdir = substr($dest_ctrl, 0, $dir_separator_pos + 1);
+      $controller = substr($dest_ctrl, $dir_separator_pos + 1);
+      $controller = ucfirst(strtolower($controller)).'Controller';
+      $controller_filename = $subdir.$controller.'.php';
+    } else {
+      $controller = ucfirst(strtolower($dest_ctrl)).'Controller';
+      $controller_filename = $controller.'.php';
+    }
+
     $action = strtolower($destination[':action']);
 
     // call the appropriate controller
-    $filename = $controller_name.".php";
-    $controller_file = App::$CONTROLLER_DIR.'/'.$filename;
+    $controller_file = App::$CONTROLLER_DIR.'/'.$controller_filename;
     if (file_exists($controller_file)) {
       require_once($controller_file);
     } else {
       // TODO: Error handling
-      die("Cannot find $controller_name in $controller_file");
+      die("Cannot find $controller in $controller_file");
     }
 
+    // setup controller object
+    $controller_obj = new $controller();
+    $controller_obj->set_view_subdir($subdir);
+
     // call action on controller
-    $controller = new $controller_name();
-    if (is_callable(array($controller, $action))) {
+    if (is_callable(array($controller_obj, $action))) {
       // call method `$action` on object $controller` with arguments `$args`
-      call_user_func_array([$controller, $action], $args);
+      call_user_func_array([$controller_obj, $action], $args);
     } else {
       // TODO: display error;
     }
@@ -93,12 +108,12 @@ class Router {
 
   /*
    * Matches the URI with the controller and action
-   * @param string $method must be POST GET PUT DELETE
+   * @param string $method must be among these methods POST, GET, PUT, DELETE
    * @param string $route_string specify the uri that will be match
    * @param string $dest in form {controller}#{action}
    */
   public function map($method, $route_string, $dest) {
-    if (preg_match("/([a-zA-Z0-9_\-]+)#([a-zA-Z0-9_\-]+)/", $dest, $matches)) {
+    if (preg_match("~([a-zA-Z0-9_\-/]+)#([a-zA-Z0-9_\-]+)~", $dest, $matches)) {
       $controller = $matches[1];
       $action     = $matches[2];
     } else {

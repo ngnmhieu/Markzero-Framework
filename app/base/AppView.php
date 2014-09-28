@@ -1,5 +1,4 @@
 <?php
-
 /*
  * Manages the organizing and loading of layouts and templates (or views).
  * AppView works in conjunction with Controller, in order to render the appropriate views.

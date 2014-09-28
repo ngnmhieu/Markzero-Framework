@@ -1,22 +1,45 @@
 <?php
 class AppController {
-  private $_appview;
+  private $appview;
+  private $default_layout;
+  private $view_subdir;
+
   /*
    * Every child class should call this constructor
    * if it has its own constructor
    */
   function __construct() {
-    $this->_appview = new AppView(App::$VIEW_DIR);
+    $this->appview = new AppView(App::$VIEW_DIR);
+    $this->set_view_subdir("");
+    $this->set_default_layout("default");
+  }
+
+  /*
+   * in which subdirectory the views are stored
+   * used for controllers lies in subdirectory like admin, ...
+   * @param string $dir 
+   */
+  public function set_view_subdir($dir) {
+    $this->view_subdir = $dir;
+  }
+
+  /*
+   * default layout for current controller
+   * @param string $layout name of layout (without file extension)
+   */
+  protected function set_default_layout($layout) {
+    if (is_string($layout) && $layout != "") {
+      $this->default_layout = $layout;
+    }
   }
 
   /*
    * render template with a layout (if given)
    * @param array $data variables to be populated into template
    * @param string $template default to {action_name}
-   * @param strign $layout default to "layouts/default"
-   * TODO: forced default layout or let user decide default layout?
+   * @param string $layout default to "layouts/default"
    */   
-  protected function render($data = array(), $template = "", $layout = "default") {
+  protected function render($data = array(), $template = "", $layout = null) {
     // template default to action name
     if ($template == "")  {
       list(,$caller) = debug_backtrace(false); // `false` for performance php5.3
@@ -26,7 +49,12 @@ class AppController {
     
     $controller = $this->current_controller();
 
-    $this->_appview->render($data, $controller.'/'.$template, $layout);
+    // set default layout if not provided
+    if (is_string($layout) && $layout != "") {
+      $layout = $this->default_layout;
+    }
+
+    $this->appview->render($data, $this->view_subdir.$controller.'/'.$template, $layout);
   }
 
   private function current_controller() {

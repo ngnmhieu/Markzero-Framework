@@ -49,9 +49,6 @@ class App {
    * like Session, Router, Database,...
    */
   private static function init_classes() {
-    // TODO: to be deleted because we use ActiveRecord
-    // $db = self::$config->database->{self::$config->app->env};
-    // self::$db = new Database($db->user, $db->host, $db->pass, $db->dbname);
     self::$session = new Session();
     self::$router = new Router();
   }

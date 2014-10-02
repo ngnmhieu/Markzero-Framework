@@ -14,5 +14,5 @@ ActiveRecord\Config::initialize(function ($cfg) use ($connections) {
   $cfg->set_model_directory(App::$MODEL_DIR);
 
   $cfg->set_connections($connections);
-  $cfg->set_default_connection('development');
+  $cfg->set_default_connection(App::$config->app->env);
 });

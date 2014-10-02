@@ -80,11 +80,11 @@ class App {
     // autoload third-party libraries
     require_once(self::$APP_PATH. "vendor/autoload.php");
     // router finds and call the right controller and action for a specific uri
-    require_once(self::$APP_PATH. "includes/router.php");
+    require_once(self::$APP_PATH. "includes/Router.class.php");
     // session class manage user session
-    require_once(self::$APP_PATH. "includes/session.php");
+    require_once(self::$APP_PATH. "includes/Session.class.php");
     // static data class keep all static data in one places
-    require_once(self::$APP_PATH. "includes/static_data.php");
+    require_once(self::$APP_PATH. "includes/StaticData.class.php");
 
     // load base controller, model and view
     require_once(self::$APP_PATH. "app/base/AppController.php");

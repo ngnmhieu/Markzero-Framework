@@ -5,6 +5,9 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @Entity @Table(name="transactions")
  **/
 class Transaction extends AppModel {
+  protected static $attr_reader = ['id'];
+  protected static $attr_accessor = ['amount','notice', 'time', 'category'];
+
   /** @Id @Column(type="integer") @GeneratedValue **/
   protected $id;
   /** @Column(type="float") **/
@@ -15,56 +18,10 @@ class Transaction extends AppModel {
   protected $time;
 
   /** @ManyToOne(targetEntity="Category", inversedBy="transactions") **/
-  protected $categories;
+  protected $category;
 
-  function __construct() {
-    $this->categories = new ArrayCollection();
-  }
-
-  public function assignToCategory($category) {
-    $this->categories[] = $category;
-  }
-
-  public function getCategories() {
-    return $this->categories;
-  }
-
-  public function getId() {
-    return $this->id;
-  }
-
-  public function getAmount() {
-    return $this->amount;
-  }
-
-  public function getNotice() {
-    return $this->notice;
-  }
-
-  public function getTime() {
-    return $this->time;
-  }
-
-  public function setAmount($amount) {
-    $this->amount = $amount;
-  }
-
-  public function setNotice($notice) {
-    $this->notice = $notice;
-  }
-
-  public function setTime($time) {
-    $this->time = $time;
-  }
-
-  static function find($id) {
-    $em = App::$entity_manager->getRepository(__CLASS__);
-    return $em->find($id);
-  }
-
-  static function findAll() {
-    $repo = App::$entity_manager->getRepository(__CLASS__);        
-    return $repo->findAll();
+  public function getCategory() {
+    return $this->category;
   }
 
   static function create($amount, $notice = "", $category_ids, $time = null) {
@@ -90,7 +47,6 @@ class Transaction extends AppModel {
   }
 
   static function getTodayTransaction() {
-    $table = __CLASS__;
     $em = App::$entity_manager;
     $repo = $em->getRepository($table);
     $query = $em->createQuery("select t from $table as t where t.time >= CURRENT_DATE()");

@@ -9,8 +9,14 @@ class AppModel {
    * @var int $id
    **/
   static function find($id) {
-    $repo = self::getRepo();
-    return $repo->find($id);
+    return self::getRepo()->find($id);
+  }
+
+  /**
+   * find all entities
+   */
+  static function findAll() {
+    return self::getRepo()->findAll();
   }
 
   /**
@@ -79,6 +85,29 @@ class AppModel {
       ' Zeile ' . $trace[0]['line'],
       E_USER_NOTICE);
     return null;
+  }
 
+  /**
+   * return attributes on call to  get{Atrribute}()
+   * and set attributes value on call to  set{Atrribute}({val})
+   **/
+  function __call($name, $args) {
+    if (preg_match('~get([A-Z].*)~', $name, $matches)) {
+      $attr = lcfirst($matches[1]);
+      return $this->{$attr};
+    } else if (preg_match('~set([A-Z].*)~', $name, $matches)) {
+      $attr = lcfirst($matches[1]);
+      $this->{$attr} = $args[0];
+      return;
+    }
+    
+    // Attribute not found, generate error
+    $trace = debug_backtrace();
+    trigger_error(
+      "Undefined method `$name()` in class `".get_class(new static)."`: ".
+      ' in ' . $trace[0]['file'] .
+      ' Line ' . $trace[0]['line'],
+      E_USER_NOTICE);
+    return null;
   }
 }

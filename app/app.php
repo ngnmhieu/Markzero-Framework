@@ -10,10 +10,10 @@ class App {
   static $VIEW_DIR;
 
   static $config; // application configurations
-  // static $db; // database connection
   static $session; // manage user sessions
   static $router; // handling
   static $data; // store static data of the application
+  static $entity_manager; // Doctrine EntityManager
 
   /*
    * This method has these responsibilities:
@@ -28,16 +28,15 @@ class App {
     self::load_config();
     self::load_static_data();
     self::init_classes();
-
     self::load_routes();
-    self::$router->dispatch();
   }
 
   /*
    * initializes the paths in the application
    */
   private static function init_path() {
-    self::$APP_PATH       = realpath("../").'/';
+    $parent_dir = dirname(dirname(__FILE__));
+    self::$APP_PATH       = $parent_dir.'/';
     self::$CONTROLLER_DIR = self::$APP_PATH."app/controllers";
     self::$MODEL_DIR      = self::$APP_PATH."app/models";
     self::$VIEW_DIR       = self::$APP_PATH."app/views";

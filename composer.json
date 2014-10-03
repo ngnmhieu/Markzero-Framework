@@ -3,6 +3,9 @@
     "tumblr/tumblr": "dev-master",
     "eher/oauth": "1.0.7",
     "guzzle/guzzle": "3.9.2",
-    "php-activerecord/php-activerecord": "dev-master"
-  }
+    "php-activerecord/php-activerecord": "dev-master",
+    "doctrine/orm": "2.4.*",
+    "doctrine/dbal": "2.4.*",
+    "doctrine/common": "2.4.*"
+  } 
 }

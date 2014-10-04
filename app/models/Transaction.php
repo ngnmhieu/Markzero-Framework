@@ -25,6 +25,7 @@ class Transaction extends AppModel {
   }
 
   static function create($amount, $notice = "", $category_ids, $time = null) {
+    $em = App::$entity_manager;
     $trans = new static();
     $trans->setAmount($amount);
     $trans->setNotice($notice);
@@ -41,7 +42,6 @@ class Transaction extends AppModel {
       }
     }
 
-    $em = App::$entity_manager;
     $em->persist($trans);
     $em->flush();
   }

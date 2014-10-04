@@ -7,7 +7,8 @@
 
 App::$router->draw(function($r) {
   $r->root('transaction#index');
-  $r->map('get', '/transaction/create', 'transaction#create');
+  $r->map('get', '/transaction/add', 'transaction#add');
+  $r->map('post', '/transaction/create', 'transaction#create');
 
   $r->map('get', '/user', 'user#index');
   $r->map('get', '/user/show/([0-9]+)', 'user#show');

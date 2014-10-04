@@ -1,6 +1,5 @@
 <?php
 class AppModel {
-
   function __construct() {
   }
 
@@ -46,7 +45,7 @@ class AppModel {
       return $this->{$attr};
     }
 
-    // Attribute not found, generate error
+    // TODO: Attribute not found, generate error
     $trace = debug_backtrace();
     trigger_error(
       'Undefinierte Eigenschaft for __get(): ' . $attr .
@@ -77,7 +76,7 @@ class AppModel {
       return;
     }
 
-    // Attribute not found, generate error
+    // TODO: Attribute not found, generate error
     $trace = debug_backtrace();
     trigger_error(
       'Undefinierte Eigenschaft for __set(): ' . $attr .
@@ -101,7 +100,7 @@ class AppModel {
       return;
     }
     
-    // Attribute not found, generate error
+    // TODO: Attribute not found, generate error
     $trace = debug_backtrace();
     trigger_error(
       "Undefined method `$name()` in class `".get_class(new static)."`: ".

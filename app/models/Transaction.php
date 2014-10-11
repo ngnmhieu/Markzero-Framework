@@ -12,7 +12,7 @@ class Transaction extends AppModel {
   protected $id;
   /** @Column(type="float") **/
   protected $amount;
-  /** @Column(type="string") **/
+  /** @Column(type="string", nullable=true) **/
   protected $notice;
   /** @Column(type="datetime") **/
   protected $time;
@@ -20,36 +20,39 @@ class Transaction extends AppModel {
   /** @ManyToOne(targetEntity="Category", inversedBy="transactions") **/
   protected $category;
 
-  public function getCategory() {
-    return $this->category;
+  function __construct() {
+    $this->time = new \DateTime("now");
   }
-
-  static function create($amount, $notice = "", $category_ids, $time = null) {
-    $em = App::$entity_manager;
-    $trans = new static();
-    $trans->setAmount($amount);
-    $trans->setNotice($notice);
-    if ($time !== null) {
-      $trans->setTime($time);
+  
+  public function validate() {
+    if (empty($this->amount)) {
+      $this->errors['amount'] = "Amount must not be empty";
+    } else if (is_numeric($this->amount)) {
+      $this->errors['amount'] = "Amount must be number.";
     }
 
-    if (is_array($category_ids)) {
-      foreach ($category_ids as $id) {
-        $cat = Category::find($id);
-        if ($cat !== null) {
-          $trans->assignToCategory($cat);
-        }
-      }
+    
+    return empty($this->errors); 
+  }
+
+  /**
+   * @var $params
+   **/
+  static function create($params) {
+    $obj = new static();
+    $obj->amount = $params->val('amount');
+    $obj->notice = $params->val('notice');
+    $obj->time = $params->val('time');
+    // $obj->category = $params->val('category');
+
+    try {
+      App::$entity_manager->persist($obj);
+      App::$entity_manager->flush();
+    } catch(ValidationException $e) {
+
     }
 
-    $em->persist($trans);
-    $em->flush();
+    return $obj;
   }
 
-  static function getTodayTransaction() {
-    $em = App::$entity_manager;
-    $repo = $em->getRepository($table);
-    $query = $em->createQuery("select t from $table as t where t.time >= CURRENT_DATE()");
-    return $query->getResult();
-  }
 }

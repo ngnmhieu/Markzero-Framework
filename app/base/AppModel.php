@@ -1,6 +1,28 @@
 <?php
+/**
+ * thrown in validate() when entities are invalid
+ */
+class ValidationException extends Exception {
+}
+
+/**
+ * @MappedSuperClass
+ * @HasLifecycleCallbacks
+ */
 class AppModel {
-  function __construct() {
+  /**
+   * contains validation errors when creating or updating enitties
+   */
+  public $errors;
+
+  /**
+   * @PrePersist
+   */
+  public function _validate() {
+    $this->errors = array();
+    if (!$this->validate()) {
+      throw new ValidationException();
+    }
   }
 
   /**
@@ -13,7 +35,7 @@ class AppModel {
 
   /**
    * find all entities
-   */
+   **/
   static function findAll() {
     return self::getRepo()->findAll();
   }

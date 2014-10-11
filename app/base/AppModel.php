@@ -20,8 +20,30 @@ class AppModel {
    */
   public function _validate() {
     $this->errors = array();
-    if (!$this->validate()) {
-      throw new ValidationException();
+    if (method_exists($this, 'validate'))
+      if (!$this->validate())
+        throw new ValidationException();
+  }
+
+  /**
+   * @return boolean | is this entity valid
+   */
+  public function is_valid() {
+    try {
+      $this->_validate();
+    } catch (ValidationException $e) {
+      return false;
+    }
+    return true;
+  }
+
+  /**
+   * set up default values for attributes
+   * @PrePersist
+   */
+  public function _default() {
+    if (method_exists($this, 'setup_default')) {
+      $this->setup_default();
     }
   }
 
@@ -30,20 +52,20 @@ class AppModel {
    * @var int $id
    **/
   static function find($id) {
-    return self::getRepo()->find($id);
+    return self::get_repo()->find($id);
   }
 
   /**
    * find all entities
    **/
-  static function findAll() {
-    return self::getRepo()->findAll();
+  static function find_all() {
+    return self::get_repo()->findAll();
   }
 
   /**
    * get the repository with the name of the current model
    **/
-  static function getRepo() {
+  static function get_repo() {
     $model = get_called_class();
     return App::$entity_manager->getRepository($model);
   }

@@ -47,9 +47,17 @@ class Parameter {
 
   /**
    * whitelist given parameters
-   * @param array permitted keys
+   * @param @permitted_keys array permitted keys
    */
-  public function permit($keys) {
+  public function permit($permitted_keys) {
+    $whitelist = array();
+    foreach ($this->params as $key => $value) {
+      if (in_array($key, $permitted_keys)) 
+        $whitelist[$key] = $value;
+    }
+    $this->params = $whitelist;
+  
+    return $this;
   }
 
   /**

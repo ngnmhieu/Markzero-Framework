@@ -8,9 +8,10 @@
 App::$router->draw(function($r) {
   $r->root('transaction#index');
   $r->map('get', '/transaction/index', 'transaction#index');
-  $r->map('get', '/transaction/', 'transaction#index');
   $r->map('get', '/transaction/add', 'transaction#add');
-  $r->map('post', '/transaction/create', 'transaction#create');
+  $r->map('get', '/transaction/', 'transaction#index');
+  $r->map('post', '/transaction/', 'transaction#create');
+  $r->map('get', '/transaction/([0-9]+)/delete', 'transaction#delete');
 
   $r->map('get', '/user', 'user#index');
   $r->map('get', '/user/show/([0-9]+)', 'user#show');

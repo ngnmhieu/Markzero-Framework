@@ -106,12 +106,12 @@ class Router {
     }
   }
 
-  /*
+  /**
    * Matches the URI with the controller and action
    * @param string $method must be among these methods POST, GET, PUT, DELETE
    * @param string $route_string specify the uri that will be match
    * @param string $dest in form {controller}#{action}
-   */
+   **/
   public function map($method, $route_string, $dest) {
     if (preg_match("~([a-zA-Z0-9_\-/]+)#([a-zA-Z0-9_\-]+)~", $dest, $matches)) {
       $controller = $matches[1];

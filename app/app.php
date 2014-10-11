@@ -78,6 +78,8 @@ class App {
   private static function load_classes() { 
     // autoload third-party libraries
     require_once(self::$APP_PATH. "vendor/autoload.php");
+    // request class encapsulate all the information about the current request
+    require_once(self::$APP_PATH. "includes/Request.class.php");
     // router finds and call the right controller and action for a specific uri
     require_once(self::$APP_PATH. "includes/Router.class.php");
     // session class manage user session

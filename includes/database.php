@@ -25,7 +25,7 @@ use Doctrine\ORM\EntityManager;
 $env  = App::$config->app->env;
 $db = App::$config->database->{$env}; // database configurations
 $is_dev = $env == 'development';
-$path   = [App::$APP_PATH.'app/models/'];
+$path   = [App::$APP_PATH.'app/models/', App::$APP_PATH.'app/base/'];
 
 $config = Setup::createAnnotationMetadataConfiguration($path, $is_dev);
 $connection = [

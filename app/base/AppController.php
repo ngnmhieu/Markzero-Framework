@@ -3,15 +3,24 @@ class AppController {
   private $appview;
   private $default_layout;
   private $view_subdir;
+  private $request;
 
   /*
    * Every child class should call this constructor
    * if it has its own constructor
    */
   function __construct() {
+    $this->request = new Request();
     $this->appview = new AppView(App::$VIEW_DIR);
     $this->set_view_subdir("");
     $this->set_default_layout("default");
+  }
+
+  /**
+   * @return object contains request information
+   **/
+  public function request() {
+    return $this->request;
   }
 
   /*
@@ -33,12 +42,12 @@ class AppController {
     }
   }
 
-  /*
+  /**
    * render template with a layout (if given)
    * @param array $data variables to be populated into template
    * @param string $template default to {action_name}
    * @param string $layout default to "layouts/default"
-   */   
+   **/   
   protected function render($data = array(), $template = "", $layout = null) {
     // template default to action name
     if ($template == "")  {

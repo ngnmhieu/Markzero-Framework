@@ -63,6 +63,21 @@ class Transaction extends AppModel {
     return $obj;
   }
 
+  static function update($id, $params) {
+    $params->permit(['amount', 'notice']);
+    $obj = static::find($id);
+    $obj->amount = $params->val('amount');
+    $obj->notice = $params->val('notice');
+
+    try {
+      App::$entity_manager->persist($obj);
+      App::$entity_manager->flush();
+    } catch(ValidationException $e) {
+    }
+
+    return $obj;
+  }
+
   /**
    * delete entity
    */

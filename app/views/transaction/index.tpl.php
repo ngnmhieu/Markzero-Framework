@@ -8,7 +8,11 @@
     <td><?=$t->time->format('d-m-Y h:m')?></td>
     <td><?=$t->amount?></td>
     <td><?=$t->notice?></td>
-    <td><a href="/transaction/<?=$t->id?>/delete">Delete</a></td>
+    <td>
+      <a href="/transaction/<?=$t->id?>/edit">Edit</a>
+      |
+      <a href="/transaction/<?=$t->id?>/delete">Delete</a>
+    </td>
   </tr>   
 <? endforeach;?>
 </table>

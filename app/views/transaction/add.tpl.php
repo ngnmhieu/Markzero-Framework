@@ -5,6 +5,7 @@
   <label for="notice">Notice: </label>
   <textarea name="notice" rows="3" cols="40"></textarea>
   <br />
+  <label for="time">Time: </label>
+  <br />
   <input type="submit" name="submit" value="Add Transaction" />
-  <!-- <label for="time">time: </label> -->
 </form>

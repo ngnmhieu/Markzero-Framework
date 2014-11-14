@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "43534e5e8ee8ceddab7117efb9e92e12",
+    "hash": "64762b75a2c36e7b2e42ac92f088d8e9",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -545,171 +545,6 @@
             "time": "2014-09-22 21:58:51"
         },
         {
-            "name": "eher/oauth",
-            "version": "1.0.7",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/EHER/OAuth.git",
-                "reference": "935c1f7709d1c1457de9e250d0e5f29cac06e507"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/EHER/OAuth/zipball/935c1f7709d1c1457de9e250d0e5f29cac06e507",
-                "reference": "935c1f7709d1c1457de9e250d0e5f29cac06e507",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "require-dev": {
-                "eher/phpunit": "1.6"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Eher\\OAuth": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "description": "OAuth 1 PHP Library",
-            "time": "2012-12-13 23:48:10"
-        },
-        {
-            "name": "guzzle/guzzle",
-            "version": "v3.9.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/guzzle/guzzle3.git",
-                "reference": "54991459675c1a2924122afbb0e5609ade581155"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle3/zipball/54991459675c1a2924122afbb0e5609ade581155",
-                "reference": "54991459675c1a2924122afbb0e5609ade581155",
-                "shasum": ""
-            },
-            "require": {
-                "ext-curl": "*",
-                "php": ">=5.3.3",
-                "symfony/event-dispatcher": "~2.1"
-            },
-            "replace": {
-                "guzzle/batch": "self.version",
-                "guzzle/cache": "self.version",
-                "guzzle/common": "self.version",
-                "guzzle/http": "self.version",
-                "guzzle/inflection": "self.version",
-                "guzzle/iterator": "self.version",
-                "guzzle/log": "self.version",
-                "guzzle/parser": "self.version",
-                "guzzle/plugin": "self.version",
-                "guzzle/plugin-async": "self.version",
-                "guzzle/plugin-backoff": "self.version",
-                "guzzle/plugin-cache": "self.version",
-                "guzzle/plugin-cookie": "self.version",
-                "guzzle/plugin-curlauth": "self.version",
-                "guzzle/plugin-error-response": "self.version",
-                "guzzle/plugin-history": "self.version",
-                "guzzle/plugin-log": "self.version",
-                "guzzle/plugin-md5": "self.version",
-                "guzzle/plugin-mock": "self.version",
-                "guzzle/plugin-oauth": "self.version",
-                "guzzle/service": "self.version",
-                "guzzle/stream": "self.version"
-            },
-            "require-dev": {
-                "doctrine/cache": "~1.3",
-                "monolog/monolog": "~1.0",
-                "phpunit/phpunit": "3.7.*",
-                "psr/log": "~1.0",
-                "symfony/class-loader": "~2.1",
-                "zendframework/zend-cache": "2.*,<2.3",
-                "zendframework/zend-log": "2.*,<2.3"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.9-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Guzzle": "src/",
-                    "Guzzle\\Tests": "tests/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Michael Dowling",
-                    "email": "mtdowling@gmail.com",
-                    "homepage": "https://github.com/mtdowling"
-                },
-                {
-                    "name": "Guzzle Community",
-                    "homepage": "https://github.com/guzzle/guzzle/contributors"
-                }
-            ],
-            "description": "Guzzle is a PHP HTTP client library and framework for building RESTful web service clients",
-            "homepage": "http://guzzlephp.org/",
-            "keywords": [
-                "client",
-                "curl",
-                "framework",
-                "http",
-                "http client",
-                "rest",
-                "web service"
-            ],
-            "time": "2014-08-11 04:32:36"
-        },
-        {
-            "name": "php-activerecord/php-activerecord",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/jpfuentes2/php-activerecord.git",
-                "reference": "3c4331ddc9ec963fdd4c689a854b4a21b64ba2af"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/jpfuentes2/php-activerecord/zipball/3c4331ddc9ec963fdd4c689a854b4a21b64ba2af",
-                "reference": "3c4331ddc9ec963fdd4c689a854b4a21b64ba2af",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "require-dev": {
-                "pear/log": "dev-master",
-                "pear/pear_exception": "1.0.*@dev",
-                "phpunit/phpunit": "3.7.*"
-            },
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "ActiveRecord.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "php-activerecord is an open source ORM library based on the ActiveRecord pattern.",
-            "homepage": "http://www.phpactiverecord.org/",
-            "keywords": [
-                "activerecord",
-                "orm"
-            ],
-            "time": "2014-07-19 21:27:26"
-        },
-        {
             "name": "symfony/console",
             "version": "v2.5.5",
             "target-dir": "Symfony/Component/Console",
@@ -820,64 +655,12 @@
             "description": "Symfony EventDispatcher Component",
             "homepage": "http://symfony.com",
             "time": "2014-07-28 13:20:46"
-        },
-        {
-            "name": "tumblr/tumblr",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/tumblr/tumblr.php.git",
-                "reference": "32fef6e6fb047371607a33e5665bf72da7dbad7d"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/tumblr/tumblr.php/zipball/32fef6e6fb047371607a33e5665bf72da7dbad7d",
-                "reference": "32fef6e6fb047371607a33e5665bf72da7dbad7d",
-                "shasum": ""
-            },
-            "require": {
-                "eher/oauth": "1.0.*",
-                "guzzle/guzzle": ">=3.1.0,<4"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Tumblr\\API": "lib"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache-2.0"
-            ],
-            "authors": [
-                {
-                    "name": "John Crepezzi",
-                    "email": "john.crepezzi@gmail.com",
-                    "homepage": "https://github.com/seejohnrun",
-                    "role": "developer"
-                }
-            ],
-            "description": "Official Tumblr PHP Client",
-            "homepage": "https://github.com/tumblr/tumblr.php",
-            "keywords": [
-                "api",
-                "gif",
-                "sdk",
-                "tumblr"
-            ],
-            "time": "2014-08-12 07:19:42"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "tumblr/tumblr": 20,
-        "php-activerecord/php-activerecord": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "platform": [],
     "platform-dev": []

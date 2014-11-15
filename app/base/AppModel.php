@@ -78,7 +78,7 @@ class AppModel {
     $getter = 'get'.ucfirst($attr); // getter name
     if (method_exists($this, $getter)) {
       return $this->{$getter}();
-    } else if (property_exists(new static, $attr) 
+    } else if (property_exists(get_called_class(), $attr) 
                && ((property_exists(get_called_class(), 'attr_reader') 
                    && is_array(static::$attr_reader) 
                    && in_array($attr, static::$attr_reader))

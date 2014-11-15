@@ -61,6 +61,8 @@ class App {
     // global application configurations
     $config_dir = self::$APP_PATH."config";
     self::$config = new StaticData($config_dir);
+    // base configurations
+    require_once(self::$APP_PATH."config/base.php");
     // database configurations
     require_once(self::$APP_PATH. "includes/database.php");
   }

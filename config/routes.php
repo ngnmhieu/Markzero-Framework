@@ -15,6 +15,14 @@ App::$router->draw(function($r) {
   $r->map('post', '/transaction/', 'transaction#create');
   $r->map('post', '/transaction/([0-9]+)/update', 'transaction#update');
 
+  $r->map('get', '/category/', 'category#index');
+  $r->map('get', '/category/index', 'category#index');
+  $r->map('get', '/category/add', 'category#add');
+  $r->map('get', '/category/([0-9]+)/edit', 'category#edit');
+  $r->map('get', '/category/([0-9]+)/delete', 'category#delete');
+  $r->map('post', '/category/', 'category#create');
+  $r->map('post', '/category/([0-9]+)/update', 'category#update');
+
   $r->map('get', '/user', 'user#index');
   $r->map('get', '/user/show/([0-9]+)', 'user#show');
 });

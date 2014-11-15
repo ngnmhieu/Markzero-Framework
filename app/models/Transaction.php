@@ -45,12 +45,13 @@ class Transaction extends AppModel {
    * @var $params
    **/
   static function create($params) {
-    $params->permit(['amount', 'notice']);
+    $params->permit(['amount', 'notice', 'category_id']);
     $obj = new static();
     $obj->amount = $params->val('amount');
     $obj->notice = $params->val('notice');
     $obj->time = $params->val('time');
-    $category_id = $params->val('category');
+    $category_id = $params->val('category_id');
+
     if ($category_id != null)
       $obj->category = Category::find($category_id);
 

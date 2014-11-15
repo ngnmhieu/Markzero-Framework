@@ -6,7 +6,8 @@ class TransactionController extends AppController {
   }
 
   function add() {
-    $this->render();
+    $data['categories'] = Category::find_all();
+    $this->render($data);
   }
 
   function edit($id) {

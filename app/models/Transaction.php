@@ -40,6 +40,8 @@ class Transaction extends AppModel {
     return empty($this->errors); 
   }
 
+
+
   /**
    * create and save an Transaction entity
    * @var $params
@@ -50,7 +52,7 @@ class Transaction extends AppModel {
     $obj->amount = $params->val('amount');
     $obj->notice = $params->val('notice');
     $obj->time = $params->val('time');
-    $category_id = $params->val('category_id');
+    $category_id = $params->val('category');
 
     if ($category_id != null)
       $obj->category = Category::find($category_id);

@@ -7,6 +7,7 @@ class TransactionController extends AppController {
 
   function add() {
     $data['categories'] = Category::find_all();
+    $tran = new Transaction();
     $this->render($data);
   }
 
@@ -20,6 +21,7 @@ class TransactionController extends AppController {
     if(empty($tran->errors)) {
       $this->redirect(["action" => "index"]);
     } else {
+      $this->redirect();
       print_r($tran->errors);
     }
   }

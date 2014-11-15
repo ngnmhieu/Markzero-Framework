@@ -16,6 +16,10 @@ class AppModel {
   public $errors;
 
   /**
+   * this function will be called right before an entity is persisted
+   * it in turn call the `validate` method in child class 
+   * (which actually performs the validation)
+   *
    * @PrePersist
    */
   public function _validate() {
@@ -133,6 +137,8 @@ class AppModel {
   /**
    * return attributes on call to  get{Atrribute}()
    * and set attributes value on call to  set{Atrribute}({val})
+   * although we already have mechanism for accessing attribute,
+   * these methods are required by doctrine
    **/
   function __call($name, $args) {
     if (preg_match('~get([A-Z].*)~', $name, $matches)) {

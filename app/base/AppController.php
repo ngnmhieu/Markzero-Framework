@@ -48,7 +48,7 @@ class AppController {
    * @param string $template default to {action_name}
    * @param string $layout default to "layouts/default"
    **/   
-  protected function render($data = array(), $template = "", $layout = null) {
+  protected function render(array $data = array(), $template = "", $layout = null) {
     // template default to action name
     if ($template == "")  {
       list(,$caller) = debug_backtrace(false); // `false` for performance php5.3
@@ -66,13 +66,16 @@ class AppController {
     $this->appview->render($data, $this->view_subdir.$controller.'/'.$template, $layout);
   }
 
+  /**
+   * @return string name of current controller
+   */
   private function current_controller() {
     preg_match("/([a-zA-Z]+)Controller/", get_class($this), $matches);
     $controller = strtolower($matches[1]);
     return $controller;
   } 
 
-  // TODO: should be move to helper functions
+  // TODO: should be move to helper functions?
   protected function redirect($to = array()) {
     if (!isset($to['controller']) && !isset($to['action'])) {
       die("No controller specified. Don't know where to redirect.");
@@ -83,5 +86,9 @@ class AppController {
     $location = "/$controller/$action";
     header('Location: '.$location);  
   }
+
+  protected function flash($key, $message) {
+    // $this->appview->flash
+  } 
 
 }

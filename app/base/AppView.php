@@ -6,6 +6,7 @@
 class AppView {
   private $view_dir;
   private $layout_dir;
+  private $flash;
 
   /*
    * @param string $views_dir directory contains all views and layout

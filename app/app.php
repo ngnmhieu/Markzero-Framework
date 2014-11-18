@@ -26,10 +26,18 @@ class App {
     self::init_path();
     self::load_classes();
     self::load_config();
-    self::load_static_data();
     self::init_classes();
+    self::load_functions();
     self::load_routes();
+    self::load_static_data();
   }
+
+  /**
+   * end of a request, some clean up have to be done 
+   * remove flash messages
+   */
+  // static function cleanup() {
+  // }
 
   /*
    * initializes the paths in the application
@@ -43,6 +51,13 @@ class App {
     self::$PUBLIC         = self::$APP_PATH."public/";
   }
 
+  /**
+   * load system functions, helper functions ...
+   */
+  private static function load_functions() {
+    require_once(self::$APP_PATH."includes/functions/functions.php");
+    require_once(self::$APP_PATH."includes/functions/view_helpers.php");
+  }
   /*
    * loads important classes for the application
    * like Session, Router, Database,...
@@ -59,8 +74,7 @@ class App {
    */
   private static function load_config() {
     // global application configurations
-    $config_dir = self::$APP_PATH."config";
-    self::$config = new StaticData($config_dir);
+    self::$config = new StaticData(self::$APP_PATH."config/");
     // base configurations
     require_once(self::$APP_PATH."config/base.php");
     // database configurations
@@ -88,6 +102,8 @@ class App {
     require_once(self::$APP_PATH. "includes/classes/Session.class.php");
     // static data class keep all static data in one places
     require_once(self::$APP_PATH. "includes/classes/StaticData.class.php");
+    // manages flash messages
+    require_once(self::$APP_PATH. "includes/classes/Flash.class.php");
 
     // load base controller, model and view
     require_once(self::$APP_PATH. "app/base/AppController.php");

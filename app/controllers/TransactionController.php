@@ -21,8 +21,8 @@ class TransactionController extends AppController {
     if(empty($tran->errors)) {
       $this->redirect(["action" => "index"]);
     } else {
-      $this->redirect();
-      print_r($tran->errors);
+      $this->flash('error', implode("<br />",$tran->errors));
+      $this->redirect(['action' => 'add']);
     }
   }
 

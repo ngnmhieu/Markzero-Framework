@@ -98,12 +98,12 @@ class App {
     require_once(self::$APP_PATH. "includes/classes/Request.class.php");
     // router finds and call the right controller and action for a specific uri
     require_once(self::$APP_PATH. "includes/classes/Router.class.php");
-    // session class manage user session
-    require_once(self::$APP_PATH. "includes/classes/Session.class.php");
     // static data class keep all static data in one places
     require_once(self::$APP_PATH. "includes/classes/StaticData.class.php");
+    // session class manage user session
+    require_once(self::$APP_PATH. "includes/classes/session/Session.class.php");
     // manages flash messages
-    require_once(self::$APP_PATH. "includes/classes/Flash.class.php");
+    require_once(self::$APP_PATH. "includes/classes/session/Flash.class.php");
 
     // load base controller, model and view
     require_once(self::$APP_PATH. "app/base/AppController.php");

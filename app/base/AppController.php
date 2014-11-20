@@ -87,8 +87,14 @@ class AppController {
     header('Location: '.$location);  
   }
 
+  /**
+   * set a flash message for next request (and only the next request)
+   * @param $key     | key for future retrieval 
+   * @param $message | message to be flashed
+   */
   protected function flash($key, $message) {
-    // $this->appview->flash
+    $flasher = \Session\Flash::getInstance();
+    $flasher->set($key, $message);
   } 
 
 }

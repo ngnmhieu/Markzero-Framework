@@ -1,3 +1,4 @@
+<?=flash('error')?>
 <form action="/transaction/" method="post">
   <label for="amount">Amount: </label>
   <input type="text" name="amount" value="" />

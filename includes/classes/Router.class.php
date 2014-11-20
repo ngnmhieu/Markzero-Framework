@@ -17,7 +17,20 @@ class Router {
    */
   private $_routes = array();
 
-  function __construct() {
+  /**
+   * Return the Singleton instance Router of the class
+   */
+  public static function getInstance() {
+    static $instance = null;
+
+    if ($instance === null) {
+      $instance = new static();
+    }
+
+    return $instance;
+  }
+
+  protected function __construct() {
     $this->_routes = array(
       'GET' => array(),
       'PUT' => array(),
@@ -135,6 +148,7 @@ class Router {
       ':controller' => $controller, 
       ':action' => $action
     ); 
+
   }
 
   /*

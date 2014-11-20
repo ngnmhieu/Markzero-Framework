@@ -64,7 +64,7 @@ class App {
    */
   private static function init_classes() {
     self::$session = new Session();
-    self::$router = new Router();
+    self::$router = Router::getInstance();
   }
 
   /*

@@ -1,4 +1,6 @@
-<?=flash('error')?>
+<div style="padding: 10px: border: 1px solid red">
+  <?=flash('error')?>
+</div>
 <form action="/transaction/" method="post">
   <label for="amount">Amount: </label>
   <input type="text" name="amount" value="" />

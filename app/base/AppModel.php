@@ -21,6 +21,7 @@ class AppModel {
    * (which actually performs the validation)
    *
    * @PrePersist
+   * @PreUpdate
    */
   public function _validate() {
     $this->errors = array();

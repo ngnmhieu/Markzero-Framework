@@ -1,3 +1,7 @@
+<div style="padding: 10px: border: 1px solid red">
+  <?=flash('error')?>
+</div>
+
 <form action="/transaction/<?=$transaction->id?>/update" method="post">
   <label for="amount">Amount: </label>
   <input type="text" name="amount" value="<?=$transaction->amount?>" />

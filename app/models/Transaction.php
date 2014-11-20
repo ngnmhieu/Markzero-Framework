@@ -66,6 +66,11 @@ class Transaction extends AppModel {
     return $obj;
   }
 
+  /**
+   * update and save an Transaction entity
+   * @param $id | id of the transaction
+   * @param $params | the new attributes of the transaction
+   */
   static function update($id, $params) {
     $params->permit(['amount', 'notice']);
     $obj = static::find($id);

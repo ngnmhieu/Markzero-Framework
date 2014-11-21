@@ -2,6 +2,8 @@
   <?=flash('error')?>
 </div>
 
+<a href="<?=path('transaction_edit', [$transaction->id])?>">Edit me</a>
+
 <form action="/transaction/<?=$transaction->id?>/update" method="post">
   <label for="amount">Amount: </label>
   <input type="text" name="amount" value="<?=$transaction->amount?>" />

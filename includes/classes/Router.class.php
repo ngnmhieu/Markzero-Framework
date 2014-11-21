@@ -15,7 +15,15 @@ class Router {
    * );
    * add new routes to $routes with map() method. (config/routes.php)
    */
-  private $_routes = array();
+  private $routes = array();
+  /**
+   * $web_paths is an array that map a string to a function
+   * the string is the name of the path (eg: 'transaction_edit') 
+   * the function will be used to replace user-provided parameters to web path
+   * and returns a web path (eg: '/transaction/{PARAM1}/edit/{PARAM2}) 
+   * with PARAM1, PARAM2,... are user-provided arguments
+   */
+  private $web_paths = array();
 
   /**
    * Return the Singleton instance Router of the class
@@ -31,7 +39,7 @@ class Router {
   }
 
   protected function __construct() {
-    $this->_routes = array(
+    $this->routes = array(
       'GET' => array(),
       'PUT' => array(),
       'POST' => array(),
@@ -44,7 +52,7 @@ class Router {
     $http_method = $_SERVER['REQUEST_METHOD']; 
 
     // load mappings in configuration file, according to HTTP method
-    $mappings = $this->_routes[$http_method]; 
+    $mappings = $this->routes[$http_method]; 
     $destination = array();
     $args = array(); // will contain URI arguments
     foreach ($mappings as $pattern => $dest) {
@@ -65,7 +73,7 @@ class Router {
 
   /*
    * Check if the given path matched with
-   * @return array of arguments if they match
+   * @return array containing information of controller and action if they match
    *         false if they don't
    */
   private function match_path($pattern, $path) {
@@ -124,6 +132,7 @@ class Router {
    * @param string $method must be among these methods POST, GET, PUT, DELETE
    * @param string $route_string specify the uri that will be match
    * @param string $dest in form {controller}#{action}
+   * @param string $path_name | will be used to get web path [optional] 
    **/
   public function map($method, $route_string, $dest) {
     if (preg_match("~([a-zA-Z0-9_\-/]+)#([a-zA-Z0-9_\-]+)~", $dest, $matches)) {
@@ -144,11 +153,29 @@ class Router {
     $pattern = '~^'.$pattern.'$~';
 
     // save the route information
-    $this->_routes[strtoupper($method)][$pattern] = array(
+    $this->routes[strtoupper($method)][$pattern] = array(
       ':controller' => $controller, 
       ':action' => $action
     ); 
 
+    // add mapping for web paths
+    $path_name = "{$controller}_{$action}";
+    $this->web_paths[$path_name] = function(array $params) use ($route_string) {
+      return preg_replace_inorder('~\(.*?\)~', $params, $route_string);
+    };
+  }
+
+  /**
+   * return a web path with all the parameters replaced
+   * this usually be called by helper function path() and by controller
+   * @param string $path_name | eg: 'transaction_edit'
+   * @param array  $params 
+   */
+  public function get_web_path($path_name, array $params = array()) {
+    if (empty($this->web_paths[$path_name])) {
+      die("No such path_name in web_paths: ". $path_name);
+    }
+    return $this->web_paths[$path_name]($params);
   }
 
   /*

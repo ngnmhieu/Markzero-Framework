@@ -38,7 +38,7 @@ class TransactionController extends AppController {
       $this->redirect(["action" => "index"]);
     } else {
       $this->flash('error', implode("<br />",$tran->errors));
-      $this->redirect(['action' => 'edit']);
+      $this->redirect(['action' => 'edit'], [$id]);
     }
   }
 }

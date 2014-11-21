@@ -75,15 +75,19 @@ class AppController {
     return $controller;
   } 
 
-  // TODO: should be move to helper functions?
-  protected function redirect($to = array()) {
+  /**
+   * redirect to a specific controller action with (optional) parameters
+   */
+  protected function redirect(array $to = array(), array $params = array()) {
     if (!isset($to['controller']) && !isset($to['action'])) {
       die("No controller specified. Don't know where to redirect.");
     }
 
     $controller = isset($to['controller']) ? strtolower($to['controller']) : $this->current_controller(); 
     $action = isset($to['action']) ? strtolower($to['action']) : "index";
-    $location = "/$controller/$action";
+    $router = Router::getInstance();
+    $path_name = "{$controller}_{$action}";
+    $location = $router->get_web_path($path_name, $params);
     header('Location: '.$location);  
   }
 

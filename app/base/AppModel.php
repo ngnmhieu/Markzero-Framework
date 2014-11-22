@@ -111,7 +111,7 @@ class AppModel {
   function __set($attr, $value) {
     $setter = 'set'.ucfirst($attr); // setter name
     if (method_exists($this, $setter)) {
-      call_user_func_array([$this, $setter], func_get_args());
+      call_user_func_array(array($this, $setter), func_get_args());
       return;
     } else if (property_exists(new static, $attr) 
                && ((property_exists(get_called_class(), 'attr_writer') 

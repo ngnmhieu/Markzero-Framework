@@ -1,21 +1,32 @@
-<div style="padding: 10px: border: 1px solid red">
+<a href="<?=path('transaction_index')?>">Return to Listing</a>
+<br />
+<br />
+
+<?php if (flash_exist('error')): ?>
+<div class="error">
   <?=flash('error')?>
 </div>
+<?php endif; ?>
+
 <form action="/transaction/" method="post">
   <label for="amount">Amount: </label>
-  <input type="text" name="amount" value="" />
+  <div class="input-group">
+    <span class="input-group-addon">$</span>
+    <input type="text" name="amount" class="form-control">
+  </div>
   <br />
   <label for="notice">Notice: </label>
-  <textarea name="notice" rows="3" cols="40"></textarea>
-  <!-- <br /> -->
-  <!-- <label for="time">Time: </label> -->
+  <textarea class="form-control" placeholder="Notice ..." name="notice" rows="3" cols="40"></textarea>
   <br />
   <label for="category_id">Category: </label>
-  <select id="" name="category_id">
+  <select class="form-control" name="category_id">
   <?php foreach($categories as $c): ?>
     <option value="<?=$c->id?>"><?=$c->name?></option>
   <?php endforeach; ?>
   </select>  
   <br />
-  <input type="submit" name="submit" value="Add Transaction" />
+  <label for="time">Time </label>
+  <input type="text" class="form-control" name="time" id="datepicker" value="<?=date('d/m/Y')?>" />
+  <br />
+  <input type="submit" class="btn btn-primary" name="submit" value="Add Transaction" />
 </form>

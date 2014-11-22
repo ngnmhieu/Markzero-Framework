@@ -1,0 +1,27 @@
+#pageWrapper {
+  width: 360px;
+  margin: auto;
+  margin-top: 20px;
+}
+
+.error {
+  margin: 10px 0;
+  color: red;
+}
+
+.float-right {
+  float: right;
+}
+
+
+#transaction-list {
+  cursor: pointer;
+}
+.moreinfo {
+  font-size: 0.8em;
+  display: none;
+}
+
+.moreinfo .content {
+  padding: 10px;
+}

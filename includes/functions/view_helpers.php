@@ -8,6 +8,23 @@ function flash($key) {
   return $flasher->get($key);
 }
 
+/**
+ * check if flash message exist
+ * @param string $key 
+ */
+function flash_exist($key) {
+  $flasher = \Session\Flash::getInstance();
+  return !empty($flasher->get($key));
+}
+
+/**
+ * selected attribute in tag-option for select list html
+ * @return string | "selected" if $a $b are equal
+ */
+function selected($a, $b) {
+  return $a == $b ? "selected" : "";
+}
+
 // should be flash for array
 
 /**

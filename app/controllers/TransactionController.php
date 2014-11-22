@@ -12,8 +12,9 @@ class TransactionController extends AppController {
   }
 
   function edit($id) {
-    $tran = Transaction::find($id);
-    $this->render(["transaction" => $tran]);
+    $data['transaction'] = Transaction::find($id);
+    $data['categories'] = Category::find_all();
+    $this->render($data);
   }
 
   function create() {

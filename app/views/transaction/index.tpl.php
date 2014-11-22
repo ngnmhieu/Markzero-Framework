@@ -1,22 +1,24 @@
-<table border=1>
-  <th>Time</th>
-  <th>Amount</th>
-  <th>Notice</th>
-  <th>Category</th>
-  <th>Action</th>
+<table id="transaction-list" class="table table-hover">
 <?php foreach($transactions as $t): ?>
-  <tr>
-    <td><?=$t->time->format('d-m-Y h:m')?></td>
-    <td><?=$t->amount?></td>
-    <td><?=$t->notice?></td>
+  <tr class="transaction">
     <td><?=$t->category->name?></td>
-    <td>
-      <a href="/transaction/<?=$t->id?>/edit">Edit</a>
-      |
-      <a href="/transaction/<?=$t->id?>/delete">Delete</a>
+    <td align="right">$ <?=$t->amount?></td>
+    <td align="right">
+      <a href="<?=path('transaction_edit',[$t->id])?>"><span class="glyphicon glyphicon-pencil"></span></a>
+      <a href="<?=path('transaction_delete',[$t->id])?>"><span class="glyphicon glyphicon-trash"></span></a>
     </td>
-  </tr>   
+  </tr>
+  <tr class="moreinfo active">
+    <td colspan=3>
+      <div class="content">
+            <?=$t->notice?>
+            <span class="float-right"><?=$t->time->format('d M Y')?></span>    
+      </div>
+    </td>
+  </tr>
 <?php endforeach; ?>
 </table>
 
-<a href="/transaction/add">[ New Transaction ]</a>
+  <a href="<?=path('transaction_add')?>">
+    <button class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> New Transaction</button>
+  </a>

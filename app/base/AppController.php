@@ -59,7 +59,7 @@ class AppController {
     $controller = $this->current_controller();
 
     // set default layout if not provided
-    if (is_string($layout) && $layout != "") {
+    if (empty($layout)) {
       $layout = $this->default_layout;
     }
 

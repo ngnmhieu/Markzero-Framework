@@ -8,10 +8,10 @@ class Router {
   /*
    * $routes have the following form:
    * array(
-   *  ['GET' => array([:controller => 'user', :action => 'index'], [...])]
-   *  ['POST' => array([:controller => 'user', :action => 'insert'], [...])]
-   *  ['PUT' => array([:controller => 'user', :action => 'update'], [...])]
-   *  ['DELETE' => array([:controller => 'user', :action => 'delete'], [...])]
+   *  ['GET' => array(array(:controller => 'user', :action => 'index'), [...])]
+   *  ['POST' => array(array(:controller => 'user', :action => 'insert'), [...])]
+   *  ['PUT' => array(array(:controller => 'user', :action => 'update'), [...])]
+   *  ['DELETE' => array(array(:controller => 'user', :action => 'delete'), [...])]
    * );
    * add new routes to $routes with map() method. (config/routes.php)
    */
@@ -85,7 +85,7 @@ class Router {
 
   /*
    * actually call the appropriate method in appropriate controller
-   * @param array $destination [':controller' => "controller", ':action' => "action"]
+   * @param array $destination array(':controller' => "controller", ':action' => "action"]
    * @param array $args Arguments that are passed to controller method
    */
   private function route(array $destination, array $args = array()) {
@@ -121,7 +121,7 @@ class Router {
     // call action on controller
     if (is_callable(array($controller_obj, $action))) {
       // call method `$action` on object $controller` with arguments `$args`
-      call_user_func_array([$controller_obj, $action], $args);
+      call_user_func_array(array($controller_obj, $action), $args);
     } else {
       // TODO: display error;
     }

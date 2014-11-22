@@ -117,7 +117,7 @@
 			<div class="section group">
         <?php foreach($mobiles as $m): ?>
           <div class="grid_1_of_4 images_1_of_4">
-          <a href="preview.html"><img height="200" src="<?=$m->picture?>" alt="" /></a>					
+          <a href="#"><img height="200" src="<?=$m->picture?>" alt="" /></a>					
              <h2><?=$m->name?></h2>
             <div class="price-details">
                  <div class="price-number">

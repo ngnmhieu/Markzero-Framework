@@ -13,7 +13,7 @@ class AppModel {
   /**
    * contains validation errors when creating or updating enitties
    */
-  public $errors;
+  public $errors = array();
 
   /**
    * this function will be called right before an entity is persisted

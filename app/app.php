@@ -36,8 +36,8 @@ class App {
    * end of a request, some clean up have to be done 
    * remove flash messages
    */
-  // static function cleanup() {
-  // }
+   // static function cleanup() {
+   // }
 
   /*
    * initializes the paths in the application
@@ -120,7 +120,7 @@ class App {
   }
 
   /* 
-   * load application specific static data 
+   * load application-specific static data 
    * data is in json formats
    */
   private static function load_static_data() {

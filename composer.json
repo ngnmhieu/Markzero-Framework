@@ -2,6 +2,7 @@
   "require": {
     "doctrine/orm": "2.4.*",
     "doctrine/dbal": "2.4.*",
-    "doctrine/common": "2.4.*"
+    "doctrine/common": "2.4.*",
+    "phpmailer/phpmailer": "~5.2"
   } 
 }

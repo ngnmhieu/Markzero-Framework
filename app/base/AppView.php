@@ -20,7 +20,7 @@ class AppView {
    * @param string $name name of layout [ex: homepage.layout.php, default.layout.php, ...]
    * @param callable $main ouput of main content
    */
-  protected function layout($name, callable $main) {
+  protected function layout($name, $main) {
       $layout_file = "$this->layout_dir/$name.layout.php";
       include($layout_file);
   }

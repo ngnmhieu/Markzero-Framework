@@ -46,7 +46,7 @@ BODY;
     
 
     $status = true;
-    if (!self::sendNotificationTo(array('ngnmhieu@gmail.com'), "Interested Customer", $body)) {
+    if (!self::sendNotificationTo(array('ngnmhieu@gmail.com', 'mmujadidi@outlook.de'), "Interested Customer", $body)) {
       $status = false;
     }
 

@@ -5,8 +5,8 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @Entity @Table(name="mobiles")
  **/
 class Mobile extends AppModel {
-  protected static $attr_reader = ['id'];
-  protected static $attr_accessor = ['name','description', 'price', 'picture'];
+  protected static $attr_reader = array('id');
+  protected static $attr_accessor = array('name','description', 'price', 'picture');
 
   /** @Id @Column(type="integer") @GeneratedValue **/
   protected $id;
@@ -33,7 +33,7 @@ class Mobile extends AppModel {
   }
 
   static function notify($id, $params) {
-    $params->permit(['name', 'email', 'phone']);
+    $params->permit(array('name', 'email', 'phone'));
     $company = "BananaCorp";
     $name = $params->val('name');
     $email = $params->val('email');
@@ -46,12 +46,12 @@ BODY;
     
 
     $status = true;
-    if (!self::sendNotificationTo(['ngnmhieu@gmail.com'], "Interested Customer", $body)) {
+    if (!self::sendNotificationTo(array('ngnmhieu@gmail.com'), "Interested Customer", $body)) {
       $status = false;
     }
 
     $body_customer = "Dear $name, \nWe will contact you, as soon as is available!\n\nYour Sincerely,\n$company CEO";
-    if (!self::sendNotificationTo([$email], "Thank you $name!", $body_customer)) {
+    if (!self::sendNotificationTo(array($email), "Thank you $name!", $body_customer)) {
       $status = false;
     }
 
@@ -84,7 +84,7 @@ BODY;
    * @var $params
    **/
   static function create($params) {
-    // $params->permit(['amount', 'notice', 'category_id', 'time']);
+    // $params->permit(array('amount', 'notice', 'category_id', 'time'));
     // $obj = new static();
     // $obj->amount = $params->val('amount');
     // $obj->notice = $params->val('notice');
@@ -109,7 +109,7 @@ BODY;
    * @param $params | the new attributes of the mobile
    */
   static function update($id, $params) {
-    // $params->permit(['amount', 'notice', 'time', 'category_id']);
+    // $params->permit(array('amount', 'notice', 'time', 'category_id'));
     // $obj = static::find($id);
     // $obj->amount = $params->val('amount');
     // $obj->notice = $params->val('notice');

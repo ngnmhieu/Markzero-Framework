@@ -4,8 +4,8 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @Entity @Table(name="categories") 
  **/
 class Category extends AppModel {
-  protected static $attr_reader = ['id'];
-  protected static $attr_accessor = ['name', 'description'];
+  protected static $attr_reader = array('id');
+  protected static $attr_accessor = array('name', 'description');
 
   /** @Id @Column(type="integer") @GeneratedValue **/
   protected $id;
@@ -20,7 +20,7 @@ class Category extends AppModel {
   }
 
   static function update($id, $params) {
-    $params->permit(['name', 'description']);
+    $params->permit(array('name', 'description'));
     $obj = static::find($id);
     $obj->name = $params->val('name');
     $obj->description = $params->val('description');
@@ -39,7 +39,7 @@ class Category extends AppModel {
    * @var $params
    **/
   static function create($params) {
-    $params->permit(['name', 'description']);
+    $params->permit(array('name', 'description'));
     $obj = new static();
     $obj->name = $params->val('name');
     $obj->description = $params->val('description');

@@ -13,7 +13,7 @@ class CategoryController extends AppController {
   function update($id) {
     $cat = Category::update($id, $this->request()->post());
     if (empty($cat->errors)) {
-      $this->redirect(["action" => "index"]);
+      $this->redirect(array("action" => "index"));
     } else {
       print_r($cat->errors);
     }
@@ -21,14 +21,14 @@ class CategoryController extends AppController {
 
   function delete($id) {
     if (Category::delete($id)) {
-      $this->redirect(["action" => "index"]);
+      $this->redirect(array("action" => "index"));
     }
   }
 
   function create() {
     $cat = Category::create($this->request()->post());
     if(empty($cat->errors)) {
-      $this->redirect(["action" => "index"]);
+      $this->redirect(array("action" => "index"));
     } else {
       print_r($cat->errors);
     }

@@ -17,9 +17,9 @@ class MobileController extends AppController {
       $status = 'error';
     }
 
-    echo json_encode([
+    echo json_encode(array(
       'status' => $status
-    ]);
+    ));
   }
 
   function add() {

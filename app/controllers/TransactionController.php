@@ -20,26 +20,26 @@ class TransactionController extends AppController {
   function create() {
     $tran = Transaction::create($this->request()->post());
     if(empty($tran->errors)) {
-      $this->redirect(["action" => "index"]);
+      $this->redirect(array("action" => "index"));
     } else {
       $this->flash('error', implode("<br />",$tran->errors));
-      $this->redirect(['action' => 'add']);
+      $this->redirect(array('action' => 'add'));
     }
   }
 
   function delete($id) {
     if (Transaction::delete($id)) {
-      $this->redirect(["action" => "index"]);
+      $this->redirect(array("action" => "index"));
     }
   }
 
   function update($id) {
     $tran = Transaction::update($id, $this->request()->post());
     if (empty($tran->errors)) {
-      $this->redirect(["action" => "index"]);
+      $this->redirect(array("action" => "index"));
     } else {
       $this->flash('error', implode("<br />",$tran->errors));
-      $this->redirect(['action' => 'edit'], [$id]);
+      $this->redirect(array('action' => 'edit'), array($id));
     }
   }
 }

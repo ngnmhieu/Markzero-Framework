@@ -4,8 +4,8 @@
     <td><?=$t->category->name?></td>
     <td align="right">$ <?=$t->amount?></td>
     <td align="right">
-      <a href="<?=path('transaction_edit',[$t->id])?>"><span class="glyphicon glyphicon-pencil"></span></a>
-      <a href="<?=path('transaction_delete',[$t->id])?>"><span class="glyphicon glyphicon-trash"></span></a>
+      <a href="<?=path('transaction_edit',array($t->id))?>"><span class="glyphicon glyphicon-pencil"></span></a>
+      <a href="<?=path('transaction_delete',array($t->id))?>"><span class="glyphicon glyphicon-trash"></span></a>
     </td>
   </tr>
   <tr class="moreinfo active">

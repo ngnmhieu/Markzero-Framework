@@ -4,7 +4,7 @@ class UserController extends AppController {
   }
 
   function show($id) {
-    $this->render(['id' => $id]); 
+    $this->render(array('id' => $id)); 
   }
 
   function login() {

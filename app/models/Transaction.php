@@ -5,8 +5,8 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @Entity @Table(name="transactions")
  **/
 class Transaction extends AppModel {
-  protected static $attr_reader = ['id'];
-  protected static $attr_accessor = ['amount','notice', 'time', 'category'];
+  protected static $attr_reader = array('id');
+  protected static $attr_accessor = array('amount','notice', 'time', 'category');
 
   /** @Id @Column(type="integer") @GeneratedValue **/
   protected $id;
@@ -47,7 +47,7 @@ class Transaction extends AppModel {
    * @var $params
    **/
   static function create($params) {
-    $params->permit(['amount', 'notice', 'category_id', 'time']);
+    $params->permit(array('amount', 'notice', 'category_id', 'time'));
     $obj = new static();
     $obj->amount = $params->val('amount');
     $obj->notice = $params->val('notice');
@@ -72,7 +72,7 @@ class Transaction extends AppModel {
    * @param $params | the new attributes of the transaction
    */
   static function update($id, $params) {
-    $params->permit(['amount', 'notice', 'time', 'category_id']);
+    $params->permit(array('amount', 'notice', 'time', 'category_id'));
     $obj = static::find($id);
     $obj->amount = $params->val('amount');
     $obj->notice = $params->val('notice');

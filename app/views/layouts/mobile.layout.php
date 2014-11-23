@@ -14,7 +14,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 <link href="css/mobile/slider.css" rel="stylesheet" type="text/css" media="all"/>
 <link href="/css/jquery-ui.css" rel="stylesheet">
 <script type="text/javascript" src="js/mobile/jquery-1.7.2.min.js"></script> 
-<script type="text/javascript" src="js/jquery-ui.js"></script> 
+<script type="text/javascript" src="js/jquery-ui.min.js"></script> 
 <script type="text/javascript" src="js/mobile/script.js"></script> 
 </head>
 <body>

@@ -196,10 +196,10 @@ class Router {
 
   /* 
    * draw() method serves as DSL (Domain Specific Language) 
-   * @param callable $func "draws" routes for application, 
-   *        $func takes a Router object
+   * @param callable $func | "draws" routes for application, 
+   *                       |  $func takes a Router object
    */  
-  public function draw(callable $func) {
+  public function draw($func) {
     $func($this);
   }
 }

@@ -14,7 +14,7 @@ function flash($key) {
  */
 function flash_exist($key) {
   $flasher = \Session\Flash::getInstance();
-  return !empty($flasher->get($key));
+  return !!$flasher->get($key);
 }
 
 /**
@@ -37,7 +37,7 @@ function path($path_name, array $params = array()) {
 }
 
 function redirect(array $to = array(), array $params = array()) {
-  if (empty($to['controller'])) {
+  if (!!$to['controller']) {
     die("Controller must be provided!");
   }
 

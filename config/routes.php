@@ -6,7 +6,7 @@
  */
 
 App::$router->draw(function($r) {
-  $r->root('mobile#index');
+  $r->root('user#index');
   $r->map('get', '/mobile/', 'mobile#index');
   $r->map('post', '/mobile/notify/([0-9]+)', 'mobile#notify');
 

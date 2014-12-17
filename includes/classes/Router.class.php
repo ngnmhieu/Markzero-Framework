@@ -25,20 +25,7 @@ class Router {
    */
   private $web_paths = array();
 
-  /**
-   * Return the Singleton instance Router of the class
-   */
-  public static function getInstance() {
-    static $instance = null;
-
-    if ($instance === null) {
-      $instance = new static();
-    }
-
-    return $instance;
-  }
-
-  protected function __construct() {
+  function __construct() {
     $this->routes = array(
       'GET' => array(),
       'PUT' => array(),
@@ -91,17 +78,8 @@ class Router {
   private function route(array $destination, array $args = array()) {
     // extract controller name and its filename
     $dest_ctrl = $destination[':controller'];
-    $dir_separator_pos = strpos($dest_ctrl, '/');
-    $subdir = "";
-    if ($dir_separator_pos !== false) { // check if the controller lies in subdirectory
-      $subdir = substr($dest_ctrl, 0, $dir_separator_pos + 1);
-      $controller = substr($dest_ctrl, $dir_separator_pos + 1);
-      $controller = ucfirst(strtolower($controller)).'Controller';
-      $controller_filename = $subdir.$controller.'.php';
-    } else {
-      $controller = ucfirst(strtolower($dest_ctrl)).'Controller';
-      $controller_filename = $controller.'.php';
-    }
+    $controller = ucfirst(strtolower($dest_ctrl)).'Controller';
+    $controller_filename = $controller.'.php';
 
     $action = strtolower($destination[':action']);
 
@@ -116,7 +94,6 @@ class Router {
 
     // setup controller object
     $controller_obj = new $controller();
-    $controller_obj->set_view_subdir($subdir);
 
     // call action on controller
     if (is_callable(array($controller_obj, $action))) {

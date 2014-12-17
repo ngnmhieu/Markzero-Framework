@@ -4,11 +4,12 @@
  */
 class App {
   static $APP_PATH;
-  static $PUBLIC;
+  static $PUBLIC_DIR;
   static $CONTROLLER_DIR;
   static $MODEL_DIR;
   static $VIEW_DIR;
 
+  static $view;
   static $config; // application configurations
   static $session; // manage user sessions
   static $router; // handling
@@ -36,8 +37,10 @@ class App {
    * end of a request, some clean up have to be done 
    * remove flash messages
    */
-   // static function cleanup() {
-   // }
+   /* 
+     static function cleanup() {
+     }
+   */
 
   /*
    * initializes the paths in the application
@@ -48,7 +51,7 @@ class App {
     self::$CONTROLLER_DIR = self::$APP_PATH."app/controllers";
     self::$MODEL_DIR      = self::$APP_PATH."app/models";
     self::$VIEW_DIR       = self::$APP_PATH."app/views";
-    self::$PUBLIC         = self::$APP_PATH."public/";
+    self::$PUBLIC_DIR     = self::$APP_PATH."public/";
   }
 
   /**
@@ -56,15 +59,16 @@ class App {
    */
   private static function load_functions() {
     require_once(self::$APP_PATH."includes/functions/functions.php");
-    require_once(self::$APP_PATH."includes/functions/view_helpers.php");
+    require_once(self::$APP_PATH."includes/functions/helpers.php");
   }
   /*
    * loads important classes for the application
    * like Session, Router, Database,...
    */
   private static function init_classes() {
+    self::$view = new AppView(self::$VIEW_DIR);
     self::$session = new Session();
-    self::$router = Router::getInstance();
+    self::$router = new Router();
   }
 
   /*
@@ -96,6 +100,8 @@ class App {
     require_once(self::$APP_PATH. "vendor/autoload.php");
     // request class encapsulate all the information about the current request
     require_once(self::$APP_PATH. "includes/classes/Request.class.php");
+    // request class encapsulate all the information about the current request
+    require_once(self::$APP_PATH. "includes/classes/Response.class.php");
     // router finds and call the right controller and action for a specific uri
     require_once(self::$APP_PATH. "includes/classes/Router.class.php");
     // static data class keep all static data in one places

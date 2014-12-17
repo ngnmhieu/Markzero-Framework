@@ -65,6 +65,11 @@ class Parameter {
    *         null if $key does not exist or not permitted
    */
   public function val($key) {
-    return isset($this->params[$key]) ? $this->params[$key] : null;
+    if (isset($this->params[$key])) {
+      $parameter = $this->params[$key];
+      return is_array($parameter) ? new Parameter($parameter) : $parameter;
+    }
+
+    return null;
   }
 }

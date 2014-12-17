@@ -2,18 +2,19 @@
 class CategoryController extends AppController {
   function index() {
     $data['categories'] = Category::find_all();
-    $this->render($data);
+    App::$view->render($data, $this->name().'/'.'index', 'default');
   }
 
   function edit($id) {
     $data['category'] = Category::find($id);
-    $this->render($data);
+
+    App::$view->render($data, $this->name().'/'.'edit', 'default');
   }
 
   function update($id) {
     $cat = Category::update($id, $this->request()->post());
     if (empty($cat->errors)) {
-      $this->redirect(array("action" => "index"));
+      $this->response()->redirect(array("controller" => $this->name(), "action" => "index"));
     } else {
       print_r($cat->errors);
     }
@@ -21,20 +22,20 @@ class CategoryController extends AppController {
 
   function delete($id) {
     if (Category::delete($id)) {
-      $this->redirect(array("action" => "index"));
+      $this->response()->redirect(array("controller" => $this->name(), "action" => "index"));
     }
   }
 
   function create() {
     $cat = Category::create($this->request()->post());
     if(empty($cat->errors)) {
-      $this->redirect(array("action" => "index"));
+      $this->response()->redirect(array("controller" => $this->name(), "action" => "index"));
     } else {
       print_r($cat->errors);
     }
   }
 
   function add() {
-    $this->render();
+    App::$view->render(array(), $this->name().'/'.'add', 'default');
   }
 }

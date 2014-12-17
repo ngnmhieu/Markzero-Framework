@@ -2,6 +2,15 @@
 /**
  * flash the message with $key
  * @param string $key 
+ * @param string $value
+ */
+function set_flash($key, $value) {
+  $flasher = \Session\Flash::getInstance();
+  return $flasher->set($key, $value);
+}
+/**
+ * flash the message with $key
+ * @param string $key 
  */
 function flash($key) {
   $flasher = \Session\Flash::getInstance();
@@ -32,21 +41,5 @@ function selected($a, $b) {
  * @param array $params
  */
 function path($path_name, array $params = array()) {
-  $router = Router::getInstance(); 
-  return $router->get_web_path($path_name, $params);
+  return App::$router->get_web_path($path_name, $params);
 }
-
-function redirect(array $to = array(), array $params = array()) {
-  if (!!$to['controller']) {
-    die("Controller must be provided!");
-  }
-
-  $controller = strtolower($to['controller']);
-  $action = isset($to['action']) ? strtolower($to['action']) : "index";
-  $router = Router::getInstance();
-  $path_name = "{$controller}_{$action}";
-  $location = $router->get_web_path($path_name, $params);
-  header('Location: '.$location);  
-}
-
-

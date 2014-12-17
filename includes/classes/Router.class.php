@@ -43,7 +43,7 @@ class Router {
     $destination = array();
     $args = array(); // will contain URI arguments
     foreach ($mappings as $pattern => $dest) {
-      $args = $this->match_path($pattern, $path);
+      $args = $this->matchPath($pattern, $path);
       if($args !== false) {
         $destination = $dest;
         break;
@@ -63,7 +63,7 @@ class Router {
    * @return array containing information of controller and action if they match
    *         false if they don't
    */
-  private function match_path($pattern, $path) {
+  private function matchPath($pattern, $path) {
     // TODO: extract arguments in a better way
     $matches = array();
     $result = preg_match($pattern, $path, $matches);
@@ -148,7 +148,7 @@ class Router {
    * @param string $path_name | eg: 'transaction_edit'
    * @param array  $params 
    */
-  public function get_web_path($path_name, array $params = array()) {
+  public function getWebPath($path_name, array $params = array()) {
     if (empty($this->web_paths[$path_name])) {
       die("No such path_name in web_paths: ". $path_name);
     }

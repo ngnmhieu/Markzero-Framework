@@ -24,13 +24,13 @@ class App {
    * - and dispatch the request from client
    */
   static function bootstrap() {
-    self::init_path();
-    self::load_classes();
-    self::load_config();
-    self::init_classes();
-    self::load_functions();
-    self::load_routes();
-    self::load_static_data();
+    self::initPath();
+    self::loadClasses();
+    self::loadConfig();
+    self::initClasses();
+    self::loadFunctions();
+    self::loadRoutes();
+    self::loadStaticData();
   }
 
   /**
@@ -45,7 +45,7 @@ class App {
   /*
    * initializes the paths in the application
    */
-  private static function init_path() {
+  private static function initPath() {
     $parent_dir = dirname(dirname(__FILE__));
     self::$APP_PATH       = $parent_dir.'/';
     self::$CONTROLLER_DIR = self::$APP_PATH."app/controllers";
@@ -57,7 +57,7 @@ class App {
   /**
    * load system functions, helper functions ...
    */
-  private static function load_functions() {
+  private static function loadFunctions() {
     require_once(self::$APP_PATH."includes/functions/functions.php");
     require_once(self::$APP_PATH."includes/functions/helpers.php");
   }
@@ -65,7 +65,7 @@ class App {
    * loads important classes for the application
    * like Session, Router, Database,...
    */
-  private static function init_classes() {
+  private static function initClasses() {
     self::$view = new AppView(self::$VIEW_DIR);
     self::$session = new Session();
     self::$router = new Router();
@@ -76,7 +76,7 @@ class App {
    * configurations are located in config/ directory.
    * important configurations are among others: application wide config, database,...
    */
-  private static function load_config() {
+  private static function loadConfig() {
     // global application configurations
     self::$config = new StaticData(self::$APP_PATH."config/");
     // base configurations
@@ -88,14 +88,14 @@ class App {
   /*
    * routes.php defines routes for the Router
    */
-  private static function load_routes() {
+  private static function loadRoutes() {
     require_once(self::$APP_PATH. "config/routes.php");
   }
 
   /*
    * loads files that contain important classes
    */
-  private static function load_classes() { 
+  private static function loadClasses() { 
     // autoload third-party libraries
     require_once(self::$APP_PATH. "vendor/autoload.php");
     // request class encapsulate all the information about the current request
@@ -129,7 +129,7 @@ class App {
    * load application-specific static data 
    * data is in json formats
    */
-  private static function load_static_data() {
+  private static function loadStaticData() {
     $data_dir = self::$APP_PATH."data";
     self::$data = new StaticData($data_dir);
   }   

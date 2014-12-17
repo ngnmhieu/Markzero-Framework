@@ -41,5 +41,5 @@ function selected($a, $b) {
  * @param array $params
  */
 function path($path_name, array $params = array()) {
-  return App::$router->get_web_path($path_name, $params);
+  return App::$router->getWebPath($path_name, $params);
 }

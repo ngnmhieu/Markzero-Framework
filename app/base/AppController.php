@@ -1,6 +1,5 @@
 <?php
 class AppController {
-  private $default_layout;
   private $request;
   private $response;
 
@@ -14,12 +13,12 @@ class AppController {
   }
 
   /**
-   * @return Request
+   * @return Request | Application Request object
    **/
   public function request() { return $this->request; }
 
   /**
-   * @return Response
+   * @return Response | Application Request object
    **/
   public function response() { return $this->response; }
 
@@ -54,17 +53,6 @@ class AppController {
   //   }
 
   //   $this->view->render($data, $controller.'/'.$template, $layout);
-  // }
-
-
-  /*
-   * default layout for current controller
-   * @param string $layout name of layout (without file extension)
-   */
-  // protected function set_default_layout($layout) {
-  //   if (is_string($layout) && $layout != "") {
-  //     $this->default_layout = $layout;
-  //   }
   // }
 
 }

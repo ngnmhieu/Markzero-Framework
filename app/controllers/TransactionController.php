@@ -21,7 +21,10 @@ class TransactionController extends AppController {
   }
 
   function create() {
-    $tran = Transaction::create($this->request()->post());
+    $tran = Transaction::create($this->request()->postParams(array(
+      'amount', 'notice', 'time', 'category_id'
+    )));
+
     if(empty($tran->errors)) {
       $this->response()->redirect(array("controller" => $this->name(), "action" => "index"));
     } else {
@@ -37,7 +40,7 @@ class TransactionController extends AppController {
   }
 
   function update($id) {
-    $tran = Transaction::update($id, $this->request()->post());
+    $tran = Transaction::update($id, $this->request()->postParams());
     if (empty($tran->errors)) {
       $this->response()->redirect(array("controller" => $this->name(), "action" => "index"));
     } else {

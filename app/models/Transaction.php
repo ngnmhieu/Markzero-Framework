@@ -47,12 +47,11 @@ class Transaction extends AppModel {
    * @var $params
    **/
   static function create($params) {
-    $params->permit(array('amount', 'notice', 'category_id', 'time'));
     $obj = new static();
-    $obj->amount = $params->val('amount');
-    $obj->notice = $params->val('notice');
-    $obj->time   = \DateTime::createFromFormat("d/m/Y", $params->val('time'));
-    $category_id = $params->val('category_id');
+    $obj->amount = $params['amount'];
+    $obj->notice = $params['notice'];
+    $obj->time   = \DateTime::createFromFormat("d/m/Y", $params['time']);
+    $category_id = $params['category_id'];
 
     if ($category_id != null)
       $obj->category = Category::find($category_id);
@@ -72,12 +71,11 @@ class Transaction extends AppModel {
    * @param $params | the new attributes of the transaction
    */
   static function update($id, $params) {
-    $params->permit(array('amount', 'notice', 'time', 'category_id'));
     $obj = static::find($id);
-    $obj->amount = $params->val('amount');
-    $obj->notice = $params->val('notice');
-    $obj->time   = \DateTime::createFromFormat("d/m/Y", $params->val('time'));
-    $category_id = $params->val('category_id');
+    $obj->amount = $params['amount'];
+    $obj->notice = $params['notice'];
+    $obj->time   = \DateTime::createFromFormat("d/m/Y", $params['time']);
+    $category_id = $params['category_id'];
 
     if ($category_id != null)
       $obj->category = Category::find($category_id);
@@ -91,9 +89,6 @@ class Transaction extends AppModel {
     return $obj;
   }
 
-  /**
-   * delete entity
-   */
   static function delete($id) {
     $tran = static::find($id);
     App::$entity_manager->remove($tran); 

@@ -48,6 +48,16 @@ class TransactionController extends AppController {
       }
     });
 
+    $this->response()->respond_to('json', function() use($tran) {
+       if (empty($tran->errors)) {
+         $this->response()->setStatusCode(Response::HTTP_CREATED);
+       } else {
+         $this->response()->setStatusCode(Response::HTTP_BAD_REQUEST, 'Bad Request (Validation Error)');
+         $data = array('validation_errors' => $tran->errors);
+         App::$view->render('json', $data, 'errors/validation');
+       }
+    });
+
     $this->response()->respond();
   }
 

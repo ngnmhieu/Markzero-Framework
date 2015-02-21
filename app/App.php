@@ -103,9 +103,11 @@ class App {
     // autoload third-party libraries
     require_once(self::$APP_PATH. "vendor/autoload.php");
     // request class encapsulate all the information about the current request
-    require_once(self::$APP_PATH. "includes/classes/Request.class.php");
+    require_once(self::$APP_PATH. "includes/classes/http/Request.class.php");
     // request class encapsulate all the information about the current request
-    require_once(self::$APP_PATH. "includes/classes/Response.class.php");
+    require_once(self::$APP_PATH. "includes/classes/http/HasHttpStatusCode.interface.php");
+    // request class encapsulate all the information about the current request
+    require_once(self::$APP_PATH. "includes/classes/http/Response.class.php");
     // router finds and call the right controller and action for a specific uri
     require_once(self::$APP_PATH. "includes/classes/Router.class.php");
     // static data class keep all static data in one places

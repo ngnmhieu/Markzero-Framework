@@ -4,7 +4,7 @@ use Symfony\Component\HttpFoundation;
 /**
  * Encapsulate all informations about a response
  **/
-class Response {
+class Response implements HasHttpStatusCode {
   private $http_response; // HttpFoundation\Response object
   private $request;       // Request object
   private $responders;    // array contain functions corresponding to a response format (html, json ...)
@@ -15,6 +15,11 @@ class Response {
     $this->responders    = array();
   }
 
+  /**
+   * Setup a redirection
+   * @param array $to array('controller' => ..., 'action' => '..')
+   * @param array $params
+   */
   public function redirect(array $to = array(), array $params = array()) {
     if (!$to['controller']) {
       // _TODO: Raise exception
@@ -27,7 +32,7 @@ class Response {
     $path_name = "{$controller}_{$action}";
     $location = App::$router->getWebPath($path_name, $params);
 
-    $this->http_response->setStatusCode(HttpFoundation\Response::HTTP_FOUND);
+    $this->http_response->setStatusCode(Response::HTTP_FOUND);
     $this->http_response->headers->set('Location', $location);  
   }
 
@@ -61,7 +66,7 @@ class Response {
     $formats = array_filter($formats); // remove null values
 
     if (empty($this->responders)) { // No responder found
-      $http_response->setStatusCode(HttpFoundation\Response::HTTP_NOT_FOUND);
+      $http_response->setStatusCode(Response::HTTP_NOT_FOUND);
       $http_response->send();
       return;
     }
@@ -82,7 +87,7 @@ class Response {
       $http_response->send();
 
     } else { // Cannot find any corresponding responder
-      $http_response->setStatusCode(HttpFoundation\Response::HTTP_UNSUPPORTED_MEDIA_TYPE);
+      $http_response->setStatusCode(Response::HTTP_UNSUPPORTED_MEDIA_TYPE);
       $http_response->send();
       return;
     }

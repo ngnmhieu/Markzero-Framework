@@ -20,10 +20,9 @@ class Category extends AppModel {
   }
 
   static function update($id, $params) {
-    $params->permit(array('name', 'description'));
     $obj = static::find($id);
-    $obj->name        = $params['name'];
-    $obj->description = $params['description'];
+    $obj->name        = $params->get('name');
+    $obj->description = $params->get('description');
 
     try {
       App::$entity_manager->persist($obj);
@@ -39,10 +38,9 @@ class Category extends AppModel {
    * @var $params
    **/
   static function create($params) {
-    $params->permit(array('name', 'description'));
     $obj = new static();
-    $obj->name        = $params['name'];
-    $obj->description = $params['description'];
+    $obj->name        = $params->get('name');
+    $obj->description = $params->get('description');
 
     try {
       App::$entity_manager->persist($obj);

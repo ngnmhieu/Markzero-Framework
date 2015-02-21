@@ -25,13 +25,14 @@ class AppView {
 
   /*
    * Render the specified template
-   * @param array $data variable used in layout and template file
+   * @param string $format
+   * @param array  $data variable used in layout and template file
    * @param string $name name of template
    * @param string $layout name of layout
    */
-  public function render($data, $name, $layout="") {
+  public function render($format, $data, $name, $layout="") {
     $view_dir = $this->view_dir;
-    $template_file = "$view_dir/$name.tpl.php";
+    $template_file = "$view_dir/$name.$format.php";
 
     // include template file in anonymous function
     // so that the populated variables doesn't cause conflicts
@@ -41,9 +42,9 @@ class AppView {
     };
 
     if ($layout != "") { // specific layout
-      $this->renderLayout($layout, $template_call);
+      $this->renderLayout($format, $layout, $template_call);
     } else if ($this->layout != "") { // default layout
-      $this->renderLayout($this->layout, $template_call);
+      $this->renderLayout($format, $this->layout, $template_call);
     } else { // no layout
       $template_call();
     }
@@ -51,11 +52,12 @@ class AppView {
 
   /*
    * Load the layout, layout will execute `$main()` to output main template
+   * @param string $format
    * @param string $name name of layout [ex: homepage.layout.php, default.layout.php, ...]
    * @param callable $main ouput of main content
    */
-  protected function renderLayout($name, $main) {
-      $layout_file = "$this->layout_dir/$name.layout.php";
+  protected function renderLayout($format, $name, $main) {
+      $layout_file = "$this->layout_dir/$name.$format.php";
       include($layout_file);
   }
 }

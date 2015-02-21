@@ -12,7 +12,7 @@ class CategoryController extends AppController {
   }
 
   function update($id) {
-    $cat = Category::update($id, $this->request()->post());
+    $cat = Category::update($id, $this->request()->request);
     if (empty($cat->errors)) {
       $this->response()->redirect(array("controller" => $this->name(), "action" => "index"));
     } else {
@@ -27,7 +27,7 @@ class CategoryController extends AppController {
   }
 
   function create() {
-    $cat = Category::create($this->request()->post());
+    $cat = Category::create($this->request()->request);
     if(empty($cat->errors)) {
       $this->response()->redirect(array("controller" => $this->name(), "action" => "index"));
     } else {

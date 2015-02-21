@@ -3,7 +3,15 @@ class TransactionController extends AppController {
   function index() {
     $data['transactions'] = Transaction::find_all();
 
-    App::$view->render($data, $this->name().'/'.'index', 'default');
+    $this->respond_to('html', function() use ($data) {
+      App::$view->render('html', $data, $this->name().'/'.'index', 'default');
+    });
+
+    $this->respond_to('json', function() use ($data) {
+      App::$view->render('json', $data, $this->name().'/'.'index');
+    });
+
+    $this->send();
   }
 
   function add() {
@@ -21,9 +29,7 @@ class TransactionController extends AppController {
   }
 
   function create() {
-    $tran = Transaction::create($this->request()->postParams(array(
-      'amount', 'notice', 'time', 'category_id'
-    )));
+    $tran = Transaction::create($this->request()->request);
 
     if(empty($tran->errors)) {
       $this->response()->redirect(array("controller" => $this->name(), "action" => "index"));
@@ -40,7 +46,7 @@ class TransactionController extends AppController {
   }
 
   function update($id) {
-    $tran = Transaction::update($id, $this->request()->postParams());
+    $tran = Transaction::update($id, $this->request()->request);
     if (empty($tran->errors)) {
       $this->response()->redirect(array("controller" => $this->name(), "action" => "index"));
     } else {

@@ -3,8 +3,8 @@
  * Represent a HTTP Request
  **/
 class Request {
-  private $get;
-  private $post;
+  public $get;
+  public $post;
 
   function __construct() {
     $this->get  = $_GET;
@@ -26,5 +26,10 @@ class Request {
   public function postParams(array $permit = array()) {
     return $this->post;
   }
+
+  public function info() {
+    return $_REQUEST;
+  }
+
 
 }

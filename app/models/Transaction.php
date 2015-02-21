@@ -48,10 +48,10 @@ class Transaction extends AppModel {
    **/
   static function create($params) {
     $obj = new static();
-    $obj->amount = $params['amount'];
-    $obj->notice = $params['notice'];
-    $obj->time   = \DateTime::createFromFormat("d/m/Y", $params['time']);
-    $category_id = $params['category_id'];
+    $obj->amount = $params->get('amount');
+    $obj->notice = $params->get('notice');
+    $obj->time   = \DateTime::createFromFormat("d/m/Y", $params->get('time'));
+    $category_id = $params->get('category_id');
 
     if ($category_id != null)
       $obj->category = Category::find($category_id);
@@ -72,10 +72,10 @@ class Transaction extends AppModel {
    */
   static function update($id, $params) {
     $obj = static::find($id);
-    $obj->amount = $params['amount'];
-    $obj->notice = $params['notice'];
-    $obj->time   = \DateTime::createFromFormat("d/m/Y", $params['time']);
-    $category_id = $params['category_id'];
+    $obj->amount = $params->get('amount');
+    $obj->notice = $params->get('notice');
+    $obj->time   = \DateTime::createFromFormat("d/m/Y", $params->get('time'));
+    $category_id = $params->get('category_id');
 
     if ($category_id != null)
       $obj->category = Category::find($category_id);

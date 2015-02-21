@@ -8,9 +8,9 @@ class Router {
   /*
    * $routes have the following form:
    * array(
-   *  ['GET' => array(array(:controller => 'user', :action => 'index'), [...])]
-   *  ['POST' => array(array(:controller => 'user', :action => 'insert'), [...])]
-   *  ['PUT' => array(array(:controller => 'user', :action => 'update'), [...])]
+   *  ['GET'    => array(array(:controller => 'user', :action => 'index' ), [...])]
+   *  ['POST'   => array(array(:controller => 'user', :action => 'insert'), [...])]
+   *  ['PUT'    => array(array(:controller => 'user', :action => 'update'), [...])]
    *  ['DELETE' => array(array(:controller => 'user', :action => 'delete'), [...])]
    * );
    * add new routes to $routes with map() method. (config/routes.php)

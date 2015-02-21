@@ -10,10 +10,12 @@ class App {
   static $VIEW_DIR;
 
   static $view;
-  static $config; // application configurations
+  static $request;
+  static $response;
+  static $config;  // application configurations
   static $session; // manage user sessions
-  static $router; // handling
-  static $data; // store static data of the application
+  static $router;  // handling
+  static $data;    // store static data of the application
   static $entity_manager; // Doctrine EntityManager
 
   /*
@@ -66,9 +68,11 @@ class App {
    * like Session, Router, Database,...
    */
   private static function initClasses() {
-    self::$view = new AppView(self::$VIEW_DIR);
-    self::$session = new Session();
-    self::$router = new Router();
+    self::$view     = new AppView(self::$VIEW_DIR);
+    self::$session  = new Session();
+    self::$request  = new Request();
+    self::$response = new Response(self::$request);
+    self::$router   = new Router(self::$response);
   }
 
   /*

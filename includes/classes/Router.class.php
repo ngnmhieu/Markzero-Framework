@@ -1,4 +1,6 @@
 <?php
+use Symfony\Component\HttpFoundation;
+
 /**
  * Router class handles the job of determining
  * where to go with a given URI.
@@ -25,13 +27,20 @@ class Router {
    */
   private $web_paths = array();
 
-  function __construct() {
+  private $response; // Response object
+
+  /**
+   * Response $response
+   */
+  function __construct(Response $response) {
     $this->routes = array(
       'GET' => array(),
       'PUT' => array(),
       'POST' => array(),
       'DELETE' => array()
     );
+
+    $this->response = $response;
   }
 
   public function dispatch() {
@@ -50,9 +59,14 @@ class Router {
       }
     }
 
+    // No mapping found
     if (empty($destination)) {
-      // TODO: handles no mapping found
-      die("no mapping found"); 
+      $this->response->setStatusCode(
+        HttpFoundation\Response::HTTP_BAD_REQUEST,
+        'Bad Request (No Route Found)'
+      );
+      $this->response->send();
+      return;
     }
 
     $this->route($destination, $args);
@@ -64,14 +78,14 @@ class Router {
    *         false if they don't
    */
   private function matchPath($pattern, $path) {
-    // TODO: extract arguments in a better way
+    // _TODO: extract arguments in a better way
     $matches = array();
     $result = preg_match($pattern, $path, $matches);
     return $result ? array_slice($matches, 1) : false;
   }
 
   /*
-   * actually call the appropriate method in appropriate controller
+   * Actually call the appropriate method in appropriate controller
    * @param array $destination array(':controller' => "controller", ':action' => "action"]
    * @param array $args Arguments that are passed to controller method
    */
@@ -88,8 +102,12 @@ class Router {
     if (file_exists($controller_file)) {
       require_once($controller_file);
     } else {
-      // TODO: Error handling
-      die("Cannot find $controller in $controller_file");
+      $this->response->setStatusCode(
+        HttpFoundation\Response::HTTP_BAD_REQUEST,
+        "Bad Request (controller `$controller` not found)"
+      );
+      $this->response->send();
+      return;
     }
 
     // setup controller object
@@ -97,10 +115,13 @@ class Router {
 
     // call action on controller
     if (is_callable(array($controller_obj, $action))) {
-      // call method `$action` on object $controller` with arguments `$args`
       call_user_func_array(array($controller_obj, $action), $args);
     } else {
-      // TODO: display error;
+      $this->response->setStatusCode(
+        HttpFoundation\Response::HTTP_BAD_REQUEST,
+        "Bad Request (action `$action` not found)"
+      );
+      $this->response->send();
     }
   }
 
@@ -116,8 +137,7 @@ class Router {
       $controller = $matches[1];
       $action     = $matches[2];
     } else {
-      // TODO: illegal destination
-      die('illegal destination');
+      throw new InvalidArgumentException("Illegal destination: `$dest`");
     }
 
     $pattern = $route_string;
@@ -143,7 +163,7 @@ class Router {
   }
 
   /**
-   * return a web path with all the parameters replaced
+   * Return a web path with all the parameters replaced
    * this usually be called by helper function path() and by controller
    * @param string $path_name | eg: 'transaction_edit'
    * @param array  $params 
@@ -156,7 +176,7 @@ class Router {
   }
 
   /*
-   * helper method that maps root of webapp to $dest 
+   * Helper method that maps root of webapp to $dest 
    * @param string $destination in form of "controller#action"
    */
   public function root($dest) {
@@ -164,7 +184,7 @@ class Router {
     $this->map("POST", "/", $dest);
   }
   
-  /* TODO:
+  /* _TODO:
    * resources() method defines default RESTful routes
    * for the application
    */  

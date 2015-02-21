@@ -1,35 +1,29 @@
 <?php
+use Symfony\Component\HttpFoundation;
+
 /**
  * Represent a HTTP Request
  **/
 class Request {
-  public $get;
-  public $post;
+  private $http_request;
 
   function __construct() {
-    $this->get  = $_GET;
-    $this->post = $_POST;
+    $this->http_request = new HttpFoundation\Request(
+      $_GET, $_POST, array(), $_COOKIE, $_FILES, $_SERVER
+    );
   }
 
   /**
-   * @param $permit | whitelist of permitted keys
-   * @return array
-   **/
-  public function getParams(array $permit = array()) {
-    return $this->get;
+   * Delegate undefined methods to HttpFoundation\Request object
+   */
+  function __call($method, $args) {
+    return call_user_func_array(array($this->http_request, $method), $args);
   }
 
   /**
-   * @param $permit | whitelist of permitted keys
-   * @return array
-   **/
-  public function postParams(array $permit = array()) {
-    return $this->post;
+   * Delegate undefined attributes to HttpFoundation\Request object
+   */
+  function __get($attribute) {
+    return $this->http_request->$attribute;
   }
-
-  public function info() {
-    return $_REQUEST;
-  }
-
-
 }

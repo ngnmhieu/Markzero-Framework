@@ -1,14 +1,15 @@
-{
-  "transactions": [
-    <?php foreach ($transactions as $t): ?>
-      {
-        "id": <?=$t->id?>,
-        "category": {
-          "name": "<?=$t->category->name?>"
-        },
-        "notice": "<?=$t->notice?>"
-        "time": "<?=$t->time->format('d-m-Y')?>",
+
+[
+  <?php $count = count($transactions); ?>
+  <?php foreach ($transactions as $i => $t): ?>
+    {
+      "id": <?=$t->id?>,
+      "amount": "<?=$t->amount?>",
+      "category": {
+        "name": "<?=$t->category->name?>"
       },
-    <?php endforeach; ?>
-  ]
-}
+      "notice": "<?=$t->notice?>",
+      "time": "<?=$t->time->format('d-m-Y')?>"
+    } <?= ++$i == $count ? '' : ',' ?>
+  <?php endforeach; ?>
+]

@@ -28,8 +28,8 @@ class App {
   static function bootstrap() {
     self::initPath();
     self::loadClasses();
-    self::loadConfig();
     self::initClasses();
+    self::loadConfig();
     self::loadFunctions();
     self::loadRoutes();
     self::loadStaticData();
@@ -72,7 +72,7 @@ class App {
     self::$session  = new Session();
     self::$request  = new Request();
     self::$response = new Response(self::$request);
-    self::$router   = new Router(self::$response);
+    self::$router   = new Router(self::$request, self::$response);
   }
 
   /*

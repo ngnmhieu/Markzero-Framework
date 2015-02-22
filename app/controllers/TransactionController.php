@@ -10,8 +10,14 @@ class TransactionController extends AppController {
     $this->response()->respond_to('json', function() use ($data) {
       App::$view->render('json', $data, $this->name().'/'.'index');
     });
+  }
 
-    $this->response()->respond();
+  function show($id) {
+    $data['transaction'] = Transaction::find($id);
+
+    $this->response()->respond_to('html', function() use ($data) {
+      App::$view->render('json', $data, $this->name().'/'.'show');
+    });
   }
 
   function add() {
@@ -22,7 +28,6 @@ class TransactionController extends AppController {
       App::$view->render('html', $data, $this->name().'/'.'add', 'default');
     });
 
-    $this->response()->respond();
   }
 
   function edit($id) {
@@ -32,8 +37,6 @@ class TransactionController extends AppController {
     $this->response()->respond_to('html', function() use ($data) {
       App::$view->render('html', $data, $this->name().'/'.'edit', 'default');
     });
-
-    $this->response()->respond();
   }
 
   function create() {
@@ -57,8 +60,6 @@ class TransactionController extends AppController {
          App::$view->render('json', $data, 'errors/validation');
        }
     });
-
-    $this->response()->respond();
   }
 
   function delete($id) {
@@ -67,8 +68,6 @@ class TransactionController extends AppController {
         $this->response()->redirect(array("controller" => $this->name(), "action" => "index"));
       });
     }
-
-    $this->response()->respond();
   }
 
   function update($id) {
@@ -83,6 +82,14 @@ class TransactionController extends AppController {
       }
     });
 
-    $this->response()->respond();
+    $this->response()->respond_to('json', function() use($tran) {
+      if (empty($tran->errors)) {
+        $this->response()->setStatusCode(Response::HTTP_OK, 'Transaction Updated');
+      } else {
+        $this->response()->setStatusCode(Response::HTTP_BAD_REQUEST, 'Bad Request (Validation Error)');
+        $data = array('validation_errors' => $tran->errors);
+        App::$view->render('json', $data, 'errors/validation');
+      }
+    });
   }
 }

@@ -2,11 +2,15 @@
 class CategoryController extends AppController {
   function index() {
     $data['categories'] = Category::find_all();
+
     $this->response()->respond_to('html', function() use($data) {
       App::$view->render('html', $data, $this->name().'/'.'index', 'default');
     });
 
-    $this->response()->respond();
+    $this->response()->respond_to('json', function() use($data) {
+      App::$view->render('json', $data, $this->name().'/'.'index');
+    });
+
   }
 
   function edit($id) {
@@ -16,23 +20,19 @@ class CategoryController extends AppController {
       App::$view->render('html', $data, $this->name().'/'.'edit', 'default');
     });
 
-    $this->response()->respond();
   }
 
   function update($id) {
     $cat = Category::update($id, $this->request()->request);
 
-    if (empty($cat->errors)) {
-      $this->response()->respond_to('html', function() use($cat){
+    $this->response()->respond_to('html', function() use($cat) {
+      if (empty($cat->errors)) {
         $this->response()->redirect(array("controller" => $this->name(), "action" => "index"));
-      });
-    } else {
-      $this->response()->respond_to('html', function() use($cat){
+      } else {
         print_r($cat->errors);
-      });
-    }
+      }
+    });
 
-    $this->response()->respond();
   }
 
   function delete($id) {
@@ -42,7 +42,6 @@ class CategoryController extends AppController {
       });
     }
 
-    $this->response()->respond();
   }
 
   function create() {
@@ -58,7 +57,6 @@ class CategoryController extends AppController {
       });
     }
 
-    $this->response()->respond();
   }
 
   function add() {
@@ -66,6 +64,5 @@ class CategoryController extends AppController {
       App::$view->render('html', array(), $this->name().'/'.'add', 'default');
     });
 
-    $this->response()->respond();
   }
 }

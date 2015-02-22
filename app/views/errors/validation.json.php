@@ -1,1 +1,1 @@
-<?php print_r($validation_errors); ?>
+<?php echo json_encode($validation_errors); ?>

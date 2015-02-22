@@ -18,8 +18,8 @@
   <label for="notice">Notice: </label>
   <textarea class="form-control" placeholder="Notice ..." name="notice" rows="3" cols="40"></textarea>
   <br />
-  <label for="category_id">Category: </label>
-  <select class="form-control" name="category_id">
+  <label for="category[id]">Category: </label>
+  <select class="form-control" name="category[id]">
   <?php foreach($categories as $c): ?>
     <option value="<?=$c->id?>"><?=$c->name?></option>
   <?php endforeach; ?>

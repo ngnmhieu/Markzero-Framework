@@ -8,7 +8,7 @@
 <?php endif; ?>
 
 <?php $t = $transaction ;?>
-<form action="/transaction/<?=$t->id?>/update" method="post">
+<form action="/transaction/<?=$t->id?>" method="post">
   <label for="amount">Amount: </label>
   <div class="input-group">
     <span class="input-group-addon">$</span>
@@ -18,8 +18,8 @@
   <label for="notice">Notice: </label>
   <textarea class="form-control" placeholder="Notice ..." name="notice" rows="3" cols="40"><?=$t->notice?></textarea>
   <br />
-  <label for="category_id">Category: </label>
-  <select class="form-control" name="category_id">
+  <label for="category[id]">Category: </label>
+  <select class="form-control" name="category[id]">
   <?php foreach($categories as $c): ?>
     <option value="<?=$c->id?>" <?=selected($c->id, $t->category->id)?>><?=$c->name?></option>
   <?php endforeach; ?>

@@ -1,6 +1,4 @@
 <?php
-use Symfony\Component\HttpFoundation;
-
 /**
  * Router class handles the job of determining
  * where to go with a given URI.
@@ -28,11 +26,12 @@ class Router {
   private $web_paths = array();
 
   private $response; // Response object
+  private $request;  // Request object
 
   /**
    * Response $response
    */
-  function __construct(Response $response) {
+  function __construct(Request $request, Response $response) {
     $this->routes = array(
       'GET' => array(),
       'PUT' => array(),
@@ -40,19 +39,41 @@ class Router {
       'DELETE' => array()
     );
 
+    $this->request = $request;
     $this->response = $response;
   }
 
+  /**
+   * Call the right action of the right controller
+   */
   public function dispatch() {
-    $path = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : '/';
-    $http_method = $_SERVER['REQUEST_METHOD']; 
+    $request = $this->request;
+    $http_method = $request->getMethod();
+
+
+    // Detect Cross-Domain Request
+    if ($request->isCrossDomain()) {
+      if ($request->isCrossDomainAllowed()) {
+        $this->response->setAccessControlHeaders();
+        $this->response->setStatusCode(Response::HTTP_OK);
+      } else {
+        $this->response->setStatusCode(Response::HTTP_BAD_REQUEST,
+          'Bad Request (Cross-Domain Request not allowed)');
+      }
+
+      // Detect preflight request (for cross domain request)
+      if ($http_method === 'OPTIONS') {
+        $this->response->send();
+        return $this;
+      }
+    }
 
     // load mappings in configuration file, according to HTTP method
     $mappings = $this->routes[$http_method]; 
     $destination = array();
     $args = array(); // will contain URI arguments
     foreach ($mappings as $pattern => $dest) {
-      $args = $this->matchPath($pattern, $path);
+      $args = $this->matchPath($pattern, $request->getPathInfo());
       if($args !== false) {
         $destination = $dest;
         break;
@@ -61,15 +82,16 @@ class Router {
 
     // No mapping found
     if (empty($destination)) {
-      $this->response->setStatusCode(
-        HttpFoundation\Response::HTTP_BAD_REQUEST,
-        'Bad Request (No Route Found)'
-      );
+      $this->response->setStatusCode(Response::HTTP_BAD_REQUEST,
+        'Bad Request (No Route Found)');
       $this->response->send();
-      return;
+
+      return $this;
     }
 
     $this->route($destination, $args);
+
+    return $this;
   }
 
   /*
@@ -103,7 +125,7 @@ class Router {
       require_once($controller_file);
     } else {
       $this->response->setStatusCode(
-        HttpFoundation\Response::HTTP_BAD_REQUEST,
+        Response::HTTP_BAD_REQUEST,
         "Bad Request (controller `$controller` not found)"
       );
       $this->response->send();
@@ -116,9 +138,11 @@ class Router {
     // call action on controller
     if (is_callable(array($controller_obj, $action))) {
       call_user_func_array(array($controller_obj, $action), $args);
+      // prepare the reponse and send to the client
+      $this->response->respond();
     } else {
       $this->response->setStatusCode(
-        HttpFoundation\Response::HTTP_BAD_REQUEST,
+        Response::HTTP_BAD_REQUEST,
         "Bad Request (action `$action` not found)"
       );
       $this->response->send();

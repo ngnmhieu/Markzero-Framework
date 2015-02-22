@@ -51,7 +51,7 @@ class Transaction extends AppModel {
     $obj->amount = $params->get('amount');
     $obj->notice = $params->get('notice');
     $obj->time   = \DateTime::createFromFormat("d/m/Y", $params->get('time'));
-    $category_id = $params->get('category_id');
+    $category_id = $params->get('category[id]', null, true);
 
     if ($category_id != null)
       $obj->category = Category::find($category_id);
@@ -75,7 +75,7 @@ class Transaction extends AppModel {
     $obj->amount = $params->get('amount');
     $obj->notice = $params->get('notice');
     $obj->time   = \DateTime::createFromFormat("d/m/Y", $params->get('time'));
-    $category_id = $params->get('category_id');
+    $category_id = $params->get('category[id]', null, true);
 
     if ($category_id != null)
       $obj->category = Category::find($category_id);

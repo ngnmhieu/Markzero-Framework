@@ -19,6 +19,7 @@ class Response implements HasHttpStatusCode {
    * Setup a redirection
    * @param array $to array('controller' => ..., 'action' => '..')
    * @param array $params
+   * @return Response $this
    */
   public function redirect(array $to = array(), array $params = array()) {
     if (!$to['controller']) {
@@ -34,12 +35,15 @@ class Response implements HasHttpStatusCode {
 
     $this->http_response->setStatusCode(Response::HTTP_FOUND);
     $this->http_response->headers->set('Location', $location);  
+
+    return $this;
   }
 
   /**
    * Register a responder for a corresponding format
    * @param string $format
    * @param callable $responder
+   * @return Response $this
    */
   public function respond_to($format, callable $responder) {
     if ($this->responders === null) {
@@ -48,50 +52,69 @@ class Response implements HasHttpStatusCode {
 
     // Register the responder
     $this->responders[$format] = $responder;
+
+    return $this;
   }
 
   /**
    * Send the response to client by calling one of the repsonders.
    * If no corresponding responder is found ###Exception is raised.
+   * @return Response $this
    */
   public function respond() {
     $request       = $this->request;
     $http_response = $this->http_response;
+    $responders    = $this->responders;
 
-    $accept_mimes = $request->getAcceptableContentTypes();
-    // Response formats of the acceptable content types
-    $formats = array_unique(array_map(function($mime) use ($request) {
-      return $request->getFormat($mime); 
-    }, $accept_mimes));
-    $formats = array_filter($formats); // remove null values
-
-    if (empty($this->responders)) { // No responder found
+    if (empty($responders)) { // No responder found
       $http_response->setStatusCode(Response::HTTP_NOT_FOUND);
       $http_response->send();
-      return;
+      return $this;
     }
 
-    // Call the repsonder function which corresponds to the preferred format
-    foreach ($formats as $format) {
-      if (array_key_exists($format,$this->responders)) {
-        $this->responders[$format]();
+    // Respond with the corresponding Content-type
+    $accept_mimes = $request->getAcceptableContentTypes();
+    foreach ($accept_mimes as $mime) {
+      $format = $request->getFormat($mime);
+      if ($format === null)
+        continue;
+
+      if (array_key_exists($format,$responders)) {
+        $responders[$format]();
+        $http_response->headers->set('Content-Type', $mime);
         $http_response->send();
-        return;
+        return $this;
       }
     }
 
     // Check if request accept any kind of content-type `*/*`
     if (in_array('*/*', $accept_mimes)) {
-      $first_responder = reset($this->responders);
+      $first_responder = reset($responders);
       $first_responder();
       $http_response->send();
-
     } else { // Cannot find any corresponding responder
       $http_response->setStatusCode(Response::HTTP_UNSUPPORTED_MEDIA_TYPE);
       $http_response->send();
-      return;
     }
 
+    return $this;
+  }
+
+  /**
+   * Set Access-Control-* Headers for Cross-Domain Request
+   */
+  public function setAccessControlHeaders() {
+    $request = $this->request;
+
+    if (!$request->isCrossDomain() || !$request->isCrossDomainAllowed()) {
+      return $this;
+    }
+
+    $origin = $this->request->headers->get('Origin');
+    $this->http_response->headers->set('Access-Control-Allow-Origin', $origin);
+    $this->http_response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Accept');
+
+    return $this;
   }
 
   /**

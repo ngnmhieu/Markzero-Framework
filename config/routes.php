@@ -9,12 +9,13 @@ App::$router->draw(function($r) {
   $r->root('transaction#index');
 
   $r->map('get', '/transaction/', 'transaction#index');
+  $r->map('get', '/transaction/([0-9]+)', 'transaction#show');
   $r->map('get', '/transaction/index', 'transaction#index');
   $r->map('get', '/transaction/add', 'transaction#add');
   $r->map('get', '/transaction/([0-9]+)/edit', 'transaction#edit');
   $r->map('get', '/transaction/([0-9]+)/delete', 'transaction#delete');
   $r->map('post', '/transaction/', 'transaction#create');
-  $r->map('post', '/transaction/([0-9]+)/update', 'transaction#update');
+  $r->map('post', '/transaction/([0-9]+)', 'transaction#update');
 
   $r->map('get', '/category/', 'category#index');
   $r->map('get', '/category/index', 'category#index');

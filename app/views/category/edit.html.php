@@ -1,4 +1,4 @@
-<form action="/category/<?=$category->id?>/update" method="post">
+<form action="/category/<?=$category->id?>/" method="post">
   <label for="name">Name: </label>
   <input type="text" name="name" value="<?=$category->name?>" />
   <br />

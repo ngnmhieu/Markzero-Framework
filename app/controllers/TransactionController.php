@@ -8,6 +8,10 @@ class TransactionController extends AppController {
     });
 
     $this->response()->respond_to('json', function() use ($data) {
+      $data['transactions'] = array_map(function($transaction) {
+        return $transaction->to_array();
+      }, $data['transactions']);
+
       App::$view->render('json', $data, $this->name().'/'.'index');
     });
   }
@@ -15,7 +19,8 @@ class TransactionController extends AppController {
   function show($id) {
     $data['transaction'] = Transaction::find($id);
 
-    $this->response()->respond_to('html', function() use ($data) {
+    $this->response()->respond_to('json', function() use ($data) {
+      $data['transaction'] = $data['transaction']->to_array();
       App::$view->render('json', $data, $this->name().'/'.'show');
     });
   }
@@ -64,8 +69,11 @@ class TransactionController extends AppController {
 
   function delete($id) {
     if (Transaction::delete($id)) {
-      $this->response()->respond_to('html', function() use($tran) {
+      $this->response()->respond_to('html', function() {
         $this->response()->redirect(array("controller" => $this->name(), "action" => "index"));
+      });
+
+      $this->response()->respond_to('json', function() {
       });
     }
   }

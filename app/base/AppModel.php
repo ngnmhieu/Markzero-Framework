@@ -160,4 +160,24 @@ class AppModel {
       E_USER_NOTICE);
     return null;
   }
+
+  /**
+   * Return array containing attributes of the model
+   * @return array
+   */
+  public function to_array() {
+    $attributes = array_merge(static::$attr_reader, static::$attr_accessor);
+
+    $array = array();
+    foreach ($attributes as $attr) {
+      if (method_exists($this->{$attr}, 'to_array')) {
+        $array[$attr] = $this->{$attr}->to_array();
+      } else {
+        $array[$attr] = $this->{$attr};
+      }
+    }
+
+    return $array;
+  }
+
 }

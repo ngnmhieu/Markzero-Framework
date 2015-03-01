@@ -31,16 +31,24 @@ class Transaction extends AppModel {
    * entity's attributes validation
    */
   protected function validate() {
+    $this->errors = array();
+
     if (empty($this->amount)) {
       $this->errors['amount'] = "Amount must not be empty";
     } else if (!is_numeric($this->amount)) {
       $this->errors['amount'] = "Amount must be number";
+    } 
+
+    if (empty($this->category)) {
+      $this->errors['category'] = "Transaction must be in a category";
+    }
+
+    if (empty($this->time)) {
+      $this->errors['time'] = "The time is invalid - either empty, or wrong format dd/mm/yyyy";
     }
     
     return empty($this->errors); 
   }
-
-
 
   /**
    * create and save an Transaction entity
@@ -50,7 +58,9 @@ class Transaction extends AppModel {
     $obj = new static();
     $obj->amount = $params->get('amount');
     $obj->notice = $params->get('notice');
-    $obj->time   = \DateTime::createFromFormat("d/m/Y", $params->get('time'));
+    if ($time = $params->get('time')) {
+      $obj->time   = \DateTime::createFromFormat("d/m/Y", $time);
+    }
     $category_id = $params->get('category[id]', null, true);
 
     if ($category_id != null)
@@ -95,4 +105,5 @@ class Transaction extends AppModel {
     App::$entity_manager->flush();
     return true;
   }
+
 }

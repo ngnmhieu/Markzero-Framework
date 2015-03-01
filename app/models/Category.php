@@ -16,9 +16,15 @@ class Category extends AppModel {
   /** @OneToMany(targetEntity="Transaction", mappedBy="categories") **/
   protected $transactions;
 
-  function __construct() {
-  }
+  protected function validate() {
+    $this->errors = array();
 
+    if (empty($this->name)) {
+      $this->errors['name'] = "Name cannot be empty";
+    }
+
+    return empty($this->errors); 
+  }
   static function update($id, $params) {
     $obj = static::find($id);
     $obj->name        = $params->get('name');
@@ -39,19 +45,19 @@ class Category extends AppModel {
    **/
   static function create($params) {
     $obj = new static();
-    $obj->name        = $params->get('name');
-    $obj->description = $params->get('description');
+    $obj->name        = $params->get('name', '');
+    $obj->description = $params->get('description', '');
 
     try {
       App::$entity_manager->persist($obj);
       App::$entity_manager->flush();
     } catch(ValidationException $e) {
-      print_r($e);
     }
 
     return $obj;
   }
 
+  // TODO: cascade?
   static function delete($id) {
     $cat = static::find($id);
     App::$entity_manager->remove($cat); 

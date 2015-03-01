@@ -113,6 +113,8 @@ class Response implements HasHttpStatusCode {
     $origin = $this->request->headers->get('Origin');
     $this->http_response->headers->set('Access-Control-Allow-Origin', $origin);
     $this->http_response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Accept');
+    $this->http_response->headers->set('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE');
+    $this->http_response->headers->set('Access-Control-Allow-Credentials', 'true');
 
     return $this;
   }

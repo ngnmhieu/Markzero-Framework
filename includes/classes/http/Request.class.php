@@ -69,7 +69,9 @@ class Request {
    * @return boolean
    */
   public function isCrossDomainAllowed() {
+    // _TODO: configurations
     $whitelist = array('http://localhost:8000', 'markzero.com');
+
     $this->http_request->setTrustedHosts($whitelist);
 
     $origin = $this->http_request->headers->get('Origin', '');

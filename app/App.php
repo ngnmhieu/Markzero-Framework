@@ -4,7 +4,7 @@
  */
 class App {
   static $APP_PATH;
-  static $PUBLIC_DIR;
+  static $BASE_DIR;
   static $CONTROLLER_DIR;
   static $MODEL_DIR;
   static $VIEW_DIR;
@@ -12,13 +12,13 @@ class App {
   static $view;
   static $request;
   static $response;
-  static $config;  // application configurations
-  static $session; // manage user sessions
-  static $router;  // handling
-  static $data;    // store static data of the application
+  static $config;         // application configurations
+  static $session;        // manage user sessions
+  static $router;         // handling
+  static $data;           // store static data of the application
   static $entity_manager; // Doctrine EntityManager
 
-  /*
+  /**
    * This method has these responsibilities:
    * - initializing constants
    * - loading classes
@@ -36,20 +36,12 @@ class App {
   }
 
   /**
-   * end of a request, some clean up have to be done 
-   * remove flash messages
-   */
-   /* 
-     static function cleanup() {
-     }
-   */
-
-  /*
-   * initializes the paths in the application
+   * Initializes the paths in the application
    */
   private static function initPath() {
     $parent_dir = dirname(dirname(__FILE__));
     self::$APP_PATH       = $parent_dir.'/';
+    self::$BASE_DIR       = self::$APP_PATH."app/base";
     self::$CONTROLLER_DIR = self::$APP_PATH."app/controllers";
     self::$MODEL_DIR      = self::$APP_PATH."app/models";
     self::$VIEW_DIR       = self::$APP_PATH."app/views";
@@ -57,14 +49,15 @@ class App {
   }
 
   /**
-   * load system functions, helper functions ...
+   * Load system functions, helper functions ...
    */
   private static function loadFunctions() {
     require_once(self::$APP_PATH."includes/functions/functions.php");
     require_once(self::$APP_PATH."includes/functions/helpers.php");
   }
-  /*
-   * loads important classes for the application
+
+  /**
+   * Loads important classes for the application
    * like Session, Router, Database,...
    */
   private static function initClasses() {
@@ -75,8 +68,8 @@ class App {
     self::$router   = new Router(self::$request, self::$response);
   }
 
-  /*
-   * loads application and environment specific configuration.
+  /**
+   * Loads application and environment specific configuration.
    * configurations are located in config/ directory.
    * important configurations are among others: application wide config, database,...
    */
@@ -89,15 +82,15 @@ class App {
     require_once(self::$APP_PATH. "includes/database.php");
   }
 
-  /*
+  /**
    * routes.php defines routes for the Router
    */
   private static function loadRoutes() {
     require_once(self::$APP_PATH. "config/routes.php");
   }
 
-  /*
-   * loads files that contain important classes
+  /**
+   * Loads files that contain important classes
    */
   private static function loadClasses() { 
     // autoload third-party libraries
@@ -132,7 +125,7 @@ class App {
   }
 
   /* 
-   * load application-specific static data 
+   * Load application-specific static data 
    * data is in json formats
    */
   private static function loadStaticData() {

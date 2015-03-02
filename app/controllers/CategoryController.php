@@ -1,7 +1,7 @@
 <?php
 class CategoryController extends AppController {
   function index() {
-    $data['categories'] = Category::find_all();
+    $data['categories'] = Category::findAll();
 
     $this->response()->respond_to('html', function() use($data) {
       App::$view->render('html', $data, $this->name().'/'.'index', 'default');

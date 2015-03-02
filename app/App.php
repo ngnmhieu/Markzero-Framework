@@ -8,6 +8,7 @@ class App {
   static $CONTROLLER_DIR;
   static $MODEL_DIR;
   static $VIEW_DIR;
+  static $PUBLIC_DIR;
 
   static $view;
   static $request;

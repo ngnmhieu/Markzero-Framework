@@ -1,7 +1,7 @@
 <?php
 class TransactionController extends AppController {
   function index() {
-    $data['transactions'] = Transaction::find_all();
+    $data['transactions'] = Transaction::findAll();
 
     $this->response()->respond_to('html', function() use ($data) {
       App::$view->render('html', $data, $this->name().'/'.'index', 'default');
@@ -26,7 +26,7 @@ class TransactionController extends AppController {
   }
 
   function add() {
-    $data['categories'] = Category::find_all();
+    $data['categories'] = Category::findAll();
     $tran = new Transaction();
 
     $this->response()->respond_to('html', function() use ($data) {
@@ -37,7 +37,7 @@ class TransactionController extends AppController {
 
   function edit($id) {
     $data['transaction'] = Transaction::find($id);
-    $data['categories'] = Category::find_all();
+    $data['categories'] = Category::findAll();
 
     $this->response()->respond_to('html', function() use ($data) {
       App::$view->render('html', $data, $this->name().'/'.'edit', 'default');

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * thrown in validate() when entities are invalid
  */
@@ -53,24 +54,66 @@ class AppModel {
   }
 
   /**
-   * find entities by ID
-   * @var int $id
+   * Proxy for Doctrine\ORM\EntityRepository#find
    **/
-  static function find($id) {
-    return self::get_repo()->find($id);
+  static function find($id, $lock_mode = \Doctrine\DBAL\LockMode::NONE, $lock_version = null) {
+    return self::getRepo()->find($id, $lock_mode, $lock_version);
   }
 
   /**
+   * Proxy for Doctrine\ORM\EntityRepository#findAll
    * find all entities
    **/
-  static function find_all() {
-    return self::get_repo()->findAll();
+  static function findAll() {
+    return self::getRepo()->findAll();
+  }
+
+  /**
+   * Proxy for Doctrine\ORM\EntityRepository#createQueryBuilder
+   */
+  static function createQueryBuilder($alias) {
+    return self::getRepo()->createQueryBuilder($alias);
+  }
+
+  /**
+   * Proxy for Doctrine\ORM\EntityRepository#createNamedQuery
+   */
+  static function createNamedQuery($queryName) {
+    return self::getRepo()->createNamedQuery($queryName);
+  }
+
+  /**
+   * Proxy for Doctrine\ORM\EntityRepository#clear
+   */
+  static function clear() {
+    return self::getRepo()->clear();
+  }
+
+  /**
+   * Proxy for Doctrine\ORM\EntityRepository#findBy
+   */
+  static function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null) {
+    return self::getRepo()->findBy($criteria, $orderBy, $limit, $offset);
+  }
+
+  /**
+   * Proxy for Doctrine\ORM\EntityRepository#findOneBy
+   */
+  static function findOneBy(array $criteria) {
+    return self::getRepo()->findOneBy($criteria);
+  }
+
+  /**
+   * Proxy for Doctrine\ORM\EntityRepository#getEntityName
+   */
+  static function getEntityName() {
+    return self::getRepo()->getEntityName();
   }
 
   /**
    * get the repository with the name of the current model
    **/
-  static function get_repo() {
+  static function getRepo() {
     $model = get_called_class();
     return App::$entity_manager->getRepository($model);
   }

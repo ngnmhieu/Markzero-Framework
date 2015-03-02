@@ -26,7 +26,12 @@ class Transaction extends AppModel {
     if (empty($this->time))
       $this->time = new \DateTime("now");
   }
-  
+
+  public function _validate() {
+    echo "Shit";
+    die();
+  }
+
   /**
    * entity's attributes validation
    */

@@ -16,6 +16,28 @@ class TransactionController extends AppController {
     });
   }
 
+  function get_support_currencies() {
+    $data['currencies'] = Transaction::get_support_currencies();
+
+    $this->response()->respond_to('json', function() use ($data) {
+      App::$view->render('json', $data, $this->name().'/'.'currencies');
+    });
+  }
+
+  function filtered_transactions() {
+    $data['transactions'] = Transaction::findByFilter($this->request()->query);
+
+    $this->response()->respond_to('json', function() use ($data) {
+      if ($data['transactions']) {
+        $data['transactions'] = array_map(function($transaction) {
+          return $transaction->to_array();
+        }, $data['transactions']);
+      }
+
+      App::$view->render('json', $data, $this->name().'/'.'index');
+    });
+  }
+
   function show($id) {
     $data['transaction'] = Transaction::find($id);
 
@@ -81,7 +103,7 @@ class TransactionController extends AppController {
   function update($id) {
     $tran = Transaction::update($id, $this->request()->request);
 
-    $this->response()->respond_to('html', function() use($tran) {
+    $this->response()->respond_to('html', function() use($tran, $id) {
       if (empty($tran->errors)) {
         $this->response()->redirect(array("controller" => $this->name(), "action" => "index"));
       } else {

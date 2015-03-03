@@ -16,4 +16,4 @@ $connection = array(
   'dbname'   => $db->dbname
 );
 
-App::$entity_manager = EntityManager::create($connection, $config);
+App::$em = EntityManager::create($connection, $config);

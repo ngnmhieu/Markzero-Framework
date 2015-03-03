@@ -31,8 +31,8 @@ class Category extends AppModel {
     $obj->description = $params->get('description');
 
     try {
-      App::$entity_manager->persist($obj);
-      App::$entity_manager->flush();
+      App::$em->persist($obj);
+      App::$em->flush();
     } catch(ValidationException $e) {
     }
 
@@ -49,8 +49,8 @@ class Category extends AppModel {
     $obj->description = $params->get('description', '');
 
     try {
-      App::$entity_manager->persist($obj);
-      App::$entity_manager->flush();
+      App::$em->persist($obj);
+      App::$em->flush();
     } catch(ValidationException $e) {
     }
 
@@ -60,8 +60,8 @@ class Category extends AppModel {
   // TODO: cascade?
   static function delete($id) {
     $cat = static::find($id);
-    App::$entity_manager->remove($cat); 
-    App::$entity_manager->flush();
+    App::$em->remove($cat); 
+    App::$em->flush();
     return true;
   }
 }

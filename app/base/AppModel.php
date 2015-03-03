@@ -17,14 +17,64 @@ class AppModel {
   public $errors = array();
 
   /**
-   * this function will be called right before an entity is persisted
-   * it in turn call the `validate` method in child class 
-   * (which actually performs the validation)
+   * Names of callbacks, which are invoked on the event PrePersist and Update
+   */
+  private $prePersistUpdateCallbacks = array('_validate');
+  private $prePersistCallbacks = array('_default');
+  private $preUpdateCallbacks  = array();
+
+
+  /**
+   * Run all the registered PrePersist and PreUpdate callback in order
    *
    * @PrePersist
    * @PreUpdate
    */
-  public function _validate() {
+  public final function _prePersistAndUpdate() {
+    foreach ($this->prePersistUpdateCallbacks as $callback) {
+      if (method_exists($this, $callback)) {
+        $this->{$callback}();
+      }
+    }
+  }
+
+  /**
+   * Run all the PrePersist callback in order
+   * @PrePersist
+   */
+  public final function _prePersist() {
+    foreach ($this->prePersistCallbacks as $callback) {
+      if (method_exists($this, $callback)) {
+        $this->{$callback}();
+      }
+    }
+  }
+
+  /**
+   * Run all the PreUpdate callback in order
+   * @PreUpdate
+   */
+  public final function _preUpdate() {
+    foreach ($this->preUpdateCallbacks as $callback) {
+      if (method_exists($this, $callback)) {
+        $this->{$callback}();
+      }
+    }
+  }
+
+  /**
+   * Set up default values for attributes
+   * Concrete models override this method to assign default values to attributes
+   */
+  protected function _default() {
+  }
+
+  /**
+   * this function will be called right before an entity is persisted
+   * it in turn call the `validate` method in child class 
+   * (which actually performs the validation)
+   */
+  protected function _validate() {
     $this->errors = array();
     if (method_exists($this, 'validate'))
       if (!$this->validate())
@@ -41,16 +91,6 @@ class AppModel {
       return false;
     }
     return true;
-  }
-
-  /**
-   * set up default values for attributes
-   * @PrePersist
-   */
-  public function _default() {
-    if (method_exists($this, 'setup_default')) {
-      $this->setup_default();
-    }
   }
 
   /**
@@ -115,7 +155,7 @@ class AppModel {
    **/
   static function getRepo() {
     $model = get_called_class();
-    return App::$entity_manager->getRepository($model);
+    return App::$em->getRepository($model);
   }
 
   /**

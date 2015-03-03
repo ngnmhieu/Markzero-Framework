@@ -17,7 +17,7 @@ class App {
   static $session;        // manage user sessions
   static $router;         // handling
   static $data;           // store static data of the application
-  static $entity_manager; // Doctrine EntityManager
+  static $em; // Doctrine EntityManager
 
   /**
    * This method has these responsibilities:

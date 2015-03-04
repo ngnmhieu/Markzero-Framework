@@ -4,6 +4,17 @@
  * thrown in validate() when entities are invalid
  */
 class ValidationException extends Exception {
+  private $errors;
+
+  public function __construct(array $errors = array(), $message = null, $code = 0) {
+    parent::__construct($message, $code);
+
+    $this->errors = $errors;
+  }
+
+  public function get_errors() {
+    return $this->errors;
+  }
 }
 
 /**
@@ -70,15 +81,11 @@ class AppModel {
   }
 
   /**
-   * this function will be called right before an entity is persisted
-   * it in turn call the `validate` method in child class 
-   * (which actually performs the validation)
+   * Perform validation 
+   * Concrete models override this method to perform specific validations
+   * @throw ValidationException($array_errors)
    */
   protected function _validate() {
-    $this->errors = array();
-    if (method_exists($this, 'validate'))
-      if (!$this->validate())
-        throw new ValidationException();
   }
 
   /**

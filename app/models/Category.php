@@ -16,25 +16,28 @@ class Category extends AppModel {
   /** @OneToMany(targetEntity="Transaction", mappedBy="categories") **/
   protected $transactions;
 
-  protected function validate() {
+  protected function _validate() {
     $this->errors = array();
 
     if (empty($this->name)) {
       $this->errors['name'] = "Name cannot be empty";
     }
 
-    return empty($this->errors); 
+    if (!empty($this->errors)) {
+      throw new ValidationException($this->errors);
+    }
   }
+
+  /**
+   * @throw ValidationException
+   */
   static function update($id, $params) {
     $obj = static::find($id);
     $obj->name        = $params->get('name');
     $obj->description = $params->get('description');
 
-    try {
-      App::$em->persist($obj);
-      App::$em->flush();
-    } catch(ValidationException $e) {
-    }
+    App::$em->persist($obj);
+    App::$em->flush();
 
     return $obj;
   }
@@ -42,17 +45,15 @@ class Category extends AppModel {
   /**
    * create and save an Category entity
    * @var $params
+   * @throw ValidationException
    **/
   static function create($params) {
     $obj = new static();
     $obj->name        = $params->get('name', '');
     $obj->description = $params->get('description', '');
 
-    try {
-      App::$em->persist($obj);
-      App::$em->flush();
-    } catch(ValidationException $e) {
-    }
+    App::$em->persist($obj);
+    App::$em->flush();
 
     return $obj;
   }
@@ -62,6 +63,7 @@ class Category extends AppModel {
     $cat = static::find($id);
     App::$em->remove($cat); 
     App::$em->flush();
+
     return true;
   }
 }

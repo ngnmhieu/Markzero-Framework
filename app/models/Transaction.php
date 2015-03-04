@@ -37,7 +37,7 @@ class Transaction extends AppModel {
   /**
    * entity's attributes validation
    */
-  protected function validate() {
+  protected function _validate() {
     $this->errors = array();
 
     if (empty($this->amount)) {
@@ -57,8 +57,10 @@ class Transaction extends AppModel {
     if (empty($this->time)) {
       $this->errors['time'] = "The time is invalid - either empty, or wrong format dd/mm/yyyy";
     }
-    
-    return empty($this->errors); 
+
+    if (!empty($this->errors)) {
+      throw new ValidationException($this->errors);
+    }
   }
 
   static function get_support_currencies() {
@@ -68,6 +70,7 @@ class Transaction extends AppModel {
   /**
    * create and save an Transaction entity
    * @var $params
+   * @throw ValidationException
    **/
   static function create($params) {
     $obj = new static();
@@ -82,11 +85,8 @@ class Transaction extends AppModel {
     if ($category_id != null)
       $obj->category = Category::find($category_id);
 
-    try {
-      App::$em->persist($obj);
-      App::$em->flush();
-    } catch(ValidationException $e) {
-    }
+    App::$em->persist($obj);
+    App::$em->flush();
 
     return $obj;
   }
@@ -95,6 +95,7 @@ class Transaction extends AppModel {
    * update and save an Transaction entity
    * @param $id | id of the transaction
    * @param $params | the new attributes of the transaction
+   * @throw ValidationException
    */
   static function update($id, $params) {
     $obj = static::find($id);
@@ -107,11 +108,8 @@ class Transaction extends AppModel {
     if ($category_id != null)
       $obj->category = Category::find($category_id);
 
-    try {
-      App::$em->persist($obj);
-      App::$em->flush();
-    } catch(ValidationException $e) {
-    }
+    App::$em->persist($obj);
+    App::$em->flush();
 
     return $obj;
   }

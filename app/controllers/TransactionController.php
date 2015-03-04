@@ -67,26 +67,28 @@ class TransactionController extends AppController {
   }
 
   function create() {
-    $tran = Transaction::create($this->request()->request);
+    try {
+      $tran = Transaction::create($this->request()->request);
 
-    $this->response()->respond_to('html', function() use($tran) {
-      if(empty($tran->errors)) {
+      $this->response()->respond_to('html', function() {
         $this->response()->redirect(array("controller" => $this->name(), "action" => "index"));
-      } else {
-        set_flash('error', implode("<br />",$tran->errors));
-        $this->response()->redirect(array("controller" => $this->name(), 'action' => 'add'));
-      }
-    });
+      });
 
-    $this->response()->respond_to('json', function() use($tran) {
-       if (empty($tran->errors)) {
-         $this->response()->setStatusCode(Response::HTTP_CREATED);
-       } else {
-         $this->response()->setStatusCode(Response::HTTP_BAD_REQUEST, 'Bad Request (Validation Error)');
-         $data = array('validation_errors' => $tran->errors);
-         App::$view->render('json', $data, 'errors/validation');
-       }
-    });
+      $this->response()->respond_to('json', function() {
+        $this->response()->setStatusCode(Response::HTTP_CREATED);
+      });
+    } catch(ValidationException $e) {
+      $this->response()->respond_to('html', function() use($e) {
+        set_flash('error', implode("<br />",$e->get_errors()));
+        $this->response()->redirect(array("controller" => $this->name(), 'action' => 'add'));
+      });
+
+      $this->response()->respond_to('json', function() use($e) {
+        $this->response()->setStatusCode(Response::HTTP_BAD_REQUEST, 'Bad Request (Validation Error)');
+        $data = array('validation_errors' => $e->get_errors());
+        App::$view->render('json', $data, 'errors/validation');
+      });
+    }
   }
 
   function delete($id) {
@@ -101,25 +103,31 @@ class TransactionController extends AppController {
   }
 
   function update($id) {
-    $tran = Transaction::update($id, $this->request()->request);
+    try {
+      $tran = Transaction::update($id, $this->request()->request);
 
-    $this->response()->respond_to('html', function() use($tran, $id) {
-      if (empty($tran->errors)) {
-        $this->response()->redirect(array("controller" => $this->name(), "action" => "index"));
-      } else {
-        set_flash('error', implode("<br />",$tran->errors));
-        $this->response()->redirect(array("controller" => $this->name(), 'action' => 'edit'), array($id));
-      }
-    });
+      $this->response()->respond_to('html', function() {
+          $this->response()->redirect(array("controller" => $this->name(), "action" => "index"));
+      });
 
-    $this->response()->respond_to('json', function() use($tran) {
-      if (empty($tran->errors)) {
+      $this->response()->respond_to('json', function() {
         $this->response()->setStatusCode(Response::HTTP_OK, 'Transaction Updated');
-      } else {
+      });
+
+    } catch(ValidationException $e) {
+
+      $this->response()->respond_to('html', function() use($e, $id) {
+        set_flash('error', implode("<br />",$e->get_errors()));
+        $this->response()->redirect(array("controller" => $this->name(), 'action' => 'edit'), array($id));
+      });
+
+      $this->response()->respond_to('json', function() use($e) {
         $this->response()->setStatusCode(Response::HTTP_BAD_REQUEST, 'Bad Request (Validation Error)');
-        $data = array('validation_errors' => $tran->errors);
+        $data = array('validation_errors' => $e->get_errors());
         App::$view->render('json', $data, 'errors/validation');
-      }
-    });
+      });
+
+    }
   }
+
 }

@@ -23,26 +23,29 @@ class CategoryController extends AppController {
   }
 
   function update($id) {
-    $cat = Category::update($id, $this->request()->request);
+    try {
+      $cat = Category::update($id, $this->request()->request);
 
-    $this->response()->respond_to('html', function() use($cat) {
-      if (empty($cat->errors)) {
+      $this->response()->respond_to('html', function() {
         $this->response()->redirect(array("controller" => $this->name(), "action" => "index"));
-      } else {
-        print_r($cat->errors);
-      }
-    });
+      });
 
-    $this->response()->respond_to('json', function() use($cat) {
-      if (empty($cat->errors)) {
+      $this->response()->respond_to('json', function() {
         $this->response()->setStatusCode(Response::HTTP_OK, 'Category Updated');
-      } else {
-        $this->response()->setStatusCode(Response::HTTP_BAD_REQUEST, 'Bad Request (Validation Error)');
-        $data = array('validation_errors' => $cat->errors);
-        App::$view->render('json', $data, 'errors/validation');
-      }
-    });
+      });
 
+    } catch(ValidationException $e) {
+      $this->response()->respond_to('html', function() use($e) {
+        print_r($e->get_errors());
+      });
+
+      $this->response()->respond_to('json', function() use($e) {
+        $this->response()->setStatusCode(Response::HTTP_BAD_REQUEST, 'Bad Request (Validation Error)');
+        $data = array('validation_errors' => $e->get_errors());
+        App::$view->render('json', $data, 'errors/validation');
+      });
+
+    }
   }
 
   function delete($id) {
@@ -68,25 +71,29 @@ class CategoryController extends AppController {
   }
 
   function create() {
-    $cat = Category::create($this->request()->request);
+    try {
+      $cat = Category::create($this->request()->request);
 
-      $this->response()->respond_to('html', function() use($cat) {
-        if(empty($cat->errors)) {
-          $this->response()->redirect(array("controller" => $this->name(), "action" => "index"));
-        } else {
-          $this->response()->respond_to('html', function() { print_r($cat->errors); });
-        }
+      $this->response()->respond_to('html', function() {
+        $this->response()->redirect(array("controller" => $this->name(), "action" => "index"));
       });
 
-      $this->response()->respond_to('json', function() use($cat) {
-        if(empty($cat->errors)) {
-          $this->response()->setStatusCode(Response::HTTP_OK, 'Category Created');
-        } else {
-          $this->response()->setStatusCode(Response::HTTP_BAD_REQUEST, 'Bad Request (Validation Error)');
-          $data = array('validation_errors' => $cat->errors);
-          App::$view->render('json', $data, 'errors/validation');
-        }
+      $this->response()->respond_to('json', function() {
+        $this->response()->setStatusCode(Response::HTTP_OK, 'Category Created');
       });
+    } catch(ValidationException $e) {
+
+      $this->response()->respond_to('html', function() use($e) {
+        $this->response()->respond_to('html', function() { print_r($e->get_errors()); });
+      });
+
+      $this->response()->respond_to('json', function() use($e) {
+        $this->response()->setStatusCode(Response::HTTP_BAD_REQUEST, 'Bad Request (Validation Error)');
+        $data = array('validation_errors' => $e->get_errors());
+        App::$view->render('json', $data, 'errors/validation');
+      });
+
+    }
   }
 
   function add() {

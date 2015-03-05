@@ -95,6 +95,10 @@ class AppModel {
     return true;
   }
 
+  static function createValidationManager() {
+    return new ValidationManager();
+  }
+
   /**
    * Proxy for Doctrine\ORM\EntityRepository#find
    **/

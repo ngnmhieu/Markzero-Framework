@@ -17,15 +17,13 @@ class Category extends AppModel {
   protected $transactions;
 
   protected function _validate() {
-    $errors = array();
+    $vm = self::createValidationManager();
 
-    if (empty($this->name)) {
-      $errors['name'] = "Name cannot be empty";
-    }
-
-    if (!empty($errors)) {
-      throw new ValidationException($errors);
-    }
+    $vm->validate('name', new FunctionValidator(function($name) {
+      return !empty($name);
+    }, array($this->name)), "Name cannot be empty");
+    
+    $vm->do_validate();
   }
 
   /**

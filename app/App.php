@@ -13,11 +13,11 @@ class App {
   static $view;
   static $request;
   static $response;
-  static $config;         // application configurations
-  static $session;        // manage user sessions
-  static $router;         // handling
-  static $data;           // store static data of the application
-  static $em; // Doctrine EntityManager
+  static $config;   // application configurations
+  static $session;  // manage user sessions
+  static $router;   // handling
+  static $data;     // store static data of the application
+  static $em;       // Doctrine EntityManager
 
   /**
    * This method has these responsibilities:
@@ -115,11 +115,23 @@ class App {
     require_once(self::$APP_PATH. "app/base/AppController.php");
     require_once(self::$APP_PATH. "app/base/AppModel.php");
     require_once(self::$APP_PATH. "app/base/AppView.php");
+
+    // Validation facilities
+    require_once(self::$APP_PATH. "includes/classes/validation/Abstractvalidator.class.php");
+    require_once(self::$APP_PATH. "includes/classes/validation/ValidationManger.class.php");
+
+    // Load all validators
+    $validators_dir = self::$APP_PATH. "includes/classes/validation/validators/"; 
+    foreach (scandir($validators_dir) as $file) {
+      if (preg_match('/^[A-Z][A-Za-z_\-.]*\.php$/', $file)) {
+        require_once($validators_dir.$file);
+      }
+    }
     
     // load other models
     $model_dir = self::$MODEL_DIR;
     foreach (scandir($model_dir) as $file) {
-      if (preg_match('/^[A-Z][a-z]*\.php$/', $file)) {
+      if (preg_match('/^[A-Z][A-Za-z_\-.]*\.php$/', $file)) {
         require_once($model_dir.'/'.$file);
       }
     }

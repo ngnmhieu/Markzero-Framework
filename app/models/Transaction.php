@@ -40,27 +40,33 @@ class Transaction extends AppModel {
   protected function _validate() {
     $errors = array();
 
-    if (empty($this->amount)) {
-      $errors['amount'] = "Amount must not be empty";
-    } else if (!is_numeric($this->amount)) {
-      $errors['amount'] = "Amount must be number";
-    } 
+    $vm = self::createValidationManager();
 
-    if (empty($this->currency)) {
-      $errors['currency'] = "A currency is required";
-    }
+    $vm->validate("amount", new FunctionValidator(function($amount) {
+      return !empty($amount);
+    }, array($this->amount)) ,"Amount must not be empty");
 
-    if (empty($this->category)) {
-      $errors['category'] = "Transaction must be in a category";
-    }
+    $vm->validate("amount", new FunctionValidator(function($amount) {
+      return is_numeric($amount); 
+    }, array($this->amount)) ,"Amount must be a number");
 
-    if (empty($this->time)) {
-      $errors['time'] = "The time is invalid - either empty, or wrong format dd/mm/yyyy";
-    }
+    $vm->validate("currency", new FunctionValidator(function($currency) {
+      return !empty($currency); 
+    }, array($this->currency)) ,"A currency is required");
 
-    if (!empty($errors)) {
-      throw new ValidationException($errors);
-    }
+    $vm->validate("category", new FunctionValidator(function($category) {
+      return !empty($category); 
+    }, array($this->category)) ,"Transaction must be in a category");
+
+    $vm->validate("time", new FunctionValidator(function($time) {
+      return !empty($time); 
+    }, array($this->time)) ,"The time is invalid - either empty, or wrong format dd/mm/yyyy");
+
+    $vm->validate("time", new FunctionValidator(function($time) {
+      return !empty($time); 
+    }, array($this->time)) ,"The time is invalid - either empty, or wrong format dd/mm/yyyy");
+
+    $vm->do_validate();
   }
 
   static function get_support_currencies() {
@@ -129,8 +135,19 @@ class Transaction extends AppModel {
     }
   }
 
+  /**
+   * @throw ValidationException
+   */
   static function findByFilter($params) {
     $transactions = self::findAll();
+
+    // App::$validation_manager->validate("date_from", 
+    //   new DateTimeValidator($params->get('date_from'), "Invalid date"));
+
+    // App::$validation_manager->validate("date_to", 
+    //   new DateTimeValidator($params->get('date_to'), "Invalid date"));
+
+    // App::$validation_manager->do_validate();
 
     $date_from = \DateTime::createFromFormat("d/m/Y", $params->get('date_from'));
     $date_to   = \DateTime::createFromFormat("d/m/Y", $params->get('date_to'));

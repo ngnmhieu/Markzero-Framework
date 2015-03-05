@@ -84,8 +84,8 @@ class CategoryController extends AppController {
       });
     } catch(ValidationException $e) {
 
-      $this->response()->respond_to('html', function() use($e) {
-        $this->response()->respond_to('html', function() { print_r($e->get_errors()); });
+      $this->response()->respond_to('html', function() use($e) { 
+        print_r($e->get_errors()); 
       });
 
       $this->response()->respond_to('json', function() use($e) {

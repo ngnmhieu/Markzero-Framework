@@ -49,7 +49,9 @@ class CategoryController extends AppController {
   }
 
   function delete($id) {
-    if (Category::delete($id)) {
+    try {
+      Category::delete($id);
+
       $this->response()->respond_to('html', function() {
         $this->response()->redirect(array("controller" => $this->name(), "action" => "index"));
       });
@@ -57,14 +59,13 @@ class CategoryController extends AppController {
       $this->response()->respond_to('json', function() {
         $this->response()->setStatusCode(Response::HTTP_OK, 'Category Deleted');
       });
-
-    } else {
-      $this->response()->respond_to('html', function() {
-        echo "Error";
+    } catch (Exception $e) {
+      $this->response()->respond_to('html', function() use($e) {
+        echo "Error: ".$e->getMessage();
       });
 
-      $this->response()->respond_to('json', function() {
-        $this->response()->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR, 'Category could not be deleted, error occurred');
+      $this->response()->respond_to('json', function() use($e) {
+        $this->response()->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR, 'Category could not be deleted, error occurred: '.$e->getMessage());
       });
     }
 

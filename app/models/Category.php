@@ -17,14 +17,14 @@ class Category extends AppModel {
   protected $transactions;
 
   protected function _validate() {
-    $this->errors = array();
+    $errors = array();
 
     if (empty($this->name)) {
-      $this->errors['name'] = "Name cannot be empty";
+      $errors['name'] = "Name cannot be empty";
     }
 
-    if (!empty($this->errors)) {
-      throw new ValidationException($this->errors);
+    if (!empty($errors)) {
+      throw new ValidationException($errors);
     }
   }
 
@@ -58,12 +58,24 @@ class Category extends AppModel {
     return $obj;
   }
 
-  // TODO: cascade?
+  /**
+   * @throw Exception
+   */
   static function delete($id) {
-    $cat = static::find($id);
-    App::$em->remove($cat); 
-    App::$em->flush();
+    App::$em->getConnection()->beginTransaction();
+    try {
+      $cat = static::find($id);
+      App::$em->remove($cat); 
 
-    return true;
+      $query = App::$em->createQuery('DELETE FROM Transaction t WHERE IDENTITY(t.category) = :id');
+      $query->setParameter('id', $id);
+      $query->execute();
+
+      App::$em->flush();
+      App::$em->getConnection()->commit();
+    } catch(Exception $e) {
+      App::$em->getConnection()->rollback();
+      throw $e;
+    }
   }
 }

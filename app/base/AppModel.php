@@ -23,11 +23,6 @@ class ValidationException extends Exception {
  */
 class AppModel {
   /**
-   * contains validation errors when creating or updating enitties
-   */
-  public $errors = array();
-
-  /**
    * Names of callbacks, which are invoked on the event PrePersist and Update
    */
   private $prePersistUpdateCallbacks = array('_validate');

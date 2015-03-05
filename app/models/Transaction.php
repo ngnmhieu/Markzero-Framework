@@ -38,28 +38,28 @@ class Transaction extends AppModel {
    * entity's attributes validation
    */
   protected function _validate() {
-    $this->errors = array();
+    $errors = array();
 
     if (empty($this->amount)) {
-      $this->errors['amount'] = "Amount must not be empty";
+      $errors['amount'] = "Amount must not be empty";
     } else if (!is_numeric($this->amount)) {
-      $this->errors['amount'] = "Amount must be number";
+      $errors['amount'] = "Amount must be number";
     } 
 
     if (empty($this->currency)) {
-      $this->errors['currency'] = "A currency is required";
+      $errors['currency'] = "A currency is required";
     }
 
     if (empty($this->category)) {
-      $this->errors['category'] = "Transaction must be in a category";
+      $errors['category'] = "Transaction must be in a category";
     }
 
     if (empty($this->time)) {
-      $this->errors['time'] = "The time is invalid - either empty, or wrong format dd/mm/yyyy";
+      $errors['time'] = "The time is invalid - either empty, or wrong format dd/mm/yyyy";
     }
 
-    if (!empty($this->errors)) {
-      throw new ValidationException($this->errors);
+    if (!empty($errors)) {
+      throw new ValidationException($errors);
     }
   }
 
@@ -115,10 +115,18 @@ class Transaction extends AppModel {
   }
 
   static function delete($id) {
-    $tran = static::find($id);
-    App::$em->remove($tran); 
-    App::$em->flush();
-    return true;
+    App::$em->getConnection()->beginTransaction();
+    try {
+      $tran = static::find($id);
+
+      App::$em->remove($tran); 
+      App::$em->flush();
+
+      App::$em->getConnection()->commit();
+    } catch(Exception $e) {
+      App::$em->getConnection()->rollback();
+      throw $e;
+    }
   }
 
   static function findByFilter($params) {

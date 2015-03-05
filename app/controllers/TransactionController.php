@@ -92,12 +92,23 @@ class TransactionController extends AppController {
   }
 
   function delete($id) {
-    if (Transaction::delete($id)) {
+    try {
+      Transaction::delete($id);
       $this->response()->respond_to('html', function() {
         $this->response()->redirect(array("controller" => $this->name(), "action" => "index"));
       });
 
       $this->response()->respond_to('json', function() {
+        $this->response()->setStatusCode(Response::HTTP_OK, 'Transaction deleted');
+      });
+
+    } catch(Exception $e) {
+      $this->response()->respond_to('html', function() use($e) {
+        echo "[Error] Transaction could not be deleted: ".$e->getMessage();
+      });
+
+      $this->response()->respond_to('json', function() use($e) {
+        $this->response()->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR, '[Error] Transaction could not be deleted: '.$e->getMessage());
       });
     }
   }

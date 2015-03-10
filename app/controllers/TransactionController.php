@@ -16,26 +16,26 @@ class TransactionController extends AppController {
     });
   }
 
-  function get_support_currencies() {
-    $data['currencies'] = Transaction::get_support_currencies();
-
-    $this->response()->respond_to('json', function() use ($data) {
-      App::$view->render('json', $data, $this->name().'/'.'currencies');
-    });
-  }
-
   function filtered_transactions() {
-    $data['transactions'] = Transaction::findByFilter($this->request()->query);
+    try {
+      $data['transactions'] = Transaction::findByFilter($this->request()->query);
 
-    $this->response()->respond_to('json', function() use ($data) {
-      if ($data['transactions']) {
-        $data['transactions'] = array_map(function($transaction) {
-          return $transaction->to_array();
-        }, $data['transactions']);
-      }
+      $this->response()->respond_to('json', function() use ($data) {
+        if ($data['transactions']) {
+          $data['transactions'] = array_map(function($transaction) {
+            return $transaction->to_array();
+          }, $data['transactions']);
+        }
 
-      App::$view->render('json', $data, $this->name().'/'.'index');
-    });
+        App::$view->render('json', $data, $this->name().'/'.'index');
+      });
+    } catch(ValidationException $e) {
+      $this->response()->respond_to('json', function() use ($e) {
+        $this->response()->setStatusCode(Response::HTTP_BAD_REQUEST, 'Bad Request (Validation Error)');
+        $data = array('validation_errors' => $e->get_errors());
+        App::$view->render('json', $data, 'errors/validation');
+      });
+    }
   }
 
   function show($id) {

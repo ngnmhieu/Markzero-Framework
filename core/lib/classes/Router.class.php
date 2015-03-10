@@ -120,7 +120,7 @@ class Router {
     $action = strtolower($destination[':action']);
 
     // call the appropriate controller
-    $controller_file = App::$CONTROLLER_DIR.'/'.$controller_filename;
+    $controller_file = App::$CONTROLLER_PATH.$controller_filename;
     if (file_exists($controller_file)) {
       require_once($controller_file);
     } else {

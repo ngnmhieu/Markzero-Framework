@@ -24,6 +24,13 @@ class AppController {
   public function response() { return $this->response; }
 
   /**
+   * Shorthand for $this->response->respond_to(...);
+   */
+  public function respond_to() {
+    return call_user_func_array(array($this->response, 'respond_to'), func_get_args());
+  }
+
+  /**
    * @return string | name of current controller
    */
   protected function name() {

@@ -64,12 +64,11 @@ class Request {
   }
 
   /**
-   * _TODO: more thorough check
+   * _TODO: whitelist configurable
    * Check if CORS Request allowed
    * @return boolean
    */
   public function isCrossDomainAllowed() {
-    // _TODO: configurations
     $whitelist = array('http://localhost:8000', 'markzero.com');
 
     $this->http_request->setTrustedHosts($whitelist);

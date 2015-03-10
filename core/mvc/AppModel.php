@@ -1,22 +1,4 @@
 <?php
-
-/**
- * thrown in validate() when entities are invalid
- */
-class ValidationException extends Exception {
-  private $errors;
-
-  public function __construct(array $errors = array(), $message = null, $code = 0) {
-    parent::__construct($message, $code);
-
-    $this->errors = $errors;
-  }
-
-  public function get_errors() {
-    return $this->errors;
-  }
-}
-
 /**
  * @MappedSuperClass
  * @HasLifecycleCallbacks

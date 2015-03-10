@@ -5,7 +5,7 @@ use Doctrine\ORM\EntityManager;
 $env  = App::$config->app->env;
 $db = App::$config->database->{$env}; // database configurations
 $is_dev = $env == 'development';
-$path   = array(App::$MODEL_DIR, App::$BASE_DIR);
+$path   = array(App::$MODEL_PATH, App::$CORE_PATH.'mvc');
 
 $config = Setup::createAnnotationMetadataConfiguration($path, $is_dev);
 $connection = array(

@@ -30,7 +30,13 @@ class AppView {
    * @param string $name name of template
    * @param string $layout name of layout
    */
-  public function render($format, $data, $name, $layout="") {
+  public function render($format, $data, $name = null, $layout="") {
+    // output raw data when no name is given
+    if ($name === null) {
+      echo $data;
+      return;
+    }
+
     $view_dir = $this->view_dir;
     $template_file = "$view_dir/$name.$format.php";
 

@@ -4,11 +4,11 @@
  */
 class App {
   static $APP_PATH;
-  static $BASE_DIR;
-  static $CONTROLLER_DIR;
-  static $MODEL_DIR;
-  static $VIEW_DIR;
-  static $PUBLIC_DIR;
+  static $CORE_PATH;
+  static $CONTROLLER_PATH;
+  static $MODEL_PATH;
+  static $VIEW_PATH;
+  static $PUBLIC_PATH;
 
   static $view;
   static $request;
@@ -42,19 +42,19 @@ class App {
   private static function initPath() {
     $parent_dir = dirname(dirname(__FILE__));
     self::$APP_PATH       = $parent_dir.'/';
-    self::$BASE_DIR       = self::$APP_PATH."app/base";
-    self::$CONTROLLER_DIR = self::$APP_PATH."app/controllers";
-    self::$MODEL_DIR      = self::$APP_PATH."app/models";
-    self::$VIEW_DIR       = self::$APP_PATH."app/views";
-    self::$PUBLIC_DIR     = self::$APP_PATH."public/";
+    self::$CORE_PATH       = self::$APP_PATH."core/";
+    self::$CONTROLLER_PATH = self::$APP_PATH."app/controllers/";
+    self::$MODEL_PATH      = self::$APP_PATH."app/models/";
+    self::$VIEW_PATH       = self::$APP_PATH."app/views/";
+    self::$PUBLIC_PATH     = self::$APP_PATH."public/";
   }
 
   /**
    * Load system functions, helper functions ...
    */
   private static function loadFunctions() {
-    require_once(self::$APP_PATH."includes/functions/functions.php");
-    require_once(self::$APP_PATH."includes/functions/helpers.php");
+    require_once(self::$CORE_PATH."lib/functions/functions.php");
+    require_once(self::$CORE_PATH."lib/functions/helpers.php");
   }
 
   /**
@@ -62,7 +62,7 @@ class App {
    * like Session, Router, Database,...
    */
   private static function initClasses() {
-    self::$view     = new AppView(self::$VIEW_DIR);
+    self::$view     = new AppView(self::$VIEW_PATH);
     self::$session  = new Session();
     self::$request  = new Request();
     self::$response = new Response(self::$request);
@@ -80,7 +80,7 @@ class App {
     // base configurations
     require_once(self::$APP_PATH."config/base.php");
     // database configurations
-    require_once(self::$APP_PATH. "includes/database.php");
+    require_once(self::$CORE_PATH."database.php");
   }
 
   /**
@@ -97,31 +97,31 @@ class App {
     // autoload third-party libraries
     require_once(self::$APP_PATH. "vendor/autoload.php");
     // request class encapsulate all the information about the current request
-    require_once(self::$APP_PATH. "includes/classes/http/Request.class.php");
+    require_once(self::$CORE_PATH. "lib/classes/http/Request.class.php");
     // request class encapsulate all the information about the current request
-    require_once(self::$APP_PATH. "includes/classes/http/HasHttpStatusCode.interface.php");
+    require_once(self::$CORE_PATH. "lib/classes/http/HasHttpStatusCode.interface.php");
     // request class encapsulate all the information about the current request
-    require_once(self::$APP_PATH. "includes/classes/http/Response.class.php");
+    require_once(self::$CORE_PATH. "lib/classes/http/Response.class.php");
     // router finds and call the right controller and action for a specific uri
-    require_once(self::$APP_PATH. "includes/classes/Router.class.php");
+    require_once(self::$CORE_PATH. "lib/classes/Router.class.php");
     // static data class keep all static data in one places
-    require_once(self::$APP_PATH. "includes/classes/StaticData.class.php");
+    require_once(self::$CORE_PATH. "lib/classes/StaticData.class.php");
     // session class manage user session
-    require_once(self::$APP_PATH. "includes/classes/session/Session.class.php");
+    require_once(self::$CORE_PATH. "lib/classes/session/Session.class.php");
     // manages flash messages
-    require_once(self::$APP_PATH. "includes/classes/session/Flash.class.php");
+    require_once(self::$CORE_PATH. "lib/classes/session/Flash.class.php");
 
     // load base controller, model and view
-    require_once(self::$APP_PATH. "app/base/AppController.php");
-    require_once(self::$APP_PATH. "app/base/AppModel.php");
-    require_once(self::$APP_PATH. "app/base/AppView.php");
+    require_once(self::$CORE_PATH. "mvc/AppController.php");
+    require_once(self::$CORE_PATH. "mvc/AppModel.php");
+    require_once(self::$CORE_PATH. "mvc/AppView.php");
 
     // Validation facilities
-    require_once(self::$APP_PATH. "includes/classes/validation/Abstractvalidator.class.php");
-    require_once(self::$APP_PATH. "includes/classes/validation/ValidationManger.class.php");
+    require_once(self::$CORE_PATH. "lib/classes/validation/Abstractvalidator.class.php");
+    require_once(self::$CORE_PATH. "lib/classes/validation/ValidationManger.class.php");
 
     // Load all validators
-    $validators_dir = self::$APP_PATH. "includes/classes/validation/validators/"; 
+    $validators_dir = self::$CORE_PATH. "lib/classes/validation/validators/"; 
     foreach (scandir($validators_dir) as $file) {
       if (preg_match('/^[A-Z][A-Za-z_\-.]*\.php$/', $file)) {
         require_once($validators_dir.$file);
@@ -129,7 +129,7 @@ class App {
     }
     
     // load other models
-    $model_dir = self::$MODEL_DIR;
+    $model_dir = self::$MODEL_PATH;
     foreach (scandir($model_dir) as $file) {
       if (preg_match('/^[A-Z][A-Za-z_\-.]*\.php$/', $file)) {
         require_once($model_dir.'/'.$file);

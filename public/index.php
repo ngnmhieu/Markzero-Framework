@@ -1,5 +1,5 @@
 <?php
-include("../app/App.php");
+include("../core/App.php");
 
 # start the application
 App::bootstrap();

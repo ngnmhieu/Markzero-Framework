@@ -1,6 +1,5 @@
 <?php
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Criteria;
 
 /**
  * @Entity @Table(name="transactions")
@@ -22,14 +21,13 @@ class Transaction extends AppModel {
   /** @ManyToOne(targetEntity="Category", inversedBy="transactions") **/
   protected $category;
 
-  protected static $CURRENCIES = array('USD', 'EUR', 'VND');
-
   /**
    * set up default values for entity's attributes
    */
   public function _default() {
     if (empty($this->time))
       $this->time = new \DateTime("now");
+
     if (empty($this->currency))
       $this->currency = 'USD';
   }
@@ -54,6 +52,11 @@ class Transaction extends AppModel {
       return !empty($currency); 
     }, array($this->currency)) ,"A currency is required");
 
+    $vm->validate("currency", new FunctionValidator(function($currency) {
+      $currs = Currency::get_supported_currencies();
+      return preg_match('/^('.implode('|',$currs).')$/',$currency); 
+    }, array($this->currency)) ,"This currency is not supported at the moment");
+
     $vm->validate("category", new FunctionValidator(function($category) {
       return !empty($category); 
     }, array($this->category)) ,"Transaction must be in a category");
@@ -67,10 +70,6 @@ class Transaction extends AppModel {
     }, array($this->time)) ,"The time is invalid - either empty, or wrong format dd/mm/yyyy");
 
     $vm->do_validate();
-  }
-
-  static function get_support_currencies() {
-    return self::$CURRENCIES;
   }
 
   /**
@@ -141,20 +140,47 @@ class Transaction extends AppModel {
   static function findByFilter($params) {
     $transactions = self::findAll();
 
-    // App::$validation_manager->validate("date_from", 
-    //   new DateTimeValidator($params->get('date_from'), "Invalid date"));
+    $vm = self::createValidationManager();
 
-    // App::$validation_manager->validate("date_to", 
-    //   new DateTimeValidator($params->get('date_to'), "Invalid date"));
+    $filtertype = $params->get('type');
 
-    // App::$validation_manager->do_validate();
+    $vm->validate("type", new FunctionValidator(function($type) {
+      return !empty($type);
+    }, array($filtertype)), "Require a filter type");
 
-    $date_from = \DateTime::createFromFormat("d/m/Y", $params->get('date_from'));
-    $date_to   = \DateTime::createFromFormat("d/m/Y", $params->get('date_to'));
+    $vm->do_validate();
+    $vm->clear();
+    
+    if ($filtertype === 'period_from_to') {
 
-    $query = App::$em
-      ->createQuery('SELECT t FROM Transaction t WHERE t.time >= :date_from AND t.time <= :date_to')
-      ->setParameters(array('date_from' => $date_from, 'date_to' => $date_to));
+      $vm->validate("date_from", new FunctionValidator(function($date) {
+        return preg_match('~^\d{1,2}/\d{1,2}/\d{4}$~', $date);
+      }, array($params->get('date_from'))), "Invalid date");
+
+      $vm->validate("date_to", new FunctionValidator(function($date) {
+        return preg_match('~^\d{1,2}/\d{1,2}/\d{4}$~', $date);
+      }, array($params->get('date_to'))), "Invalid date");
+
+      $vm->do_validate();
+
+      $date_from = \DateTime::createFromFormat("d/m/Y", $params->get('date_from'));
+      $date_to   = \DateTime::createFromFormat("d/m/Y", $params->get('date_to'));
+
+      $query = App::$em->createQuery('SELECT t FROM Transaction t WHERE t.time >= :date_from AND t.time <= :date_to');
+      $query->setParameters(array('date_from' => $date_from, 'date_to' => $date_to));
+
+    } else if ($filtertype === 'period_lastdays') {
+      $lastdays = $params->get('lastdays');
+      $vm->validate("lastdays", new FunctionValidator(function($lastdays) {
+        return is_numeric($lastdays) && ((int) $lastdays) > 0;
+      }, array($lastdays)), "Days period must be a number greater than 0");
+
+      $vm->do_validate();
+
+      $query = App::$em->createQuery('SELECT t FROM TRANSACTION t WHERE t.time >= :past_day');
+      $today = new \DateTime("now");
+      $query->setParameter('past_day',$today->sub(new DateInterval('P'.$lastdays.'D')));
+    }
 
     return $query->getResult();
   }

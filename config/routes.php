@@ -13,7 +13,6 @@ App::$router->draw(function($r) {
   $r->map('post', '/transaction/([0-9]+)', 'transaction#update');
   $r->map('post', '/transaction/', 'transaction#create');
   $r->map('delete', '/transaction/([0-9]+)', 'transaction#delete');
-  $r->map('get', '/transaction/get_support_currencies', 'transaction#get_support_currencies');
   $r->map('get', '/transaction/filtered_transactions', 'transaction#filtered_transactions');
 
   $r->map('get', '/transaction/index', 'transaction#index');
@@ -34,5 +33,8 @@ App::$router->draw(function($r) {
 
   $r->map('get', '/user', 'user#index');
   $r->map('get', '/user/show/([0-9]+)', 'user#show');
+
+  $r->map('get', '/currency/get_exchange_rates', 'currency#get_exchange_rates');
+  $r->map('get', '/currency/get_supported_currencies', 'currency#get_supported_currencies');
 });
 

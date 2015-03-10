@@ -1,5 +1,23 @@
 <?php
 
+class ValidationException extends Exception {
+  private $errors;
+
+  public function __construct(array $errors = array(), $message = null, $code = 0) {
+    parent::__construct($message, $code);
+
+    $this->errors = $errors;
+  }
+
+  public function get_errors() {
+    return $this->errors;
+  }
+}
+
+/**
+ * Manage registration and performing validation 
+ * using registered validators
+ */
 class ValidationManager {
   /**
    * array | Contain registered validators
@@ -33,8 +51,8 @@ class ValidationManager {
    * @throw ValidationException
    */
   public function do_validate() {
-    // $errors contains error messages
-    $errors = array();
+    $errors = array(); // contains error messages
+
     foreach ($this->validators as $field_name => $validator) {
       if (!$validator->validate())
         $errors[$field_name] = $validator->get_message();

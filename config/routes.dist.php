@@ -7,7 +7,12 @@
 
 App::$router->draw(function($r) {
   $r->root('controller#index');
+
   $r->map('get', '/path/', 'controller#action');
-  $r->map('post', '/controller/([REGEX])/action/([0-9]+)', 'controller#action');
+
+  $r->get('/controller/([REGEX])/action/([0-9]+)', 'controller#action');
+  $r->post('/controller/([REGEX])/action/([0-9]+)', 'controller#action');
+  $r->put('/controller/([REGEX])/action/([0-9]+)', 'controller#action');
+  $r->delete('/controller/([REGEX])/action/([0-9]+)', 'controller#action');
 });
 

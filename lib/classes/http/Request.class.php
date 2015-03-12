@@ -17,20 +17,19 @@ class Request {
 
   /**
    * Applies to Request with Content-Type other than application/x-www-form-urlencoded
-   * Replace POST request parameters with the content in the body of the request
-   * (if possible)
+   * Replace POST request parameters with the content in the body of the request if possible
    */
   private function prepareRequestData() {
     $http_request = $this->http_request;
     $content_type = $http_request->headers->get('Content-Type');
 
+    // _TODO: make it some how more extensible
     if (0 === strpos($content_type, 'application/json')) {
         $data = json_decode($http_request->getContent(), true);
         $http_request->request->replace(is_array($data) ? $data : array());
     } else if (0 === strpos($content_type, 'application/xml')) {
       // pending
     }
-
   } 
 
   /**
@@ -49,12 +48,15 @@ class Request {
     if ($http_request->getMethod() == 'OPTIONS')
       return true;
 
-    // Finally, compare Origin and Host
+    // Finally, compare Origin and Host (protocol, hostname, port must exactly the same)
+    // if they're different then it's a Cross-Domain Request
     $server_host = $http_request->getSchemeAndHttpHost().':'.$http_request->getPort();
     preg_match('/^(https?):\/\/(.*?)(?::(\d+))?$/', $origin, $matches);
+
     $origin_protocol = $matches[1];
     $origin_hostname = $matches[2];
     $origin_port     = isset($matches[3]) ? $matches[3] : null;
+
     if (is_null($origin_port)) {
       $origin_port = $origin_protocol === 'http' ? '80' : '443';
     }
@@ -64,16 +66,19 @@ class Request {
   }
 
   /**
-   * _TODO: whitelist configurable
-   * Check if CORS Request allowed
+   * Check if CORS Request from a specific host is allowed 
+   *
+   * Configure allowed hosts: (maybe in config/config.php)
+   * $requestObject->setTrustedHosts(array('host1','host2');
+   *
    * @return boolean
    */
   public function isCrossDomainAllowed() {
-    $whitelist = array('http://localhost:8000', 'markzero.com');
-
-    $this->http_request->setTrustedHosts($whitelist);
-
+    
+    // Host that make the request
     $origin = $this->http_request->headers->get('Origin', '');
+
+    // List of trusted hosts
     $trusted_origins = $this->http_request->getTrustedHosts();
 
     foreach ($trusted_origins as $host_pattern) {

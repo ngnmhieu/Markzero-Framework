@@ -77,8 +77,8 @@ class App {
   private static function loadConfig() {
     // global application configurations
     self::$config = new StaticData(self::$APP_PATH."config/");
-    // base configurations
-    require_once(self::$APP_PATH."config/base.php");
+    // configurations
+    require_once(self::$APP_PATH."config/config.php");
     // database configurations
     require_once(self::$CORE_PATH."database.php");
   }

@@ -1,7 +1,3 @@
 .DS_Store
 *.swp
-test.php
-test.json
 vendor/
-data/**/*.json
-config/**/*.json

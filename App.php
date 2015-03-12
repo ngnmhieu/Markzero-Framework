@@ -94,8 +94,8 @@ class App {
    * Loads files that contain important classes
    */
   private static function loadClasses() { 
-    // autoload third-party libraries
-    require_once(self::$APP_PATH. "vendor/autoload.php");
+    // autoload third-party libraries for the framework
+    require_once(self::$CORE_PATH. "vendor/autoload.php");
     // request class encapsulate all the information about the current request
     require_once(self::$CORE_PATH. "lib/classes/http/Request.class.php");
     // request class encapsulate all the information about the current request
@@ -110,6 +110,8 @@ class App {
     require_once(self::$CORE_PATH. "lib/classes/session/Session.class.php");
     // manages flash messages
     require_once(self::$CORE_PATH. "lib/classes/session/Flash.class.php");
+    // autoload third-party libraries for the application
+    require_once(self::$APP_PATH. "vendor/autoload.php");
 
     // load base controller, model and view
     require_once(self::$CORE_PATH. "mvc/AppController.php");

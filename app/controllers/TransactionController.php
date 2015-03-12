@@ -4,7 +4,7 @@ class TransactionController extends AppController {
     $data['transactions'] = Transaction::findAll();
 
     $this->response()->respond_to('html', function() use ($data) {
-      App::$view->render('html', $data, $this->name().'/'.'index', 'default');
+      App::$view->render('html', $data, 'transaction/index', 'default');
     });
 
     $this->response()->respond_to('json', function() use ($data) {
@@ -12,7 +12,7 @@ class TransactionController extends AppController {
         return $transaction->to_array();
       }, $data['transactions']);
 
-      App::$view->render('json', $data, $this->name().'/'.'index');
+      App::$view->render('json', $data, 'transaction/index');
     });
   }
 
@@ -27,7 +27,7 @@ class TransactionController extends AppController {
           }, $data['transactions']);
         }
 
-        App::$view->render('json', $data, $this->name().'/'.'index');
+        App::$view->render('json', $data, 'transaction/index');
       });
     } catch(ValidationException $e) {
       $this->response()->respond_to('json', function() use ($e) {
@@ -43,7 +43,7 @@ class TransactionController extends AppController {
 
     $this->response()->respond_to('json', function() use ($data) {
       $data['transaction'] = $data['transaction']->to_array();
-      App::$view->render('json', $data, $this->name().'/'.'show');
+      App::$view->render('json', $data, 'transaction/show');
     });
   }
 
@@ -52,7 +52,7 @@ class TransactionController extends AppController {
     $tran = new Transaction();
 
     $this->response()->respond_to('html', function() use ($data) {
-      App::$view->render('html', $data, $this->name().'/'.'add', 'default');
+      App::$view->render('html', $data, 'transaction/add', 'default');
     });
 
   }
@@ -62,7 +62,7 @@ class TransactionController extends AppController {
     $data['categories'] = Category::findAll();
 
     $this->response()->respond_to('html', function() use ($data) {
-      App::$view->render('html', $data, $this->name().'/'.'edit', 'default');
+      App::$view->render('html', $data, 'transaction/edit', 'default');
     });
   }
 
@@ -71,7 +71,7 @@ class TransactionController extends AppController {
       $tran = Transaction::create($this->request()->request);
 
       $this->response()->respond_to('html', function() {
-        $this->response()->redirect(array("controller" => $this->name(), "action" => "index"));
+        $this->response()->redirect(array("controller" => 'transaction', "action" => "index"));
       });
 
       $this->response()->respond_to('json', function() {
@@ -80,7 +80,7 @@ class TransactionController extends AppController {
     } catch(ValidationException $e) {
       $this->response()->respond_to('html', function() use($e) {
         set_flash('error', implode("<br />",$e->get_errors()));
-        $this->response()->redirect(array("controller" => $this->name(), 'action' => 'add'));
+        $this->response()->redirect(array("controller" => 'transaction', 'action' => 'add'));
       });
 
       $this->response()->respond_to('json', function() use($e) {
@@ -95,7 +95,7 @@ class TransactionController extends AppController {
     try {
       Transaction::delete($id);
       $this->response()->respond_to('html', function() {
-        $this->response()->redirect(array("controller" => $this->name(), "action" => "index"));
+        $this->response()->redirect(array("controller" => 'transaction', "action" => "index"));
       });
 
       $this->response()->respond_to('json', function() {
@@ -118,7 +118,7 @@ class TransactionController extends AppController {
       $tran = Transaction::update($id, $this->request()->request);
 
       $this->response()->respond_to('html', function() {
-          $this->response()->redirect(array("controller" => $this->name(), "action" => "index"));
+          $this->response()->redirect(array("controller" => 'transaction', "action" => "index"));
       });
 
       $this->response()->respond_to('json', function() {
@@ -129,7 +129,7 @@ class TransactionController extends AppController {
 
       $this->response()->respond_to('html', function() use($e, $id) {
         set_flash('error', implode("<br />",$e->get_errors()));
-        $this->response()->redirect(array("controller" => $this->name(), 'action' => 'edit'), array($id));
+        $this->response()->redirect(array("controller" => 'transaction', 'action' => 'edit'), array($id));
       });
 
       $this->response()->respond_to('json', function() use($e) {

@@ -24,8 +24,13 @@ class Currency extends AppModel {
     });
     $curl->get($api_endpoint);
 
+    $data = $curl->response->query->results->rate;
+    if (!$data) {
+      throw new Exception("Cannot request Exchange Rates.");
+    }
+
     $exchange_rates = array(); 
-    foreach ($curl->response->query->results->rate as $rate) {
+    foreach ($data as $rate) {
       $key = substr($rate->id,0,3);
       $exchange_rates[$key] = $rate->Rate;
     }

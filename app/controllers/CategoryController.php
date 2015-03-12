@@ -4,11 +4,11 @@ class CategoryController extends AppController {
     $data['categories'] = Category::findAll();
 
     $this->response()->respond_to('html', function() use($data) {
-      App::$view->render('html', $data, $this->name().'/'.'index', 'default');
+      App::$view->render('html', $data, 'category/index', 'default');
     });
 
     $this->response()->respond_to('json', function() use($data) {
-      App::$view->render('json', $data, $this->name().'/'.'index');
+      App::$view->render('json', $data, 'category/index');
     });
 
   }
@@ -17,7 +17,7 @@ class CategoryController extends AppController {
     $data['category'] = Category::find($id);
 
     $this->response()->respond_to('html', function() use($data) {
-      App::$view->render('html', $data, $this->name().'/'.'edit', 'default');
+      App::$view->render('html', $data, 'category/edit', 'default');
     });
 
   }
@@ -27,7 +27,7 @@ class CategoryController extends AppController {
       $cat = Category::update($id, $this->request()->request);
 
       $this->response()->respond_to('html', function() {
-        $this->response()->redirect(array("controller" => $this->name(), "action" => "index"));
+        $this->response()->redirect(array("controller" => 'category', "action" => "index"));
       });
 
       $this->response()->respond_to('json', function() {
@@ -53,7 +53,7 @@ class CategoryController extends AppController {
       Category::delete($id);
 
       $this->response()->respond_to('html', function() {
-        $this->response()->redirect(array("controller" => $this->name(), "action" => "index"));
+        $this->response()->redirect(array("controller" => 'category', "action" => "index"));
       });
 
       $this->response()->respond_to('json', function() {
@@ -76,7 +76,7 @@ class CategoryController extends AppController {
       $cat = Category::create($this->request()->request);
 
       $this->response()->respond_to('html', function() {
-        $this->response()->redirect(array("controller" => $this->name(), "action" => "index"));
+        $this->response()->redirect(array("controller" => 'category', "action" => "index"));
       });
 
       $this->response()->respond_to('json', function() {
@@ -99,7 +99,7 @@ class CategoryController extends AppController {
 
   function add() {
     $this->response()->respond_to('html', function() {
-      App::$view->render('html', array(), $this->name().'/'.'add', 'default');
+      App::$view->render('html', array(), 'category/add', 'default');
     });
 
   }

@@ -31,6 +31,14 @@ class AppController {
   }
 
   /**
+   * Render a view using a concrete AppView object (HtmlView, JsonView, ...)
+   * @param AppView $view
+   */
+  public function render(AppView $view) {
+    $this->response->setContent($view->getContent());
+  }
+
+  /**
    * @return string | name of current controller
    */
   protected function name() {

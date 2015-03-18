@@ -87,12 +87,20 @@ class Response implements HasHttpStatusCode {
       }
     }
 
+
     // Check if request accept any kind of content-type `*/*`
     if (in_array('*/*', $accept_mimes)) {
       $first_responder = reset($responders);
       $first_responder();
       $http_response->send();
-    } else { // Cannot find any corresponding responder
+    } 
+    // Check if user want to respond to any requested content-type
+    else if (array_key_exists('all', $responders)) {
+      $responders['all']();
+      $http_response->send();
+    } 
+    // Cannot find any corresponding responder
+    else { 
       $http_response->setStatusCode(Response::HTTP_UNSUPPORTED_MEDIA_TYPE);
       $http_response->send();
     }

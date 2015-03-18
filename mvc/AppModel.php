@@ -85,7 +85,10 @@ class AppModel {
    * Proxy for Doctrine\ORM\EntityRepository#find
    **/
   static function find($id, $lock_mode = \Doctrine\DBAL\LockMode::NONE, $lock_version = null) {
-    return self::getRepo()->find($id, $lock_mode, $lock_version);
+    $result = self::getRepo()->find($id, $lock_mode, $lock_version);
+    if ($result === null)
+      throw new ResourceNotFoundException();
+    return $result;
   }
 
   /**

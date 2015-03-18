@@ -62,7 +62,7 @@ class App {
    * like Session, Router, Database,...
    */
   private static function initClasses() {
-    self::$view     = new AppView(self::$VIEW_PATH);
+    self::$view     = new AppViewOld(self::$VIEW_PATH);
     self::$session  = new Session();
     self::$request  = new Request();
     self::$response = new Response(self::$request);
@@ -117,6 +117,15 @@ class App {
     require_once(self::$CORE_PATH. "mvc/AppController.php");
     require_once(self::$CORE_PATH. "mvc/AppModel.php");
     require_once(self::$CORE_PATH. "mvc/AppView.php");
+    require_once(self::$CORE_PATH. "mvc/AppViewOld.php");
+
+    // Load all subclasses of View
+    $views_dir = self::$CORE_PATH. "mvc/views/"; 
+    foreach (scandir($views_dir) as $file) {
+      if (preg_match('/^[A-Z][A-Za-z_\-.]*\.php$/', $file)) {
+        require_once($views_dir.$file);
+      }
+    }
 
     // Validation facilities
     require_once(self::$CORE_PATH. "lib/classes/validation/Abstractvalidator.class.php");

@@ -122,6 +122,14 @@ class App {
     require_once(self::$CORE_PATH. "lib/classes/validation/Abstractvalidator.class.php");
     require_once(self::$CORE_PATH. "lib/classes/validation/ValidationManger.class.php");
 
+    // Load all Exception classes
+    $exceptions_dir = self::$CORE_PATH. "lib/classes/exceptions/"; 
+    foreach (scandir($exceptions_dir) as $file) {
+      if (preg_match('/^[A-Z][A-Za-z_\-.]*\.php$/', $file)) {
+        require_once($exceptions_dir.$file);
+      }
+    }
+
     // Load all validators
     $validators_dir = self::$CORE_PATH. "lib/classes/validation/validators/"; 
     foreach (scandir($validators_dir) as $file) {

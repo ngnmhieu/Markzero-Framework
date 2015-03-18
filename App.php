@@ -10,7 +10,6 @@ class App {
   static $VIEW_PATH;
   static $PUBLIC_PATH;
 
-  static $view;
   static $request;
   static $response;
   static $config;   // application configurations
@@ -62,7 +61,6 @@ class App {
    * like Session, Router, Database,...
    */
   private static function initClasses() {
-    self::$view     = new AppViewOld(self::$VIEW_PATH);
     self::$session  = new Session();
     self::$request  = new Request();
     self::$response = new Response(self::$request);
@@ -117,7 +115,6 @@ class App {
     require_once(self::$CORE_PATH. "mvc/AppController.php");
     require_once(self::$CORE_PATH. "mvc/AppModel.php");
     require_once(self::$CORE_PATH. "mvc/AppView.php");
-    require_once(self::$CORE_PATH. "mvc/AppViewOld.php");
 
     // Load all subclasses of View
     $views_dir = self::$CORE_PATH. "mvc/views/"; 

@@ -10,7 +10,6 @@ class AppController {
   function __construct() {
     $this->request  = App::$request;
     $this->response = App::$response;
-    $this->view     = App::$view;  
   }
 
   /**

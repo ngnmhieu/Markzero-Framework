@@ -35,7 +35,17 @@ class Response implements HasHttpStatusCode {
     $status_code = $this->http_response->getStatusCode();
 
     // if non of the 3xx HTTP Status Code has been set, HTTP_FOUND 302 status code is set
-    if (!in_array($status_code, array(HTTP_MULTIPLE_CHOICES, HTTP_MOVED_PERMANENTLY, HTTP_FOUND, HTTP_SEE_OTHER, HTTP_NOT_MODIFIED, HTTP_USE_PROXY, HTTP_RESERVED, HTTP_TEMPORARY_REDIRECT, HTTP_PERMANENTLY_REDIRECT))) {
+    if (!in_array($status_code, array(
+      Response::HTTP_MULTIPLE_CHOICES,
+      Response::HTTP_MOVED_PERMANENTLY,
+      Response::HTTP_FOUND,
+      Response::HTTP_SEE_OTHER,
+      Response::HTTP_NOT_MODIFIED,
+      Response::HTTP_USE_PROXY,
+      Response::HTTP_RESERVED,
+      Response::HTTP_TEMPORARY_REDIRECT,
+      Response::HTTP_PERMANENTLY_REDIRECT
+    ))) {
       $this->http_response->setStatusCode(Response::HTTP_FOUND, 'Redirecting');
     }
       

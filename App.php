@@ -73,11 +73,21 @@ class App {
    * important configurations are among others: application wide config, database,...
    */
   private static function loadConfig() {
-    // global application configurations
+    // Global application configurations
     self::$config = new StaticData(self::$APP_PATH."config/");
-    // configurations
+
+    // Configurations
     require_once(self::$APP_PATH."config/config.php");
-    // database configurations
+
+    // Initializers, load all files in initializers directory
+    $initializers_path = self::$APP_PATH."config/initializers/"; 
+    foreach (scandir($initializers_path) as $file) {
+      if (preg_match('/^[A-Za-z_\-.]+\.php$/', $file)) {
+        require_once($initializers_path.$file);
+      }
+    }
+
+    // Database configurations
     require_once(self::$CORE_PATH."database.php");
   }
 

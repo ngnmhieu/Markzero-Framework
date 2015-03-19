@@ -204,17 +204,37 @@ class Router {
    * @param string $destination in form of "controller#action"
    */
   public function root($dest) {
-    $this->map("GET", "/", $dest);
-    $this->map("POST", "/", $dest);
-  }
-  
-  /* _TODO:
-   * resources() method defines default RESTful routes
-   * for the application
-   */  
-  public function resources() {
+    $this->map("get", "/", $dest);
+    $this->map("post", "/", $dest);
+    $this->map("delete", "/", $dest);
+    $this->map("put", "/", $dest);
   }
 
+  /**
+   * Shorthand for $this->map('get',...);
+   */
+  public function get($route_string, $dest) {
+    return $this->map('get', $route_string, $dest);
+  }
+  /**
+   * Shorthand for $this->map('post',...);
+   */
+  public function post($route_string, $dest) {
+    return $this->map('post', $route_string, $dest);
+  }
+  /**
+   * Shorthand for $this->map('put',...);
+   */
+  public function put($route_string, $dest) {
+    return $this->map('put', $route_string, $dest);
+  }
+  /**
+   * Shorthand for $this->map('delete',...);
+   */
+  public function delete($route_string, $dest) {
+    return $this->map('delete', $route_string, $dest);
+  }
+  
   /* 
    * draw() method serves as DSL (Domain Specific Language) 
    * @param callable $func | "draws" routes for application, 

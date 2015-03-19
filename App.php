@@ -62,9 +62,12 @@ class App {
    */
   private static function initClasses() {
     self::$session  = new Session();
+    self::$router   = new Router();
     self::$request  = new Request();
-    self::$response = new Response(self::$request);
-    self::$router   = new Router(self::$request, self::$response);
+    self::$response = new Response(self::$request, self::$router);
+
+    self::$router->setRequest(self::$request);
+    self::$router->setResponse(self::$response);
   }
 
   /**

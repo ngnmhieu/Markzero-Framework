@@ -29,9 +29,10 @@ class Router {
   private $request;  // Request object
 
   /**
-   * Response $response
+   * @param Request  $request
+   * @param Response $response
    */
-  function __construct(Request $request, Response $response) {
+  function __construct(Request $request = null, Response $response = null) {
     $this->routes = array(
       'GET' => array(),
       'PUT' => array(),
@@ -39,7 +40,15 @@ class Router {
       'DELETE' => array()
     );
 
+    $this->request  = $request;
+    $this->response = $response;
+  }
+
+  function setRequest(Request $request) {
     $this->request = $request;
+  }
+
+  function setResponse(Response $response) {
     $this->response = $response;
   }
 
@@ -151,12 +160,12 @@ class Router {
 
   /**
    * Matches the URI with the controller and action
-   * @param string $method must be among these methods POST, GET, PUT, DELETE
-   * @param string $route_string specify the uri that will be match
-   * @param string $dest in form {controller}#{action}
-   * @param string $path_name | will be used to get web path [optional] 
+   * @param string $method HTTP Method, must be among these methods POST, GET, PUT, DELETE,...
+   * @param string $route_string Specify the uri that will be match against
+   * @param string $dest Destination, should have the form of {controller}#{action}
+   * @param string $path_name (optional) Name of path path , default to {controller}#{action} 
    **/
-  public function map($method, $route_string, $dest) {
+  public function map($method, $route_string, $dest, $path_name = null) {
     if (preg_match("~([a-zA-Z0-9_\-/]+)#([a-zA-Z0-9_\-]+)~", $dest, $matches)) {
       $controller = $matches[1];
       $action     = $matches[2];
@@ -180,7 +189,9 @@ class Router {
     ); 
 
     // add mapping for web paths
-    $path_name = "{$controller}_{$action}";
+    if ($path_name === null) {
+      $path_name = "{$controller}#{$action}";
+    }
     $this->web_paths[$path_name] = function(array $params) use ($route_string) {
       return preg_replace_inorder('~\(.*?\)~', $params, $route_string);
     };
@@ -188,11 +199,13 @@ class Router {
 
   /**
    * Return a web path with all the parameters replaced
-   * this usually be called by helper function path() and by controller
-   * @param string $path_name | eg: 'transaction_edit'
+   * this usually be called by helper function webpath() and by controller
+   * @param string $path_name | eg: 'transaction#edit'
    * @param array  $params 
    */
   public function getWebPath($path_name, array $params = array()) {
+    // _TODO: get web path by providing controller and action
+    
     if (empty($this->web_paths[$path_name])) {
       die("No such path_name in web_paths: ". $path_name);
     }
@@ -239,8 +252,10 @@ class Router {
    * draw() method serves as DSL (Domain Specific Language) 
    * @param callable $func | "draws" routes for application, 
    *                       |  $func takes a Router object
+   * @return Router the current Router object
    */  
   public function draw($func) {
     $func($this);
+    return $this;
   }
 }

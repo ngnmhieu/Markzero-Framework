@@ -34,12 +34,10 @@ function selected($a, $b) {
   return $a == $b ? "selected" : "";
 }
 
-// should be flash for array
-
 /**
  * @param string $path_name
  * @param array $params
  */
-function path($path_name, array $params = array()) {
+function webpath($path_name, array $params = array()) {
   return App::$router->getWebPath($path_name, $params);
 }

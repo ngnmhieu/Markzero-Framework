@@ -7,34 +7,33 @@ use Symfony\Component\HttpFoundation;
 class Response implements HasHttpStatusCode {
   private $http_response; // HttpFoundation\Response object
   private $request;       // Request object
+  private $router;        // Router object
   private $responders;    // array contain functions corresponding to a response format (html, json ...)
 
-  function __construct(Request $request) {
+  function __construct(Request $request, Router $router) {
     $this->http_response = new HttpFoundation\Response();
     $this->request       = $request;
+    $this->router        = $router;
     $this->responders    = array();
   }
 
   /**
    * Setup a redirection
-   * @param array $to array('controller' => ..., 'action' => '..')
+   * @param string $controller
+   * @param string $action
    * @param array $params
    * @return Response $this
+   * @throw Exception If no controller is provided
    */
-  public function redirect(array $to = array(), array $params = array()) {
-    if (!$to['controller']) {
-      // _TODO: Raise exception
-      die("Controller must be provided!");
-    }
+  public function redirect($controller, $action, array $params = array()) {
 
-    $controller = strtolower($to['controller']);
-    $action = isset($to['action']) ? strtolower($to['action']) : "index";
+    $path_name = "{$controller}#{$action}";
 
-    $path_name = "{$controller}_{$action}";
-    $location = App::$router->getWebPath($path_name, $params);
+    // _TODO: get web path by pass controller and action, not just name 
+    $location = $this->router->getWebPath($path_name, $params);
 
-    $this->http_response->setStatusCode(Response::HTTP_FOUND);
-    $this->http_response->headers->set('Location', $location);  
+    $this->http_response->setStatusCode(Response::HTTP_TEMPORARY_REDIRECT, 'Redirecting');
+    $this->http_response->headers->set('Location', $location);
 
     return $this;
   }

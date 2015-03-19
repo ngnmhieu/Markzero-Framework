@@ -7,8 +7,7 @@ namespace Session;
  * usually used for error, notice, success messages
  */
 class Flash {
-  // @type boolean | keep old flash messages to next request or not
-  private $keep;
+  private $keep; // [bool] Keep old flash messages to next request or not
 
   /**
    * Return the Singleton instance Flash of the class

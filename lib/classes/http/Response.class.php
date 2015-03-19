@@ -32,7 +32,13 @@ class Response implements HasHttpStatusCode {
     // _TODO: get web path by pass controller and action, not just name 
     $location = $this->router->getWebPath($path_name, $params);
 
-    $this->http_response->setStatusCode(Response::HTTP_TEMPORARY_REDIRECT, 'Redirecting');
+    $status_code = $this->http_response->getStatusCode();
+
+    // if non of the 3xx HTTP Status Code has been set, HTTP_FOUND 302 status code is set
+    if (!in_array($status_code, array(HTTP_MULTIPLE_CHOICES, HTTP_MOVED_PERMANENTLY, HTTP_FOUND, HTTP_SEE_OTHER, HTTP_NOT_MODIFIED, HTTP_USE_PROXY, HTTP_RESERVED, HTTP_TEMPORARY_REDIRECT, HTTP_PERMANENTLY_REDIRECT))) {
+      $this->http_response->setStatusCode(Response::HTTP_FOUND, 'Redirecting');
+    }
+      
     $this->http_response->headers->set('Location', $location);
 
     return $this;

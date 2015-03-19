@@ -15,17 +15,17 @@ class AppController {
   /**
    * @return Request | Application Request object
    **/
-  public function request() { return $this->request; }
+  protected function request() { return $this->request; }
 
   /**
    * @return Response | Application Request object
    **/
-  public function response() { return $this->response; }
+  protected function response() { return $this->response; }
 
   /**
    * Shorthand for $this->response->respond_to(...);
    */
-  public function respond_to() {
+  protected function respond_to() {
     return call_user_func_array(array($this->response, 'respond_to'), func_get_args());
   }
 
@@ -33,7 +33,7 @@ class AppController {
    * Render a view using a concrete AppView object (HtmlView, JsonView, ...)
    * @param AppView $view
    */
-  public function render(AppView $view) {
+  protected function render(AppView $view) {
     $this->response->setContent($view->getContent());
   }
 

@@ -77,8 +77,19 @@ class AppModel {
     return true;
   }
 
+  /**
+   * Get a new ValidationManager object
+   */
   static function createValidationManager() {
     return new ValidationManager();
+  }
+
+  /**
+   * Return the application EntityManager
+   * @return Doctrine\ORM\EntityManager
+   */
+  static function getEntityMananger() {
+    return App::$em;
   }
 
   /**
@@ -142,19 +153,21 @@ class AppModel {
   }
 
   /**
-   * get the repository with the name of the current model
+   * Get the repository with the name of the current model
    **/
   static function getRepo() {
     $model = get_called_class();
-    return App::$em->getRepository($model);
+    return self::getEntityMananger()->getRepository($model);
   }
 
   /**
-   * call getter for attributes if defined
+   * Call getter for attributes if defined
    * otherwise return the attribute
    **/
   function __get($attr) {
+
     $getter = 'get'.ucfirst($attr); // getter name
+
     if (method_exists($this, $getter)) {
       return $this->{$getter}();
     } else if (property_exists(get_called_class(), $attr) 
@@ -168,25 +181,24 @@ class AppModel {
       return $this->{$attr};
     }
 
-    // TODO: Attribute not found, generate error
     $trace = debug_backtrace();
-    trigger_error(
-      'Undefinierte Eigenschaft for __get(): ' . $attr .
-      ' in ' . $trace[0]['file'] .
-      ' Zeile ' . $trace[0]['line'],
-      E_USER_NOTICE);
-    return null;
+    throw new AttributNotFoundException(
+       "Undefined attribute `$attr`:"
+      .' in ' . $trace[0]['file']
+      .' Line ' . $trace[0]['line']
+    );
   }
 
   /**
-   * call setter for attributes if defined
+   * Call setter for attributes if defined
    * otherwise set the attribute to the given value
    **/
   function __set($attr, $value) {
+
     $setter = 'set'.ucfirst($attr); // setter name
+
     if (method_exists($this, $setter)) {
-      call_user_func_array(array($this, $setter), func_get_args());
-      return;
+      return call_user_func_array(array($this, $setter), func_get_args());
     } else if (property_exists(new static, $attr) 
                && ((property_exists(get_called_class(), 'attr_writer') 
                    && is_array(static::$attr_writer) 
@@ -196,17 +208,15 @@ class AppModel {
                    && is_array(static::$attr_accessor) 
                    && in_array($attr, static::$attr_accessor)))) {
       $this->{$attr} = $value;
-      return;
+      return $value;
     }
 
-    // TODO: Attribute not found, generate error
     $trace = debug_backtrace();
-    trigger_error(
-      'Undefinierte Eigenschaft for __set(): ' . $attr .
-      ' in ' . $trace[0]['file'] .
-      ' Zeile ' . $trace[0]['line'],
-      E_USER_NOTICE);
-    return null;
+    throw new AttributNotFoundException(
+       "Undefined attribute `$attr`:"
+      .' in ' . $trace[0]['file']
+      .' Line ' . $trace[0]['line']
+    );
   }
 
   /**
@@ -222,17 +232,16 @@ class AppModel {
     } else if (preg_match('~set([A-Z].*)~', $name, $matches)) {
       $attr = lcfirst($matches[1]);
       $this->{$attr} = $args[0];
-      return;
+      return $this->{$attr};
     }
     
-    // TODO: Attribute not found, generate error
     $trace = debug_backtrace();
-    trigger_error(
+    throw new BadMethodCallException(
       "Undefined method `$name()` in class `".get_class(new static)."`: ".
       ' in ' . $trace[0]['file'] .
       ' Line ' . $trace[0]['line'],
-      E_USER_NOTICE);
-    return null;
+      E_USER_NOTICE
+    );
   }
 
   /**

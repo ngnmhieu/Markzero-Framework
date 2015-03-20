@@ -108,7 +108,6 @@ class Router {
    *         false if they don't
    */
   private function matchPath($pattern, $path) {
-    // _TODO: extract arguments in a better way
     $matches = array();
     $result = preg_match($pattern, $path, $matches);
     return $result ? array_slice($matches, 1) : false;
@@ -162,7 +161,7 @@ class Router {
    * @param string $method HTTP Method, must be among these methods POST, GET, PUT, DELETE,...
    * @param string $route_string Specify the uri that will be match against
    * @param string $dest Destination, should have the form of {controller}#{action}
-   * @param string $path_name (optional) Name of path path , default to {controller}#{action} 
+   * @param string $path_name (optional, not implemented)
    **/
   public function map($method, $route_string, $dest, $path_name = null) {
     if (preg_match("~([a-zA-Z0-9_\-/]+)#([a-zA-Z0-9_\-]+)~", $dest, $matches)) {
@@ -187,6 +186,7 @@ class Router {
       ':action' => $action
     ); 
 
+    // _TODO: namespaced ???
     // route identification
     $route_id = "{$controller}#{$action}";
     if (!array_key_exists($route_id, $this->webpaths)) {

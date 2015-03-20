@@ -39,5 +39,10 @@ function selected($a, $b) {
  * @param array $params
  */
 function webpath($path_name, array $params = array()) {
-  return App::$router->getWebPath($path_name, $params);
+  $path_comp  = explode('#',$path_name);
+  $controller = $path_comp[0];
+  $action     = $path_comp[1];
+
+  // return the first webpath found
+  return App::$router->getWebPath($controller, $action, $params)[0];
 }

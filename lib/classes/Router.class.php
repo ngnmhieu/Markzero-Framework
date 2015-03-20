@@ -8,22 +8,21 @@ class Router {
   /*
    * $routes have the following form:
    * array(
-   *  ['GET'    => array(array(:controller => 'user', :action => 'index' ), [...])]
-   *  ['POST'   => array(array(:controller => 'user', :action => 'insert'), [...])]
-   *  ['PUT'    => array(array(:controller => 'user', :action => 'update'), [...])]
-   *  ['DELETE' => array(array(:controller => 'user', :action => 'delete'), [...])]
+   *  'GET'    => array('path_pattern' => array(:controller => 'user', :action => 'index' ), array(),...),
+   *  'POST'   => array('path_pattern' => array(:controller => 'user', :action => 'insert'), array(),...),
+   *  'PUT'    => array('path_pattern' => array(:controller => 'user', :action => 'update'), array(),...),
+   *  'DELETE' => array('path_pattern' => array(:controller => 'user', :action => 'delete'), array(),...),
    * );
    * add new routes to $routes with map() method. (config/routes.php)
    */
   private $routes = array();
   /**
-   * $web_paths is an array that map a string to a function
-   * the string is the name of the path (eg: 'transaction_edit') 
-   * the function will be used to replace user-provided parameters to web path
-   * and returns a web path (eg: '/transaction/{PARAM1}/edit/{PARAM2}) 
+   * $webpaths is an array that map a route identification (i.e 'controller#action') 
+   * to a function. This function will be used to replace user-provided parameters 
+   * to web path and returns a web path (eg: '/transaction/{PARAM1}/edit/{PARAM2}) 
    * with PARAM1, PARAM2,... are user-provided arguments
    */
-  private $web_paths = array();
+  private $webpaths = array();
 
   private $response; // Response object
   private $request;  // Request object
@@ -77,7 +76,7 @@ class Router {
       }
     }
 
-    // load mappings in configuration file, according to HTTP method
+    // get mappings in routes.php file, according to HTTP method
     $mappings = $this->routes[$http_method]; 
     $destination = array();
     $args = array(); // will contain URI arguments
@@ -188,11 +187,13 @@ class Router {
       ':action' => $action
     ); 
 
-    // add mapping for web paths
-    if ($path_name === null) {
-      $path_name = "{$controller}#{$action}";
+    // route identification
+    $route_id = "{$controller}#{$action}";
+    if (!array_key_exists($route_id, $this->webpaths)) {
+      $this->webpaths[$route_id] = array();
     }
-    $this->web_paths[$path_name] = function(array $params) use ($route_string) {
+
+    $this->webpaths[$route_id][] = function(array $params) use ($route_string) {
       return preg_replace_inorder('~\(.*?\)~', $params, $route_string);
     };
   }
@@ -200,16 +201,30 @@ class Router {
   /**
    * Return a web path with all the parameters replaced
    * this usually be called by helper function webpath() and by controller
-   * @param string $path_name | eg: 'transaction#edit'
+   * @param string $controller
+   * @param string $action
    * @param array  $params 
+   * @throw InvalidArgumentException when $controller or $action is not string
+   *        Exception if no path is found
    */
-  public function getWebPath($path_name, array $params = array()) {
-    // _TODO: get web path by providing controller and action
-    
-    if (empty($this->web_paths[$path_name])) {
-      die("No such path_name in web_paths: ". $path_name);
+  public function getWebPath($controller, $action, array $params = array()) {
+    if(!is_string($controller)) {
+      throw new InvalidArgumentException('Argument $controller must be a string: Router#getWebPath.');
+    } 
+
+    if(!is_string($action)) {
+      throw new InvalidArgumentException('Argument $action must be a string: Router#getWebPath.');
     }
-    return $this->web_paths[$path_name]($params);
+
+    $route_id = "{$controller}#{$action}";
+    if (empty($this->webpaths[$route_id])) {
+      throw new Exception("No web path is found for path name: ". $route_id);
+    }
+
+    // return all populated webpath associated with the specified controller and action
+    return array_map(function($webpath_callback) use ($params) {
+      return $webpath_callback($params);
+    }, $this->webpaths[$route_id]);
   }
 
   /*

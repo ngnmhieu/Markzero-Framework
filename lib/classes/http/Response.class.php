@@ -10,6 +10,10 @@ class Response implements HasHttpStatusCode {
   private $router;        // Router object
   private $responders;    // array contain functions corresponding to a response format (html, json ...)
 
+  /**
+   * @param Request  $request
+   * @param Response $response
+   */
   function __construct(Request $request, Router $router) {
     $this->http_response = new HttpFoundation\Response();
     $this->request       = $request;
@@ -23,18 +27,13 @@ class Response implements HasHttpStatusCode {
    * @param string $action
    * @param array $params
    * @return Response $this
-   * @throw Exception If no controller is provided
    */
   public function redirect($controller, $action, array $params = array()) {
 
-    $path_name = "{$controller}#{$action}";
-
-    // _TODO: get web path by pass controller and action, not just name 
-    $location = $this->router->getWebPath($path_name, $params);
-
-    $status_code = $this->http_response->getStatusCode();
+    $location = $this->router->getWebPath($controller, $action, $params)[0];
 
     // if non of the 3xx HTTP Status Code has been set, HTTP_FOUND 302 status code is set
+    $status_code = $this->http_response->getStatusCode();
     if (!in_array($status_code, array(
       Response::HTTP_MULTIPLE_CHOICES,
       Response::HTTP_MOVED_PERMANENTLY,

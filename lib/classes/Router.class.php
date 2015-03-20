@@ -19,7 +19,7 @@ class Router {
   /**
    * $webpaths is an array that map a route identification (i.e 'controller#action') 
    * to a function. This function will be used to replace user-provided parameters 
-   * to web path and returns a web path (eg: '/transaction/{PARAM1}/edit/{PARAM2}) 
+   * to webpath and returns a webpath (eg: '/controller/{PARAM1}/edit/{PARAM2}) 
    * with PARAM1, PARAM2,... are user-provided arguments
    */
   private $webpaths = array();
@@ -199,26 +199,27 @@ class Router {
   }
 
   /**
-   * Return a web path with all the parameters replaced
+   * Return webpaths with all the parameters replaced
    * this usually be called by helper function webpath() and by controller
    * @param string $controller
    * @param string $action
    * @param array  $params 
+   * @return array List of all webpaths associated with the provided controller and action
    * @throw InvalidArgumentException when $controller or $action is not string
    *        Exception if no path is found
    */
-  public function getWebPath($controller, $action, array $params = array()) {
+  public function getWebpaths($controller, $action, array $params = array()) {
     if(!is_string($controller)) {
-      throw new InvalidArgumentException('Argument $controller must be a string: Router#getWebPath.');
+      throw new InvalidArgumentException('Argument $controller must be a string: Router#getWebpath.');
     } 
 
     if(!is_string($action)) {
-      throw new InvalidArgumentException('Argument $action must be a string: Router#getWebPath.');
+      throw new InvalidArgumentException('Argument $action must be a string: Router#getWebpath.');
     }
 
     $route_id = "{$controller}#{$action}";
     if (empty($this->webpaths[$route_id])) {
-      throw new Exception("No web path is found for path name: ". $route_id);
+      throw new Exception("No webpath is found for path name: ". $route_id);
     }
 
     // return all populated webpath associated with the specified controller and action

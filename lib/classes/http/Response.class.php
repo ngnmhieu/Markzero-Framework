@@ -30,7 +30,7 @@ class Response implements HasHttpStatusCode {
    */
   public function redirect($controller, $action, array $params = array()) {
 
-    $location = $this->router->getWebPath($controller, $action, $params)[0];
+    $location = $this->router->getWebpaths($controller, $action, $params)[0];
 
     // if non of the 3xx HTTP Status Code has been set, HTTP_FOUND 302 status code is set
     $status_code = $this->http_response->getStatusCode();

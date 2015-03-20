@@ -44,5 +44,5 @@ function webpath($path_name, array $params = array()) {
   $action     = $path_comp[1];
 
   // return the first webpath found
-  return App::$router->getWebPath($controller, $action, $params)[0];
+  return App::$router->getWebpaths($controller, $action, $params)[0];
 }

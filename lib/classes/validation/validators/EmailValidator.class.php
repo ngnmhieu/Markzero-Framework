@@ -16,7 +16,7 @@ class EmailValidator extends AbstractValidator {
    * return boolean
    */
   public function validate() {
-    return $this->email && preg_match("/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/", $this->email);
+    return $this->email && preg_match("/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[a-zA-Z]{2,4}$/", $this->email);
   }
 
 }

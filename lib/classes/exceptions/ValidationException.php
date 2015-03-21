@@ -12,7 +12,7 @@ class ValidationException extends Exception {
     $this->errors = $errors;
   }
 
-  public function get_errors() {
+  public function getErrors() {
     return $this->errors;
   }
 }

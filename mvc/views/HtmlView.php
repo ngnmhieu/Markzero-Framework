@@ -37,18 +37,13 @@ class HtmlView extends AppView {
    * @param array  $data variable used in layout and template file
    * @param string $name name of template
    */
-  public function render($data, $name = null) {
-
-    // output raw data when no name is given
-    if ($name === null) {
-      return $data;
-    }
+  public function render(array $data, $name = null) {
 
     // start capturing output in buffer
     ob_start();
 
     $view_path = $this->view_path;
-    $template_file = "$view_path/$name.html.php";
+    $template_file = $view_path."$name.html.php";
 
     // include template file in anonymous function
     // so that the populated variables doesn't cause conflicts

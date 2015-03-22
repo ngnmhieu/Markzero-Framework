@@ -182,7 +182,7 @@ class AppModel {
     }
 
     $trace = debug_backtrace();
-    throw new AttributNotFoundException(
+    throw new AttributeNotFoundException(
        "Undefined attribute `$attr`:"
       .' in ' . $trace[0]['file']
       .' Line ' . $trace[0]['line']
@@ -212,7 +212,7 @@ class AppModel {
     }
 
     $trace = debug_backtrace();
-    throw new AttributNotFoundException(
+    throw new AttributeNotFoundException(
        "Undefined attribute `$attr`:"
       .' in ' . $trace[0]['file']
       .' Line ' . $trace[0]['line']

@@ -23,6 +23,7 @@ class Response implements HasHttpStatusCode {
 
   /**
    * Setup a redirection
+   * _TODO:  to Root? to a URL?
    * @param string $controller
    * @param string $action
    * @param array $params

@@ -9,7 +9,7 @@ class FunctionValidator extends AbstractValidator {
    * @param callable $func
    * @param array    $args
    */
-  public function __construct(callable $func, array $args) {
+  public function __construct(callable $func, array $args = array()) {
     $this->validate_func = $func;
     $this->validate_args = $args;
     $this->set_message(self::DEFAULT_MESSAGE);

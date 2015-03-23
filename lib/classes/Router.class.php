@@ -194,7 +194,11 @@ class Router {
     }
 
     $this->webpaths[$route_id][] = function(array $params) use ($route_string) {
-      return preg_replace_inorder('~\(.*?\)~', $params, $route_string);
+      if (count($params) === 0) {
+        return $route_string;
+      }
+      $patterns = array_fill(0, count($params), '~\(.*?\)~');
+      return preg_replace($patterns, $params, $route_string, 1);
     };
   }
 

@@ -13,6 +13,8 @@ class ValidationManager {
     $this->validators = array();
   }
 
+  /** _TODO: wrap validations in a function which is passed a validationmanager and don't have to call do_validate  **/
+
   /**
    * Register a validator, which will be 
    * executed (with other validators) by calling #do_validate

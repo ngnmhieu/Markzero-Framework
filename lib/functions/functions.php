@@ -11,4 +11,20 @@ function preg_grep_keys(string $pattern, array $input, $flags = 0) {
     return array_intersect_key($input, array_flip(preg_grep($pattern, array_keys($input), $flags)));
 }
 
+/**
+ *
+ */
+function array_flatten($array) {
+  if (!is_array($array)) {
+    return array($array);
+  }
+
+  $result = array();
+  foreach ($array as $item) {
+    $result = array_merge($result, array_flatten($item));
+  }
+
+  return $result;
+}
+
 ?>

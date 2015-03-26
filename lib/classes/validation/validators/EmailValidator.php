@@ -1,4 +1,5 @@
 <?php
+namespace Markzero\Validation\Validator;
 
 class EmailValidator extends AbstractValidator {
   private $email;

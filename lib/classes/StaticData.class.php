@@ -1,4 +1,6 @@
 <?php
+namespace Markzero;
+
 /**
  * Static data are stored in JSON files.
  * Data is represented like directory structure.
@@ -23,7 +25,7 @@ class StaticData {
    *                         or a stdClass object that contain json_decoded result
    */
   private function recursive_load_data($dir) {
-    $result = new stdClass(); 
+    $result = new \stdClass(); 
 
     $cdir = scandir($dir); 
     foreach ($cdir as $node) { 

@@ -1,4 +1,8 @@
 <?php
+namespace Markzero\Http;
+
+use Markzero\App;
+
 /**
  * Router class handles the job of determining
  * where to go with a given URI.

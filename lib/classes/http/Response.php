@@ -1,4 +1,6 @@
 <?php
+namespace Markzero\Http;
+
 use Symfony\Component\HttpFoundation;
 
 /**

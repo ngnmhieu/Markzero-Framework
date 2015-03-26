@@ -1,11 +1,14 @@
 <?php
+use Markzero\App;
+use Markzero\Session\Flash;
+
 /**
  * flash the message with $key
  * @param string $key 
  * @param string $value
  */
 function set_flash($key, $value) {
-  $flasher = \Session\Flash::getInstance();
+  $flasher = Flash::getInstance();
   return $flasher->set($key, $value);
 }
 /**
@@ -13,7 +16,7 @@ function set_flash($key, $value) {
  * @param string $key 
  */
 function flash($key) {
-  $flasher = \Session\Flash::getInstance();
+  $flasher = Flash::getInstance();
   return $flasher->get($key);
 }
 
@@ -22,7 +25,7 @@ function flash($key) {
  * @param string $key 
  */
 function flash_exist($key) {
-  $flasher = \Session\Flash::getInstance();
+  $flasher = Flash::getInstance();
   return !!$flasher->get($key);
 }
 

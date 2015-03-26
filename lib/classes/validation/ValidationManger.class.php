@@ -1,4 +1,9 @@
 <?php
+namespace Markzero\Validation;
+
+use Markzero\Validation\Exception\ValidationException;
+use Markzero\Validation\Validator\AbstractValidator;
+
 /**
  * Manage registration and performing validation 
  * using registered validators
@@ -19,7 +24,7 @@ class ValidationManager {
    * Register a validator, which will be 
    * executed (with other validators) by calling #do_validate
    * @param string $field_name
-   * @param AbstractValidator $validator
+   * @param Markzero\Validation\Validator\AbstractValidator $validator
    * @param string  $error_message custom error message
    * @return $this return itself enables chaining method calls
    */
@@ -35,7 +40,7 @@ class ValidationManager {
   /**
    * Iterate over all registered validators
    * and execute the validations
-   * @throw ValidationException
+   * @throw Markzero\Validation\Exception\ValidationException
    */
   public function do_validate() {
     $errors = array(); // contains error messages

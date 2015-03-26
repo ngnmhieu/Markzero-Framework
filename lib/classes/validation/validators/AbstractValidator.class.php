@@ -1,4 +1,5 @@
 <?php
+namespace Markzero\Validation\Validator;
 
 abstract class AbstractValidator {
   /**

@@ -1,4 +1,9 @@
 <?php
+namespace Markzero\Mvc;
+
+use Markzero\App;
+use Markzero\Mvc\View;
+
 class AppController {
   private $request;
   private $response;
@@ -30,10 +35,10 @@ class AppController {
   }
 
   /**
-   * Render a view using a concrete AppView object (HtmlView, JsonView, ...)
-   * @param AppView $view
+   * Render a view using a concrete AbstractView object (HtmlView, JsonView, ...)
+   * @param Markzero\Mvc\View\AbstractView
    */
-  protected function render(AppView $view) {
+  protected function render(View\AbstractView $view) {
     $this->response->setContent($view->getContent());
   }
 

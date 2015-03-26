@@ -1,6 +1,7 @@
 <?php
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
+use Markzero\App;
 
 $env  = App::$config->app->env;
 $db = App::$config->database->{$env}; // database configurations

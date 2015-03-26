@@ -1,4 +1,5 @@
 <?php
+namespace Markzero\Validation\Validator;
 
 class FunctionValidator extends AbstractValidator {
   private $validate_func; // Function that performs validation

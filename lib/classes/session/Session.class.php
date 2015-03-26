@@ -1,4 +1,6 @@
 <?php
+namespace Markzero\Session;
+
 /**
  * Manage web application Session
  */

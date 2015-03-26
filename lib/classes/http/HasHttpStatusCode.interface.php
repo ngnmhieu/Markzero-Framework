@@ -1,4 +1,6 @@
 <?php
+namespace Markzero\Http;
+
 interface HasHttpStatusCode {
     const HTTP_CONTINUE = 100;
     const HTTP_SWITCHING_PROTOCOLS = 101;

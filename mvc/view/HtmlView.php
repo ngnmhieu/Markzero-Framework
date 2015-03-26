@@ -1,5 +1,7 @@
 <?php
-class HtmlView extends AppView {
+namespace Markzero\Mvc\View;
+
+class HtmlView extends AbstractView {
   private $view_path;
   private static $DEFAULT_VIEW_PATH = null; 
 

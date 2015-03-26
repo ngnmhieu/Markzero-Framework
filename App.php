@@ -1,4 +1,9 @@
 <?php
+namespace Markzero;
+
+use Markzero\Session;
+use Markzero\Http;
+
 /**
  * Central class of the system
  */
@@ -61,10 +66,10 @@ class App {
    * like Session, Router, Database,...
    */
   private static function initClasses() {
-    self::$session  = new Session();
-    self::$router   = new Router();
-    self::$request  = new Request();
-    self::$response = new Response(self::$request, self::$router);
+    self::$session  = new Session\Session();
+    self::$router   = new Http\Router();
+    self::$request  = new Http\Request();
+    self::$response = new Http\Response(self::$request, self::$router);
 
     self::$router->setRequest(self::$request);
     self::$router->setResponse(self::$response);
@@ -108,13 +113,13 @@ class App {
     // autoload third-party libraries for the framework
     require_once(self::$CORE_PATH. "vendor/autoload.php");
     // request class encapsulate all the information about the current request
-    require_once(self::$CORE_PATH. "lib/classes/http/Request.class.php");
+    require_once(self::$CORE_PATH. "lib/classes/http/Request.php");
     // request class encapsulate all the information about the current request
     require_once(self::$CORE_PATH. "lib/classes/http/HasHttpStatusCode.interface.php");
     // request class encapsulate all the information about the current request
-    require_once(self::$CORE_PATH. "lib/classes/http/Response.class.php");
+    require_once(self::$CORE_PATH. "lib/classes/http/Response.php");
     // router finds and call the right controller and action for a specific uri
-    require_once(self::$CORE_PATH. "lib/classes/Router.class.php");
+    require_once(self::$CORE_PATH. "lib/classes/http/Router.php");
     // static data class keep all static data in one places
     require_once(self::$CORE_PATH. "lib/classes/StaticData.class.php");
     // session class manage user session
@@ -127,10 +132,9 @@ class App {
     // load base controller, model and view
     require_once(self::$CORE_PATH. "mvc/AppController.php");
     require_once(self::$CORE_PATH. "mvc/AppModel.php");
-    require_once(self::$CORE_PATH. "mvc/AppView.php");
 
-    // Load all subclasses of View
-    $views_dir = self::$CORE_PATH. "mvc/views/"; 
+    // Load AbstractView and it's concrete implementation
+    $views_dir = self::$CORE_PATH. "mvc/view/"; 
     foreach (scandir($views_dir) as $file) {
       if (preg_match('/^[A-Z][A-Za-z_\-.]*\.php$/', $file)) {
         require_once($views_dir.$file);
@@ -138,17 +142,7 @@ class App {
     }
 
     // Validation facilities
-    require_once(self::$CORE_PATH. "lib/classes/validation/Abstractvalidator.class.php");
     require_once(self::$CORE_PATH. "lib/classes/validation/ValidationManger.class.php");
-
-    // Load all Exception classes
-    $exceptions_dir = self::$CORE_PATH. "lib/classes/exceptions/"; 
-    foreach (scandir($exceptions_dir) as $file) {
-      if (preg_match('/^[A-Z][A-Za-z_\-.]*\.php$/', $file)) {
-        require_once($exceptions_dir.$file);
-      }
-    }
-
     // Load all validators
     $validators_dir = self::$CORE_PATH. "lib/classes/validation/validators/"; 
     foreach (scandir($validators_dir) as $file) {
@@ -156,7 +150,21 @@ class App {
         require_once($validators_dir.$file);
       }
     }
-    
+
+    // Load all Exception classes
+    $exceptions_dirs = array();
+    $exceptions_dirs[] = self::$CORE_PATH. "lib/classes/exception/"; 
+    $exceptions_dirs[] = self::$CORE_PATH. "lib/classes/auth/exception/"; 
+    $exceptions_dirs[] = self::$CORE_PATH. "lib/classes/validation/exception/"; 
+    $exceptions_dirs[] = self::$CORE_PATH. "lib/classes/http/exception/"; 
+    foreach ($exceptions_dirs as $dir) {
+      foreach (scandir($dir) as $file) {
+        if (preg_match('/^[A-Z][A-Za-z_\-.]*\.php$/', $file)) {
+          require_once($dir.$file);
+        }
+      }
+    }
+
     // load other models
     $model_dir = self::$MODEL_PATH;
     foreach (scandir($model_dir) as $file) {
@@ -164,6 +172,7 @@ class App {
         require_once($model_dir.'/'.$file);
       }
     }
+
   }
 
   /* 

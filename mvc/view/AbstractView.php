@@ -1,9 +1,10 @@
 <?php
+namespace Markzero\Mvc\View;
 
 /**
  * Declear interface for all the View classes
  */
-abstract class AppView {
+abstract class AbstractView {
   protected $content;
   
   public function getContent() {

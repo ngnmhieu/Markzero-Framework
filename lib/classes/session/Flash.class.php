@@ -1,6 +1,5 @@
 <?php
-
-namespace Session;
+namespace Markzero\Session;
 
 /**
  * Flash keep messages between 2 request

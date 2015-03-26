@@ -1,9 +1,10 @@
 <?php
+namespace Markzero\Validation\Exception;
 
 /**
  * Thrown when a validation error occurs
  */
-class ValidationException extends Exception {
+class ValidationException extends \Exception {
   private $errors;
 
   public function __construct(array $errors = array(), $message = null, $code = 0) {

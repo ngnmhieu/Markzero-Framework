@@ -1,4 +1,5 @@
 <?php
+namespace Markzero\Validation\Validator;
 
 class RequireValidator extends AbstractValidator {
   private $field;

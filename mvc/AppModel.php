@@ -1,4 +1,10 @@
 <?php
+namespace Markzero\Mvc;
+
+use Markzero\App;
+use Markzero\Validation;
+use Markzero\Validation\Exception\ValidationException;
+
 /**
  * @MappedSuperClass
  * @HasLifecycleCallbacks
@@ -59,10 +65,10 @@ class AppModel {
   }
 
   /**
-   * _TODO: should it be abstract
+   * _TODO: should it be abstract?
    * Perform validation 
    * Concrete models override this method to perform specific validations
-   * @throw ValidationException($array_errors)
+   * @throw Markzero\Validation\Exception\ValidationException ($array_errors)
    */
   protected function _validate() {
   }
@@ -83,7 +89,7 @@ class AppModel {
    * Get a new ValidationManager object
    */
   static function createValidationManager() {
-    return new ValidationManager();
+    return new Validation\ValidationManager();
   }
 
   /**

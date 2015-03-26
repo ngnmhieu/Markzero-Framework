@@ -1,8 +1,10 @@
 <?php
+namespace Markzero\Mvc\View;
+
 /**
  * Produce a plain text View
  */
-class TextView extends AppView {
+class TextView extends AbstractView {
 
   /**
    * @throw InvalidArgumentException

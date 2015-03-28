@@ -130,11 +130,8 @@ class Router {
 
     $action = strtolower($destination[':action']);
 
-    // call the appropriate controller
-    $controller_file = App::$CONTROLLER_PATH.$controller_filename;
-    if (file_exists($controller_file)) {
-      require_once($controller_file);
-    } else {
+    // Controller not found
+    if (!class_exists($controller)) {
       $this->response->setStatusCode(
         Response::HTTP_BAD_REQUEST,
         "Bad Request (controller `$controller` not found)"
@@ -144,7 +141,7 @@ class Router {
     }
 
     // setup controller object
-    $controller_obj = new $controller();
+    $controller_obj = new $controller(App::$request, App::$response);
 
     // call action on controller
     if (is_callable(array($controller_obj, $action))) {

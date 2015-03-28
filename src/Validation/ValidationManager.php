@@ -18,6 +18,14 @@ class ValidationManager {
     $this->validators = array();
   }
 
+  /**
+   * Mostly used for testing
+   * @return array Registered Validators
+   */
+  public function getValidators() {
+    return $this->validators;
+  }
+
   /** _TODO: wrap validations in a function which is passed a validationmanager and don't have to call do_validate  **/
 
   /**
@@ -32,7 +40,10 @@ class ValidationManager {
     if ($error_message)
       $validator->set_message($error_message);
 
-    $this->validators[$field_name] = $validator;
+    if (!array_key_exists($field_name, $this->validators))
+      $this->validators[$field_name] = array();
+
+    $this->validators[$field_name][] = $validator;
 
     return $this;
   }
@@ -42,17 +53,24 @@ class ValidationManager {
    * and execute the validations
    * @throw Markzero\Validation\Exception\ValidationException
    */
-  public function do_validate() {
+  public function doValidate() {
     $errors = array(); // contains error messages
 
-    foreach ($this->validators as $field_name => $validator) {
-      if (!$validator->validate())
-        $errors[$field_name] = $validator->get_message();
+    foreach ($this->validators as $field_name => $validators) {
+
+      foreach ($validators as $validator) {
+
+        if (!$validator->validate())
+          $errors[$field_name] = $validator->get_message();
+
+        if (!empty($errors)) {
+          throw new ValidationException($errors);
+        }
+
+      }
+
     }
 
-    if (!empty($errors)) {
-      throw new ValidationException($errors);
-    }
   }
 
   /**

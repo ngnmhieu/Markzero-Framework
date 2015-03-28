@@ -3,6 +3,7 @@ namespace Markzero;
 
 use Markzero\Session;
 use Markzero\Http;
+use Markzero\Data;
 
 /**
  * Central class of the system
@@ -57,8 +58,8 @@ class App {
    * Load system functions, helper functions ...
    */
   private static function loadFunctions() {
-    require_once(self::$CORE_PATH."lib/functions/functions.php");
-    require_once(self::$CORE_PATH."lib/functions/helpers.php");
+    require_once(self::$CORE_PATH."src/functions/functions.php");
+    require_once(self::$CORE_PATH."src/functions/helpers.php");
   }
 
   /**
@@ -82,7 +83,7 @@ class App {
    */
   private static function loadConfig() {
     // Global application configurations
-    self::$config = new StaticData(self::$APP_PATH."config/");
+    self::$config = new Data\StaticData(self::$APP_PATH."config/");
 
     // Configurations
     require_once(self::$APP_PATH."config/config.php");
@@ -110,66 +111,26 @@ class App {
    * Loads files that contain important classes
    */
   private static function loadClasses() { 
-    // autoload third-party libraries for the framework
+    // autoload internal classes and third-party libraries for the framework
     require_once(self::$CORE_PATH. "vendor/autoload.php");
-    // request class encapsulate all the information about the current request
-    require_once(self::$CORE_PATH. "lib/classes/http/Request.php");
-    // request class encapsulate all the information about the current request
-    require_once(self::$CORE_PATH. "lib/classes/http/HasHttpStatusCode.interface.php");
-    // request class encapsulate all the information about the current request
-    require_once(self::$CORE_PATH. "lib/classes/http/Response.php");
-    // router finds and call the right controller and action for a specific uri
-    require_once(self::$CORE_PATH. "lib/classes/http/Router.php");
-    // static data class keep all static data in one places
-    require_once(self::$CORE_PATH. "lib/classes/StaticData.class.php");
-    // session class manage user session
-    require_once(self::$CORE_PATH. "lib/classes/session/Session.class.php");
-    // manages flash messages
-    require_once(self::$CORE_PATH. "lib/classes/session/Flash.class.php");
-    // autoload third-party libraries for the application
-    require_once(self::$APP_PATH. "vendor/autoload.php");
 
-    // load base controller, model and view
-    require_once(self::$CORE_PATH. "mvc/AppController.php");
-    require_once(self::$CORE_PATH. "mvc/AppModel.php");
-
-    // Load AbstractView and it's concrete implementation
-    $views_dir = self::$CORE_PATH. "mvc/view/"; 
-    foreach (scandir($views_dir) as $file) {
-      if (preg_match('/^[A-Z][A-Za-z_\-.]*\.php$/', $file)) {
-        require_once($views_dir.$file);
-      }
+    // autoload third-party libraries for the app
+    if (file_exists(self::$APP_PATH. "vendor/autoload.php")) {
+      require_once(self::$APP_PATH. "vendor/autoload.php");
     }
-
-    // Validation facilities
-    require_once(self::$CORE_PATH. "lib/classes/validation/ValidationManger.class.php");
-    // Load all validators
-    $validators_dir = self::$CORE_PATH. "lib/classes/validation/validators/"; 
-    foreach (scandir($validators_dir) as $file) {
-      if (preg_match('/^[A-Z][A-Za-z_\-.]*\.php$/', $file)) {
-        require_once($validators_dir.$file);
-      }
-    }
-
-    // Load all Exception classes
-    $exceptions_dirs = array();
-    $exceptions_dirs[] = self::$CORE_PATH. "lib/classes/exception/"; 
-    $exceptions_dirs[] = self::$CORE_PATH. "lib/classes/auth/exception/"; 
-    $exceptions_dirs[] = self::$CORE_PATH. "lib/classes/validation/exception/"; 
-    $exceptions_dirs[] = self::$CORE_PATH. "lib/classes/http/exception/"; 
-    foreach ($exceptions_dirs as $dir) {
-      foreach (scandir($dir) as $file) {
-        if (preg_match('/^[A-Z][A-Za-z_\-.]*\.php$/', $file)) {
-          require_once($dir.$file);
-        }
-      }
-    }
-
-    // load other models
+    // load all models
     $model_dir = self::$MODEL_PATH;
     foreach (scandir($model_dir) as $file) {
       if (preg_match('/^[A-Z][A-Za-z_\-.]*\.php$/', $file)) {
         require_once($model_dir.'/'.$file);
+      }
+    }
+    
+    // load all controllers
+    $controller_dir = self::$CONTROLLER_PATH;
+    foreach (scandir($controller_dir) as $file) {
+      if (preg_match('/^[A-Z][A-Za-z_\-.]*\.php$/', $file)) {
+        require_once($controller_dir.'/'.$file);
       }
     }
 
@@ -181,7 +142,7 @@ class App {
    */
   private static function loadStaticData() {
     $data_dir = self::$APP_PATH."data";
-    self::$data = new StaticData($data_dir);
+    self::$data = new Data\StaticData($data_dir);
   }   
 
 }

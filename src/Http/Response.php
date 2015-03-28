@@ -6,15 +6,25 @@ use Symfony\Component\HttpFoundation;
 /**
  * Encapsulate all informations about a response
  **/
-class Response implements HasHttpStatusCode {
-  private $http_response; // HttpFoundation\Response object
-  private $request;       // Request object
+class Response implements HttpStatusCodeInterface {
+  private $http_response; // Symfony\Component\HttpFoundation\Response
+  /**
+   * @var Markzero\Http\Request
+   */
+  private $request;       
+
+  /**
+   * @var Markzero\Http\Router
+   */
   private $router;        // Router object
+  /**
+   * @var array<callable>
+   */
   private $responders;    // array contain functions corresponding to a response format (html, json ...)
 
   /**
-   * @param Request  $request
-   * @param Response $response
+   * @param Markzero\Http\Request  $request
+   * @param Markzero\Http\Response $response
    */
   function __construct(Request $request, Router $router) {
     $this->http_response = new HttpFoundation\Response();
@@ -26,10 +36,10 @@ class Response implements HasHttpStatusCode {
   /**
    * Setup a redirection
    * _TODO:  to Root? to a URL?
-   * @param string $controller
-   * @param string $action
-   * @param array $params
-   * @return Response $this
+   * @param string
+   * @param string
+   * @param array
+   * @return Markzero\Http\Response 
    */
   public function redirect($controller, $action, array $params = array()) {
 
@@ -58,9 +68,9 @@ class Response implements HasHttpStatusCode {
 
   /**
    * Register a responder for a corresponding format
-   * @param string $format
-   * @param callable $responder
-   * @return Response $this
+   * @param string The coresponding format
+   * @param callable
+   * @return Markzero\Http\Response current object
    */
   public function respond_to($format, callable $responder) {
     if ($this->responders === null) {
@@ -76,7 +86,8 @@ class Response implements HasHttpStatusCode {
   /**
    * Send the response to client by calling one of the repsonders.
    * If no corresponding responder is found ###Exception is raised.
-   * @return Response $this
+   *
+   * @return Markzero\Http\Response current object
    */
   public function respond() {
     $request       = $this->request;
@@ -127,6 +138,7 @@ class Response implements HasHttpStatusCode {
 
   /**
    * Set Access-Control-* Headers for Cross-Domain Request
+   * @return Markzero\Http\Response current object
    */
   public function setAccessControlHeaders() {
     $request = $this->request;
@@ -148,7 +160,7 @@ class Response implements HasHttpStatusCode {
    * Delegate undefined methods to HttpFoundation\Response object
    */
   function __call($method, $args) {
-    call_user_func_array(array($this->http_response, $method), $args);
+    return call_user_func_array(array($this->http_response, $method), $args);
   }
 
   /**

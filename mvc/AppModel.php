@@ -96,7 +96,7 @@ class AppModel {
    * Return the application EntityManager
    * @return Doctrine\ORM\EntityManager
    */
-  static function getEntityMananger() {
+  static function getEntityManager() {
     return App::$em;
   }
 

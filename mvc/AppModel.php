@@ -165,7 +165,7 @@ class AppModel {
    **/
   static function getRepo() {
     $model = get_called_class();
-    return self::getEntityMananger()->getRepository($model);
+    return self::getEntityManager()->getRepository($model);
   }
 
   /**

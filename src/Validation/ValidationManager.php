@@ -38,7 +38,7 @@ class ValidationManager {
    */
   public function validate($field_name, AbstractValidator $validator, $error_message = "") {
     if ($error_message)
-      $validator->set_message($error_message);
+      $validator->setMessage($error_message);
 
     if (!array_key_exists($field_name, $this->validators))
       $this->validators[$field_name] = array();
@@ -61,7 +61,7 @@ class ValidationManager {
       foreach ($validators as $validator) {
 
         if (!$validator->validate())
-          $errors[$field_name] = $validator->get_message();
+          $errors[$field_name] = $validator->getMessage();
 
         if (!empty($errors)) {
           throw new ValidationException($errors);

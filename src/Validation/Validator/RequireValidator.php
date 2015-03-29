@@ -10,14 +10,17 @@ class RequireValidator extends AbstractValidator {
    */
   public function __construct($field) {
     $this->field = $field;
-    $this->set_message(self::DEFAULT_MESSAGE);
+    $this->setMessage(self::DEFAULT_MESSAGE);
   }
 
   /**
    * return boolean
    */
   public function validate() {
-    return !empty($this->field);
+    return is_int($this->field) 
+      || is_float($this->field) 
+      || (is_string($this->field) && strlen($this->field) !== 0)
+      || !!$this->field;
   }
 
 }

@@ -13,14 +13,6 @@ abstract class AbstractValidator {
    */
   abstract function validate();
 
-  public function set_message($message) {
-    $this->message = $message;
-  }
-
-  public function get_message() {
-    return $this->message;
-  }
-
   public function setMessage($message) {
     $this->message = $message;
   }

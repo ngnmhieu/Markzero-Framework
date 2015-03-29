@@ -8,6 +8,8 @@
     "doctrine/common": "2.4.*",
     "phpmailer/phpmailer": "~5.2",
     "symfony/http-foundation": "3.0.x-dev",
-    "php-curl-class/php-curl-class": "~2.1"
+    "php-curl-class/php-curl-class": "~2.1",
+    "mockery/mockery": "0.9.*",
+    "phpunit/php-code-coverage": "~2.0"
   } 
 }

@@ -10,7 +10,7 @@ class EmailValidator extends AbstractValidator {
    */
   public function __construct($email) {
     $this->email = $email;
-    $this->set_message(self::DEFAULT_MESSAGE);
+    $this->setMessage(self::DEFAULT_MESSAGE);
   }
 
   /**

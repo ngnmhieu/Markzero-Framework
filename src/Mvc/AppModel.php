@@ -9,7 +9,7 @@ use Markzero\Validation\Exception\ValidationException;
  * @MappedSuperClass
  * @HasLifecycleCallbacks
  */
-class AppModel {
+abstract class AppModel {
   /**
    * Names of callbacks, which are invoked on the event PrePersist and Update
    */
@@ -57,26 +57,22 @@ class AppModel {
   }
 
   /**
-   * _TODO: should it be abstract
    * Set up default values for attributes
    * Concrete models override this method to assign default values to attributes
    */
-  protected function _default() {
-  }
+  abstract protected function _default();
 
   /**
-   * _TODO: should it be abstract?
    * Perform validation 
    * Concrete models override this method to perform specific validations
    * @throw Markzero\Validation\Exception\ValidationException ($array_errors)
    */
-  protected function _validate() {
-  }
+  abstract protected function _validate();
 
   /**
    * @return boolean | is this entity valid
    */
-  public function is_valid() {
+  public function isValid() {
     try {
       $this->_validate();
     } catch (ValidationException $e) {

@@ -13,7 +13,7 @@ class FunctionValidator extends AbstractValidator {
   public function __construct(callable $func, array $args = array()) {
     $this->validate_func = $func;
     $this->validate_args = $args;
-    $this->set_message(self::DEFAULT_MESSAGE);
+    $this->setMessage(self::DEFAULT_MESSAGE);
   }
 
   /**
@@ -21,10 +21,15 @@ class FunctionValidator extends AbstractValidator {
    */
   public function validate() {
     if (is_callable($this->validate_func)) {
-      return call_user_func_array($this->validate_func, $this->validate_args);
+
+      $result = call_user_func_array($this->validate_func, $this->validate_args);;
+      return !!$result;
+
     } else {
-      $this->set_message("Validation function is not callable");
+
+      $this->setMessage("Validation function is not callable");
       return false;
+
     }
   }
 

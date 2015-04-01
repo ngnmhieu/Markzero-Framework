@@ -1,12 +1,14 @@
 <?php
-namespace Markzero\Http;
+namespace Markzero\Http\Routing;
 
-use Markzero\Http\RouteMatcher\AbstractRouteMatcher;
+use Markzero\Http\Request;
+use Markzero\Http\Response;
+use Markzero\Http\Routing\RouteMatcher\AbstractRouteMatcher;
 
 class Route {
 
   /**
-   * @var Markzero\Http\RouteMatcher\AbstractRouteMatcher 
+   * @var Markzero\Http\Routing\RouteMatcher\AbstractRouteMatcher 
    */
   private $matcher;
   /**
@@ -26,7 +28,7 @@ class Route {
    * @param string Route string
    * @param string Destination controller
    * @param string Action to be executed
-   * @param Markzero\Http\RouteMatcher\AbstractRouteMatcher 
+   * @param Markzero\Http\Routing\RouteMatcher\AbstractRouteMatcher 
    */
   public function __construct($route_string, $controller, $action, AbstractRouteMatcher $matcher) {
     $this->route_string  = $route_string;

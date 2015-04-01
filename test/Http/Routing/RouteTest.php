@@ -1,11 +1,11 @@
 <?php
-use Markzero\Http\Route;
-use Markzero\Http\RouteMatcher\AbstractRouteMatcher;
+use Markzero\Http\Routing\Route;
+use Markzero\Http\Routing\RouteMatcher\AbstractRouteMatcher;
 
 class RouteTest extends PHPUnit_Framework_TestCase {
 
   public function getPositiveMatcher() {
-    $matcher = Mockery::mock('Markzero\Http\RouteMatcher\AbstractRouteMatcher', array(
+    $matcher = Mockery::mock('Markzero\Http\Routing\RouteMatcher\AbstractRouteMatcher', array(
       'match' => true,
       'getArguments' => array()
     ));
@@ -13,7 +13,7 @@ class RouteTest extends PHPUnit_Framework_TestCase {
   }
 
   public function getNegativeMatcher() {
-    $matcher = Mockery::mock('Markzero\Http\RouteMatcher\AbstractRouteMatcher', array(
+    $matcher = Mockery::mock('Markzero\Http\Routing\RouteMatcher\AbstractRouteMatcher', array(
       'match' => false,
       'getArguments' => array()
     ));

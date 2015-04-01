@@ -1,5 +1,5 @@
 <?php
-namespace Markzero\Http\RouteMatcher;
+namespace Markzero\Http\Routing\RouteMatcher;
 
 abstract class AbstractRouteMatcher {
   /**

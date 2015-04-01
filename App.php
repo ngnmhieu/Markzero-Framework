@@ -2,8 +2,8 @@
 namespace Markzero;
 
 use Markzero\Session;
-use Markzero\Http;
 use Markzero\Data;
+use Markzero\Http;
 
 /**
  * Central class of the system
@@ -68,7 +68,7 @@ class App {
    */
   private static function initClasses() {
     self::$session  = new Session\Session();
-    self::$router   = new Http\Router();
+    self::$router   = new Http\Routing\Router();
     self::$request  = new Http\Request();
     self::$response = new Http\Response(self::$request, self::$router);
 

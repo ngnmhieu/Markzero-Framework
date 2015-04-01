@@ -1,5 +1,5 @@
 <?php
-use Markzero\Http\Router;
+use Markzero\Http\Routing\Router;
 use \Mockery;
 
 class RouterTest extends \PHPUnit_Framework_TestCase {

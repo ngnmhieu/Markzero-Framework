@@ -1,7 +1,9 @@
 <?php
-namespace Markzero\Http;
+namespace Markzero\Http\Routing;
 
 use Markzero\App;
+use Markzero\Http\Request;
+use Markzero\Http\Response;
 
 /**
  * Router class handles the job of determining
@@ -64,7 +66,7 @@ class Router {
   }
 
   /**
-   * @return array Markzero\Http\Route
+   * @return array Markzero\Http\Routing\Route
    */
   public function getRoutes() {
     return $this->routes;

@@ -1,6 +1,7 @@
 <?php
 namespace Markzero\Http;
 
+use Markzero\Http\Routing\Router;
 use Symfony\Component\HttpFoundation;
 
 /**
@@ -14,17 +15,18 @@ class Response implements HttpStatusCodeInterface {
   private $request;       
 
   /**
-   * @var Markzero\Http\Router
+   * @var Markzero\Http\Routing\Router
    */
-  private $router;        // Router object
+  private $router;
   /**
+   * array contain functions corresponding to a response format (html, json ...)
    * @var array<callable>
    */
-  private $responders;    // array contain functions corresponding to a response format (html, json ...)
+  private $responders;
 
   /**
-   * @param Markzero\Http\Request  $request
-   * @param Markzero\Http\Response $response
+   * @param Markzero\Http\Request
+   * @param Markzero\Http\Routing\Router
    */
   function __construct(Request $request, Router $router) {
     $this->http_response = new HttpFoundation\Response();

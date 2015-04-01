@@ -1,6 +1,6 @@
 <?php
 
-use Markzero\Http\RouteMatcher\RegexRouteMatcher;
+use Markzero\Http\Routing\RouteMatcher\RegexRouteMatcher;
 
 class RegexRouteMatcherTest extends \PHPUnit_Framework_TestCase {
 

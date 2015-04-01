@@ -1,12 +1,12 @@
 <?php
 namespace Markzero\Http;
 
-use Markzero\Http\RouteMatcher;
+use Markzero\Http\RouteMatcher\AbstractRouteMatcher;
 
 class Route {
 
   /**
-   * @var AbstractRouteMatcher
+   * @var Markzero\Http\RouteMatcher\AbstractRouteMatcher 
    */
   private $matcher;
   /**
@@ -21,26 +21,18 @@ class Route {
    * @var string Action/Method name
    */
   private $action;
-  /**
-   * @var array
-   */
-  private $arguments;
   
   /**
    * @param string Route string
    * @param string Destination controller
    * @param string Action to be executed
+   * @param Markzero\Http\RouteMatcher\AbstractRouteMatcher 
    */
-  public function __construct($route_string, $controller, $action) {
+  public function __construct($route_string, $controller, $action, AbstractRouteMatcher $matcher) {
     $this->route_string  = $route_string;
     $this->controller    = $controller;
     $this->action        = $action;
-    $this->arguments     = array();
-
-    $pattern = $route_string;
-    // add '/?' to the end of $pattern so that both URIs '/user/' and '/user' works
-    $pattern .= !preg_match("~.*/$~", $pattern) ? '/?' : '?';
-    $this->matcher = new RouteMatcher\RegexRouteMatcher('~^'.$pattern.'$~');
+    $this->matcher       = $matcher;
   }
 
   /**
@@ -50,10 +42,6 @@ class Route {
    */
   public function matchPath($path) {
     return $this->matcher->match($path);
-  }
-
-  public function getArguments() {
-    return $this->matcher->getArguments();
   }
 
   /**
@@ -75,7 +63,7 @@ class Route {
       throw new \RuntimeException("Action '".$this->action."' in controller '".$this->controller."' not found");
     }
 
-    return call_user_func_array(array($controller_obj, $this->action), $this->getArguments());
+    return call_user_func_array(array($controller_obj, $this->action), $this->matcher->getArguments());
   }
 
   /**

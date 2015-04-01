@@ -141,7 +141,12 @@ class Router {
       throw new \InvalidArgumentException("Invalid Action Name: `$action`");
     }
 
-    $route = new Route($route_string, $controller, $action);
+    // add '/?' to the end of $pattern so that both URIs '/user/' and '/user' works
+    $pattern = $route_string . (!preg_match("~.*/$~", $route_string) ? '/?' : '?');
+    $matcher = new RouteMatcher\RegexRouteMatcher('~^'.$pattern.'$~');
+
+    // initialize new Route
+    $route = new Route($route_string, $controller, $action, $matcher);
 
     // Save route for request routing 
     $method_normalized = strtoupper($method);

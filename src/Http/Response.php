@@ -87,12 +87,19 @@ class Response implements HttpStatusCodeInterface {
    * Send the response to client by calling one of the repsonders.
    * If no corresponding responder is found ###Exception is raised.
    *
+   * @param bool send response without any content
    * @return Markzero\Http\Response current object
    */
-  public function respond() {
+  public function respond($no_content = false) {
     $request       = $this->request;
     $http_response = $this->http_response;
     $responders    = $this->responders;
+
+
+    if ($no_content) {
+      $http_response->send();
+      return $this;
+    }
 
     if (empty($responders)) { // No responder found
       $http_response->setStatusCode(Response::HTTP_NOT_FOUND);

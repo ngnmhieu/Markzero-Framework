@@ -240,7 +240,7 @@ abstract class AppModel {
     }
     
     $trace = debug_backtrace();
-    throw new BadMethodCallException(
+    throw new \BadMethodCallException(
       "Undefined method `$name()` in class `".get_class(new static)."`: ".
       ' in ' . $trace[0]['file'] .
       ' Line ' . $trace[0]['line'],

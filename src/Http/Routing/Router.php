@@ -96,7 +96,7 @@ class Router {
     }
 
     // Match requested path against registered routes
-    $routes = $this->routes[$http_method]; 
+    $routes = array_key_exists($http_method, $this->routes) ? $this->routes[$http_method] : array(); 
     foreach ($routes as $route) {
       if ($route->matchPath($this->request->getPathInfo())) {
 

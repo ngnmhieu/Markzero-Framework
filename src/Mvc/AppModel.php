@@ -100,10 +100,7 @@ abstract class AppModel {
    * Proxy for Doctrine\ORM\EntityRepository#find
    **/
   static function find($id, $lock_mode = \Doctrine\DBAL\LockMode::NONE, $lock_version = null) {
-    $result = self::getRepo()->find($id, $lock_mode, $lock_version);
-    if ($result === null)
-      throw new ResourceNotFoundException();
-    return $result;
+    return self::getRepo()->find($id, $lock_mode, $lock_version);;
   }
 
   /**
@@ -252,13 +249,19 @@ abstract class AppModel {
    * Return array containing attributes of the model
    * @return array
    */
-  public function to_array() {
+  public function toArray() {
     $attributes = array_merge(static::$attr_reader, static::$attr_accessor);
 
     $array = array();
     foreach ($attributes as $attr) {
-      if (method_exists($this->{$attr}, 'to_array')) {
-        $array[$attr] = $this->{$attr}->to_array();
+      if ($this->{$attr} instanceof \Traversable) {
+        $items = iterator_to_array($this->{$attr});
+
+        $array[$attr] = array_map(function($item) {
+          return $item->toArray();
+        }, $items);
+      } else if (method_exists($this->{$attr}, 'toArray')) {
+        $array[$attr] = $this->{$attr}->toArray();
       } else {
         $array[$attr] = $this->{$attr};
       }

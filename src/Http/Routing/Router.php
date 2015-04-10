@@ -136,7 +136,7 @@ class Router {
    **/
   public function map($method, $route_string, $controller, $action) {
 
-    if (!preg_match("~^[a-zA-Z_][a-zA-Z0-9_]*$~", $controller)) {
+    if (!preg_match("~^[a-zA-Z_\\\][a-zA-Z0-9_\\\]*$~", $controller)) {
       throw new \InvalidArgumentException("Invalid Controller Name: `$controller`");
     }
     if (!preg_match("~^[a-zA-Z_][a-zA-Z0-9_]*$~", $action)) {

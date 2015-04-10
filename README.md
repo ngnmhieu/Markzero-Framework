@@ -9,3 +9,6 @@ Generate autoload file:
 ```
 $ composer dump-autoload 
 ```
+
+TODO:
+[ ] Session

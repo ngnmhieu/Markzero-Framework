@@ -118,22 +118,32 @@ class App {
     if (file_exists(self::$APP_PATH. "vendor/autoload.php")) {
       require_once(self::$APP_PATH. "vendor/autoload.php");
     }
-    // load all models
-    $model_dir = self::$MODEL_PATH;
-    foreach (scandir($model_dir) as $file) {
-      if (preg_match('/^[A-Z][A-Za-z_\-.]*\.php$/', $file)) {
-        require_once($model_dir.'/'.$file);
-      }
-    }
-    
-    // load all controllers
-    $controller_dir = self::$CONTROLLER_PATH;
-    foreach (scandir($controller_dir) as $file) {
-      if (preg_match('/^[A-Z][A-Za-z_\-.]*\.php$/', $file)) {
-        require_once($controller_dir.'/'.$file);
-      }
-    }
 
+    // load all models
+    self::loadRecursive(self::$MODEL_PATH, '/^[A-Z][A-Za-z_\-.]*\.php$/');
+    
+    // Load all controllers
+    self::loadRecursive(self::$CONTROLLER_PATH, '/^[A-Z][A-Za-z_\-.]*\.php$/');
+
+  }
+
+  /**
+   * @param string Directory where files should be loaded
+   * @param string File's name will be matched against this regex
+   */
+  private static function loadRecursive($path, $regex = null) {
+    $regex = $regex === null ? '~^[^/?*:;{}\\]+\.php$~' : $regex;
+
+    foreach (scandir($path) as $file) {
+
+      $filepath = $path.'/'.$file;
+      if ($file !== '.' && $file !== '..' && is_dir($filepath)) {
+        self::loadRecursive($filepath, $regex);
+      } else if (preg_match($regex, $file)) {
+        require_once($filepath);
+      }
+
+    }
   }
 
   /* 

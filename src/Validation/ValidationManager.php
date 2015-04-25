@@ -49,6 +49,26 @@ class ValidationManager {
   }
 
   /**
+   * Register a validator, which will be 
+   * executed (with other validators) by calling #do_validate
+   * @param string $field_name
+   * @param Markzero\Validation\Validator\AbstractValidator $validator
+   * @param string  $error_message custom error message
+   * @return $this return itself enables chaining method calls
+   */
+  public function register($field_name, AbstractValidator $validator, $error_message = "") {
+    if ($error_message)
+      $validator->setMessage($error_message);
+
+    if (!array_key_exists($field_name, $this->validators))
+      $this->validators[$field_name] = array();
+
+    $this->validators[$field_name][] = $validator;
+
+    return $this;
+  }
+
+  /**
    * Iterate over all registered validators
    * and execute the validations
    * @throw Markzero\Validation\Exception\ValidationException

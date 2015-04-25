@@ -27,7 +27,7 @@ class ValidationManagerTest extends \PHPUnit_Framework_TestCase {
 
     $validators = $this->getDoubleValidators();
     for ($i = 0; $i < count($validators); $i++) {
-      $vm->validate("attribute_$i", $validators[$i]);
+      $vm->register("attribute_$i", $validators[$i]);
     }
 
     $num_registered_validators = array_reduce(
@@ -47,7 +47,7 @@ class ValidationManagerTest extends \PHPUnit_Framework_TestCase {
     $this->assertEquals(0, count($vm->getValidators()));
 
     foreach ($validators as $validator) {
-      $vm->validate("attribute", $validator);
+      $vm->register("attribute", $validator);
     }
 
     $num_registered_validators = array_reduce(
@@ -70,9 +70,11 @@ class ValidationManagerTest extends \PHPUnit_Framework_TestCase {
       'validate'   => false
     ));
 
-    $vm->validate('attribute', $validator);
+    $vm->register('attribute', $validator);
 
     $vm->doValidate();
   }
-
+  
+  public function test_runValidation() {
+  }
 }

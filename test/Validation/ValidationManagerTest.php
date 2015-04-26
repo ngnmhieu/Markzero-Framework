@@ -20,7 +20,7 @@ class ValidationManagerTest extends \PHPUnit_Framework_TestCase {
     );
   }
   
-  public function test_validate_Register_Validators_Diff_Attributes() {
+  public function test_register_Validators_Diff_Attributes() {
     $vm = new ValidationManager();
 
     $this->assertEquals(0, count($vm->getValidators()));
@@ -39,10 +39,9 @@ class ValidationManagerTest extends \PHPUnit_Framework_TestCase {
     $this->assertEquals(count($validators), $num_registered_validators);
   }
 
-  public function test_validate_Register_Validators_Same_Attribute() {
+  public function test_register_Validators_Same_Attribute() {
     $vm = new ValidationManager();
-    $validators = $this->getDoubleValidators();
-
+    $validators = $this->getDoubleValidators(); 
     // no validators are registered yet
     $this->assertEquals(0, count($vm->getValidators()));
 
@@ -73,8 +72,5 @@ class ValidationManagerTest extends \PHPUnit_Framework_TestCase {
     $vm->register('attribute', $validator);
 
     $vm->doValidate();
-  }
-  
-  public function test_runValidation() {
   }
 }

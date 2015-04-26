@@ -26,26 +26,21 @@ class ValidationManager {
     return $this->validators;
   }
 
-  /** _TODO: wrap validations in a function which is passed a validationmanager and don't have to call do_validate  **/
-
   /**
-   * Register a validator, which will be 
-   * executed (with other validators) by calling #do_validate
-   * @param string $field_name
-   * @param Markzero\Validation\Validator\AbstractValidator $validator
-   * @param string  $error_message custom error message
-   * @return $this return itself enables chaining method calls
+   * Execute a validation transaction, and clear all validators at the end
+   * @param callable
+   * @throw Markzero\Validation\Exception\ValidationException 
    */
-  public function validate($field_name, AbstractValidator $validator, $error_message = "") {
-    if ($error_message)
-      $validator->setMessage($error_message);
+  public function validate(callable $closure) {
 
-    if (!array_key_exists($field_name, $this->validators))
-      $this->validators[$field_name] = array();
+    // validators are be registered in the closure
+    $closure($this);
 
-    $this->validators[$field_name][] = $validator;
+    // run the validators
+    $this->doValidate();
 
-    return $this;
+    // if no Exception was thrown, clear all validators
+    $this->clear();
   }
 
   /**

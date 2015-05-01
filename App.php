@@ -58,8 +58,8 @@ class App {
    * Load system functions, helper functions ...
    */
   private static function loadFunctions() {
-    require_once(self::$CORE_PATH."src/functions/functions.php");
-    require_once(self::$CORE_PATH."src/functions/helpers.php");
+    require_once(self::$CORE_PATH."src/helpers/functions.php");
+    require_once(self::$CORE_PATH."src/helpers/helpers.php");
   }
 
   /**

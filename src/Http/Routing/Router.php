@@ -178,7 +178,7 @@ class Router {
   public function getWebpaths($controller, $action, array $args = array()) {
     if(!is_string($controller)) {
       throw new \InvalidArgumentException('Argument $controller must be a string: Router#getWebpath.');
-    } 
+    }
 
     if(!is_string($action)) {
       throw new \InvalidArgumentException('Argument $action must be a string: Router#getWebpath.');

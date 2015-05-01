@@ -2,6 +2,7 @@
 namespace Markzero\Http;
 
 use Symfony\Component\HttpFoundation;
+use Markzero\Http\RequestParser;
 
 /**
  * Represent a HTTP Request
@@ -43,14 +44,14 @@ class Request extends HttpFoundation\Request {
    * Factory Method of AbstractRequestParser
    *
    * @param string Request's Content-Type
-   * @return Markzero\Http\AbstractRequestParser
+   * @return Markzero\Http\RequestParser\AbstractRequestParser
    */
   private function getRequestParser($content_type) {
 
     if (0 === strpos($content_type, 'application/json')) {
-      return new JsonRequestParser();
+      return new RequestParser\JsonRequestParser();
     } else if (0 === strpos($content_type, 'application/xml')) {
-      return new XmlRequestParser();
+      return new RequestParser\XmlRequestParser();
     }
 
     return null;

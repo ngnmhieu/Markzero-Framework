@@ -1,13 +1,11 @@
 <?php
 namespace Markzero\Http\RequestParser;
 
-/**
- * 
- */
-class AbstractRequestParser {
+abstract class AbstractRequestParser {
+
   /**
    * @param  string Request Data
    * @return array
    */
-  public function parse($data);
+  public abstract  function parse($data);
 }

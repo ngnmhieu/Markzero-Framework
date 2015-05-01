@@ -11,31 +11,42 @@ class ResponseTest extends \PHPUnit_Framework_TestCase {
     return new Response($request, $router);
   }
 
-  public function test_redirect_setCorrectRedirectUrl() {
-
+  public function getResponseForRedirection() {
     $path = '/book/';
     $router = \Mockery::mock('Markzero\Http\Routing\Router', array(
       'getWebpaths' => array($path)
     ));
     $request = \Mockery::mock('Markzero\Http\Request');
-    $response = new Markzero\Http\Response($request, $router);
+
+    return new Response($request, $router);
+  }
+
+  public function test_redirect_setCorrectRedirectUrl() {
+
+    $response = $this->getResponseForRedirection();
 
     $response->redirect('BookController', 'index');
 
-    $this->assertEquals($path, $response->headers->get('Location'));
+    $this->assertEquals('/book/', $response->headers->get('Location'));
   }
 
   public function test_redirect_setCorrectStatusCode() {
 
-    $router = \Mockery::mock('Markzero\Http\Routing\Router', array(
-      'getWebpaths' => array('/book/')
-    ));
-    $request = \Mockery::mock('Markzero\Http\Request');
-    $response = new Markzero\Http\Response($request, $router);
+    $response = $this->getResponseForRedirection();
 
     $response->redirect('BookController', 'index');
 
-    $this->assertEquals(Markzero\Http\Response::HTTP_FOUND, $response->getStatusCode());
+    $this->assertEquals(Response::HTTP_FOUND, $response->getStatusCode());
+  }
+
+  public function test_redirect_noChangeToAlreadySetRedirectionStatus() {
+    $response = $this->getResponseForRedirection();
+
+    $response->setStatusCode(Response::HTTP_MOVED_PERMANENTLY);
+
+    $response->redirect('BookController', 'index');
+
+    $this->assertFalse($response->getStatusCode() === Response::HTTP_FOUND);
   }
 
   public function test_respond_noResponder() {

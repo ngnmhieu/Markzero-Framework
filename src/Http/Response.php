@@ -7,8 +7,7 @@ use Symfony\Component\HttpFoundation;
 /**
  * Encapsulate all informations about a response
  **/
-class Response implements HttpStatusCodeInterface {
-  private $http_response; // Symfony\Component\HttpFoundation\Response
+class Response extends HttpFoundation\Response {
   /**
    * @var Markzero\Http\Request
    */
@@ -29,10 +28,11 @@ class Response implements HttpStatusCodeInterface {
    * @param Markzero\Http\Routing\Router
    */
   function __construct(Request $request, Router $router) {
-    $this->http_response = new HttpFoundation\Response();
     $this->request       = $request;
     $this->router        = $router;
     $this->responders    = array();
+
+    parent::__construct();
   }
 
   /**
@@ -47,23 +47,13 @@ class Response implements HttpStatusCodeInterface {
 
     $location = $this->router->getWebpaths($controller, $action, $params)[0];
 
-    // if non of the 3xx HTTP Status Code has been set, HTTP_FOUND 302 status code is set
-    $status_code = $this->http_response->getStatusCode();
-    if (!in_array($status_code, array(
-      Response::HTTP_MULTIPLE_CHOICES,
-      Response::HTTP_MOVED_PERMANENTLY,
-      Response::HTTP_FOUND,
-      Response::HTTP_SEE_OTHER,
-      Response::HTTP_NOT_MODIFIED,
-      Response::HTTP_USE_PROXY,
-      Response::HTTP_RESERVED,
-      Response::HTTP_TEMPORARY_REDIRECT,
-      Response::HTTP_PERMANENTLY_REDIRECT
-    ))) {
-      $this->http_response->setStatusCode(Response::HTTP_FOUND, 'Redirecting');
+    // if it's not already a redirection, HTTP_FOUND 302 status code is set
+    $status_code = $this->getStatusCode();
+    if (!$this->isRedirection()) {
+      $this->setStatusCode(Response::HTTP_FOUND);
     }
       
-    $this->http_response->headers->set('Location', $location);
+    $this->headers->set('Location', $location);
 
     return $this;
   }
@@ -94,18 +84,17 @@ class Response implements HttpStatusCodeInterface {
    */
   public function respond($no_content = false) {
     $request       = $this->request;
-    $http_response = $this->http_response;
     $responders    = $this->responders;
 
 
     if ($no_content) {
-      $http_response->send();
+      $this->send();
       return $this;
     }
 
     if (empty($responders)) { // No responder found
-      $http_response->setStatusCode(Response::HTTP_NOT_FOUND);
-      $http_response->send();
+      $this->setStatusCode(Response::HTTP_NOT_FOUND);
+      $this->send();
       return $this;
     }
 
@@ -118,8 +107,8 @@ class Response implements HttpStatusCodeInterface {
 
       if (array_key_exists($format,$responders)) {
         $responders[$format]();
-        $http_response->headers->set('Content-Type', $mime);
-        $http_response->send();
+        $this->headers->set('Content-Type', $mime);
+        $this->send();
         return $this;
       }
     }
@@ -129,17 +118,17 @@ class Response implements HttpStatusCodeInterface {
     if (in_array('*/*', $accept_mimes)) {
       $first_responder = reset($responders);
       $first_responder();
-      $http_response->send();
+      $this->send();
     } 
     // Check if user want to respond to any requested content-type
     else if (array_key_exists('all', $responders)) {
       $responders['all']();
-      $http_response->send();
+      $this->send();
     }
     // Cannot find any corresponding responder
     else { 
-      $http_response->setStatusCode(Response::HTTP_UNSUPPORTED_MEDIA_TYPE);
-      $http_response->send();
+      $this->setStatusCode(Response::HTTP_UNSUPPORTED_MEDIA_TYPE);
+      $this->send();
     }
 
     return $this;
@@ -157,27 +146,12 @@ class Response implements HttpStatusCodeInterface {
     }
 
     $origin = $this->request->headers->get('Origin');
-    $this->http_response->headers->set('Access-Control-Allow-Origin', $origin);
-    $this->http_response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Accept');
+    $this->headers->set('Access-Control-Allow-Origin', $origin);
+    $this->headers->set('Access-Control-Allow-Headers', 'Content-Type, Accept');
     // _TODO: extensibility? How to add more methods when needed
-    $this->http_response->headers->set('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE');
-    $this->http_response->headers->set('Access-Control-Allow-Credentials', 'true');
+    $this->headers->set('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE');
+    $this->headers->set('Access-Control-Allow-Credentials', 'true');
 
     return $this;
   }
-
-  /**
-   * Delegate undefined methods to HttpFoundation\Response object
-   */
-  function __call($method, $args) {
-    return call_user_func_array(array($this->http_response, $method), $args);
-  }
-
-  /**
-   * Delegate undefined attributes to HttpFoundation\Response object
-   */
-  function __get($attribute) {
-    return $this->http_response->$attribute;
-  }
-
 }

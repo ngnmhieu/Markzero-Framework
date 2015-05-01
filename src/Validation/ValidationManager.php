@@ -10,7 +10,7 @@ use Markzero\Validation\Validator\AbstractValidator;
  */
 class ValidationManager {
   /**
-   * array | Contain registered validators
+   * @var array Contain registered validators
    */
   private $validators;
   
@@ -74,17 +74,18 @@ class ValidationManager {
     foreach ($this->validators as $field_name => $validators) {
 
       foreach ($validators as $validator) {
-
-        if (!$validator->validate())
+        if (!$validator->validate()) {
           $errors[$field_name] = $validator->getMessage();
-
-        if (!empty($errors)) {
-          throw new ValidationException($errors);
+          break;
         }
-
       }
 
     }
+
+    if (!empty($errors)) {
+      throw new ValidationException($errors);
+    }
+
 
   }
 

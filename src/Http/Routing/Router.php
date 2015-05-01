@@ -29,11 +29,7 @@ class Router {
   private $routes = array();
 
   /**
-   * An array that map a route identification (i.e 'controller#action') 
-   * to a function. This function will be used to replace user-provided parameters 
-   * to webpath and returns a webpath (eg: '/controller/{PARAM1}/edit/{PARAM2}) 
-   * with PARAM1, PARAM2,... are user-provided arguments
-   *
+   * A mapping from Route-Id (i.e 'controller#action') to a Route object. 
    * @var array
    */
   private $webpaths = array();

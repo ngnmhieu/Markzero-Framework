@@ -76,5 +76,11 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
     $this->assertContains('/user/9/book/display/12', $webpaths);
   }
 
+  public function test_getRouteId() {
+    $router = $this->getRouter();
+
+    $this->assertEquals('BookController#update',$router->getRouteId('BookController', 'update'));
+  }
+
   // _TODO: test dispatch
 }

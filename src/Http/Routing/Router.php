@@ -155,11 +155,19 @@ class Router {
     $this->routes[$method_normalized][] = $route;
 
     // Save route for web path generation 
-    $route_id = $controller.'#'.$action;
+    $route_id = $this->getRouteId($controller, $action);
     if (!array_key_exists($route_id, $this->webpaths))
       $this->webpaths[$route_id] = array();
 
     $this->webpaths[$route_id][] = $route;
+  }
+
+  /**
+   * @param string Controller's name
+   * @param string Action's name
+   */
+  public function getRouteId($controller, $action) {
+    return "$controller#$action";
   }
 
   /**

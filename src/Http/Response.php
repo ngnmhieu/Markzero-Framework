@@ -37,7 +37,7 @@ class Response extends HttpFoundation\Response {
 
   /**
    * Setup a redirection
-   * _TODO:  to Root? to a URL?
+   * _TODO: to Root?
    * @param string
    * @param string
    * @param array
@@ -56,6 +56,10 @@ class Response extends HttpFoundation\Response {
     $this->headers->set('Location', $location);
 
     return $this;
+  }
+
+  public function redirectUrl() {
+    // _TODO: pending
   }
 
   /**

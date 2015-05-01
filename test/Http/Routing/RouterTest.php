@@ -40,6 +40,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
 
     $this->assertEquals('/user/12/book/favorite',$router->getNamedWebpath('favorite_book', array(12)));
   }
+
   public function test_map_emptyController() {
     $this->setExpectedException('\InvalidArgumentException');
 

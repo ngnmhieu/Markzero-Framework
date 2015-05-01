@@ -48,21 +48,18 @@ class RouteTest extends PHPUnit_Framework_TestCase {
     $route->go($request, $response);
   }
 
-  public function test_getWebpath_withoutArguments() {
+  public function test_getWebpath_withoutArgs() {
     $route1 = new Route('/book/', 'SomeController', 'show', $this->getPositiveMatcher());
     $route2 = new Route('/book', 'SomeController', 'show', $this->getPositiveMatcher());
 
-    $this->assertEquals($route1->getWebpath(array()), '/book/');
-    $this->assertEquals($route2->getWebpath(array()), '/book');
+    $this->assertEquals($route1->getWebpath(), '/book/');
+    $this->assertEquals($route2->getWebpath(), '/book');
   }
 
-  public function test_getWebpath_withArguments() {
+  public function test_getWebpath_withArgs() {
     $route = new Route('/user/([0-9]+)/book/([0-9]+)/like/', 'book', 'like', $this->getPositiveMatcher());
 
     $this->assertEquals($route->getWebpath(array(1,20)), '/user/1/book/20/like/');
   }
-
-  // _TODO: How to test controller gets called?
-  //        How to test fake that controller exists?
 
 }

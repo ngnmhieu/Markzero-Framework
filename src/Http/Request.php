@@ -8,6 +8,12 @@ use Symfony\Component\HttpFoundation;
  **/
 class Request extends HttpFoundation\Request {
 
+
+  /**
+   * @var array
+   */
+  private $supported_request_parser = array();
+
   function __construct() {
 
     parent::__construct(
@@ -24,14 +30,31 @@ class Request extends HttpFoundation\Request {
   private function prepareRequestData() {
     $content_type = $this->headers->get('Content-Type');
 
-    // _TODO: make it some how more extensible
-    if (0 === strpos($content_type, 'application/json')) {
-        $data = json_decode($this->getContent(), true);
-        $this->request->replace(is_array($data) ? $data : array());
-    } else if (0 === strpos($content_type, 'application/xml')) {
-      // pending
+    $request_parser = $this->getRequestParser($content_type);
+
+    if ($request_parser !== null) {
+      $parsed_data = $request_parser->parse($this->getContent());
+      $this->request->replace($parsed_data);
     }
   } 
+
+  /**
+   * Return the appropriate RequestParser
+   * Factory Method of AbstractRequestParser
+   *
+   * @param string Request's Content-Type
+   * @return Markzero\Http\AbstractRequestParser
+   */
+  private function getRequestParser($content_type) {
+
+    if (0 === strpos($content_type, 'application/json')) {
+      return new JsonRequestParser();
+    } else if (0 === strpos($content_type, 'application/xml')) {
+      return new XmlRequestParser();
+    }
+
+    return null;
+  }
 
   /**
    * Check if current request is a Cross-Domain Request

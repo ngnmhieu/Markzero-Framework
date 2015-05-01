@@ -23,6 +23,23 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
     $this->assertCount(1, $routes);
   }
 
+  public function test_getNamedWebpath() {
+
+    $router = $this->getRouter();
+
+    $router->map('post','/login/', 'SessionController','create', 'login');
+
+    $this->assertEquals('/login/',$router->getNamedWebpath('login'));
+  }
+
+  public function test_getNamedWebpathWithArgs() {
+
+    $router = $this->getRouter();
+
+    $router->map('post','/user/([0-9]+)/book/favorite', 'BookController','favorite', 'favorite_book');
+
+    $this->assertEquals('/user/12/book/favorite',$router->getNamedWebpath('favorite_book', array(12)));
+  }
   public function test_map_emptyController() {
     $this->setExpectedException('\InvalidArgumentException');
 

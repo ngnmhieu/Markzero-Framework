@@ -29,10 +29,16 @@ class Router {
   private $routes = array();
 
   /**
-   * A mapping from Route-Id (i.e 'controller#action') to a Route object. 
-   * @var array
+   * A mapping from Route-Id (e.g 'controller#action') to a Route object. 
+   * @var array<Markzero\Http\Routing\Route> 
    */
   private $webpaths = array();
+
+  /**
+   * A mapping from (user defined) Route name to a Route object
+   * @var array<Markzero\Http\Routing\Route> 
+   */
+  private $named_paths = array();
 
   /**
    * @var Markzero\Http\Response 
@@ -131,7 +137,7 @@ class Router {
    * @param string Controller
    * @param string Action
    **/
-  public function map($method, $route_string, $controller, $action) {
+  public function map($method, $route_string, $controller, $action, $name = null) {
 
     if (!preg_match("~^[a-zA-Z_\\\][a-zA-Z0-9_\\\]*$~", $controller)) {
       throw new \InvalidArgumentException("Invalid Controller Name: `$controller`");
@@ -154,12 +160,17 @@ class Router {
 
     $this->routes[$method_normalized][] = $route;
 
-    // Save route for web path generation 
+    // Save route for webpath generation 
     $route_id = $this->getRouteId($controller, $action);
     if (!array_key_exists($route_id, $this->webpaths))
       $this->webpaths[$route_id] = array();
 
     $this->webpaths[$route_id][] = $route;
+
+    // Save named webpath
+    if ($name !== null) {
+      $this->named_paths[$name] = $route;
+    }
   }
 
   /**
@@ -197,6 +208,22 @@ class Router {
     return array_map(function($route) use ($args) {
       return $route->getWebpath($args);
     }, $this->webpaths[$route_id]);
+  }
+
+  /**
+   * Return webpath corresponding to given name
+   * @param string Name of the webpath
+   * @param array  Optional arguments for the webpath
+   */
+  public function getNamedWebpath($name, $args = array()) {
+
+    if (!array_key_exists($name, $this->named_paths)) {
+      throw new \RuntimeException("No web path is found for path name: ". $name);
+    } 
+
+    $route = $this->named_paths[$name];
+
+    return $route->getWebpath($args);
   }
 
   /*

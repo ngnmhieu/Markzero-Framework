@@ -46,7 +46,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase {
 
     $response->redirect('BookController', 'index');
 
-    $this->assertFalse($response->getStatusCode() === Response::HTTP_FOUND);
+    $this->assertNotEquals( Response::HTTP_FOUND,$response->getStatusCode());
   }
 
   public function test_respond_noResponder() {

@@ -20,6 +20,14 @@ class ValidationManagerTest extends \PHPUnit_Framework_TestCase {
     );
   }
   
+  public function getNegativeValidator($id) {
+    return m::mock('Markzero\Validation\Validator\AbstractValidator', array(
+      'setMessage' => null,
+      'getMessage' => 'error'.$id,
+      'validate'   => false
+    ));
+  }
+  
   public function test_register_Validators_Diff_Attributes() {
     $vm = new ValidationManager();
 
@@ -72,5 +80,41 @@ class ValidationManagerTest extends \PHPUnit_Framework_TestCase {
     $vm->register('attribute', $validator);
 
     $vm->doValidate();
+  }
+
+  public function test_doValidate_strict() {
+
+    $vm = new ValidationManager();
+
+    $validator1 = $this->getNegativeValidator(1);
+    $validator2 = $this->getNegativeValidator(2);
+    $vm->register('attribute1', $validator1);
+    $vm->register('attribute2', $validator2);
+
+    try {
+      $strict = true;
+      $vm->doValidate($strict);
+    } catch(Markzero\Validation\Exception\ValidationException $e) {
+      $errors = $e->getErrors();
+      $this->assertArrayNotHasKey('attribute2', $errors);
+    }
+  }
+
+  public function test_doValidate_noStrict() {
+
+    $vm = new ValidationManager();
+
+    $validator1 = $this->getNegativeValidator(1);
+    $validator2 = $this->getNegativeValidator(2);
+    $vm->register('attribute1', $validator1);
+    $vm->register('attribute2', $validator2);
+
+    try {
+      $strict = false;
+      $vm->doValidate($strict);
+    } catch(Markzero\Validation\Exception\ValidationException $e) {
+      $errors = $e->getErrors();
+      $this->assertArrayHasKey('attribute2', $errors);
+    }
   }
 }

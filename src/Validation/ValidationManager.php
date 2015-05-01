@@ -66,9 +66,12 @@ class ValidationManager {
   /**
    * Iterate over all registered validators
    * and execute the validations
+   * @param boolean Strict Mode 
+   *                if set to true, ValidationException is thrown immediately after a validation error
+   *                otherwise ValidationException is only thrown after all validators are run.
    * @throw Markzero\Validation\Exception\ValidationException
    */
-  public function doValidate() {
+  public function doValidate($strict = false) {
     $errors = array(); // contains error messages
 
     foreach ($this->validators as $field_name => $validators) {
@@ -76,7 +79,12 @@ class ValidationManager {
       foreach ($validators as $validator) {
         if (!$validator->validate()) {
           $errors[$field_name] = $validator->getMessage();
-          break;
+
+          if ($strict) {
+            throw new ValidationException($errors);
+          } else {
+            break;
+          }
         }
       }
 

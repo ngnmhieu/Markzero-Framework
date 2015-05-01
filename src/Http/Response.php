@@ -135,7 +135,7 @@ class Response implements HttpStatusCodeInterface {
     else if (array_key_exists('all', $responders)) {
       $responders['all']();
       $http_response->send();
-    } 
+    }
     // Cannot find any corresponding responder
     else { 
       $http_response->setStatusCode(Response::HTTP_UNSUPPORTED_MEDIA_TYPE);
@@ -159,6 +159,7 @@ class Response implements HttpStatusCodeInterface {
     $origin = $this->request->headers->get('Origin');
     $this->http_response->headers->set('Access-Control-Allow-Origin', $origin);
     $this->http_response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Accept');
+    // _TODO: extensibility? How to add more methods when needed
     $this->http_response->headers->set('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE');
     $this->http_response->headers->set('Access-Control-Allow-Credentials', 'true');
 

@@ -14,12 +14,12 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
   public function test_map_addNewRoute() {
 
     $router = $this->getRouter();
-    $routes = array_flatten($router->getRoutes());
+    $routes = ArrayHelper::array_flatten($router->getRoutes());
     $this->assertCount(0, $routes);
 
     $router->map('get','/book/([0-9]+)/', 'BookController','show');
 
-    $routes = array_flatten($router->getRoutes());
+    $routes = ArrayHelper::array_flatten($router->getRoutes());
     $this->assertCount(1, $routes);
   }
 

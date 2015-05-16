@@ -68,8 +68,7 @@ class Response extends HttpFoundation\Response {
    * @param callable
    * @return Markzero\Http\Response current object
    */
-  public function respond_to($format, callable $responder) {
-    if ($this->responders === null) {
+  public function respondTo($format, callable $responder) { if ($this->responders === null) {
       $this->responders = array();
     }
 

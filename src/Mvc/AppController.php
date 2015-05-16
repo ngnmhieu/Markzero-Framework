@@ -58,11 +58,11 @@ class AppController {
   protected function getSession() { return $this->session; }
 
   /**
-   * Shorthand for $this->response->respond_to(...);
-   * See Markzero\Http\Response#respond_to
+   * Shorthand for $this->response->respondTo(...);
+   * See Markzero\Http\Response#respondTo
    */
-  protected function respond_to() {
-    return call_user_func_array(array($this->response, 'respond_to'), func_get_args());
+  protected function respondTo() {
+    return call_user_func_array(array($this->response, 'respondTo'), func_get_args());
   }
 
   /**

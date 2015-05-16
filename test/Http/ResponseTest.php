@@ -66,7 +66,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase {
       'getFormat' => 'xml'
     ));
     $response = new Response($request, $router);
-    $response->respond_to('html', function(){});
+    $response->respondTo('html', function(){});
 
     $response->respond();
     $this->assertEquals(Response::HTTP_UNSUPPORTED_MEDIA_TYPE, $response->getStatusCode());

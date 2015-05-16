@@ -1,8 +1,6 @@
 <?php
 namespace Markzero\Http\Routing;
 
-use Markzero\Http\Request;
-use Markzero\Http\Response;
 use Markzero\Http\Routing\RouteMatcher\AbstractRouteMatcher;
 
 class Route {
@@ -49,18 +47,18 @@ class Route {
   /**
    * Execute controller's action
    *
-   * @param Markzero\Http\Request
-   * @param Markzero\Http\Response
+   * @param array Dependencies of the controller
    * @throw \RuntimeException
    */
-  public function go(Request $request, Response $response) {
+  public function go(array $controller_dependencies = array()) {
 
     if (!class_exists($this->controller)) {
       throw new \RuntimeException("Controller '".$this->controller."' cannot be instantiated");
     }
 
-    $controller_obj = new $this->controller($request, $response);
-    
+    $rc = new \ReflectionClass($this->controller);
+    $controller_obj = $rc->newInstanceArgs($controller_dependencies);
+
     if (!is_callable(array($controller_obj, $this->action))) {
       throw new \RuntimeException("Action '".$this->action."' in controller '".$this->controller."' not found");
     }

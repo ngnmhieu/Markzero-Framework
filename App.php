@@ -1,7 +1,6 @@
 <?php
 namespace Markzero;
 
-use Markzero\Session;
 use Markzero\Data;
 use Markzero\Http;
 
@@ -68,13 +67,19 @@ class App {
    * like Session, Router, Database,...
    */
   private static function initClasses() {
-    self::$session  = new Session\Session();
+    self::$session  = new Http\Session();
     self::$router   = new Http\Routing\Router();
     self::$request  = new Http\Request();
     self::$response = new Http\Response(self::$request, self::$router);
 
+    // Set the dependencies 
     self::$router->setRequest(self::$request);
     self::$router->setResponse(self::$response);
+    self::$router->setCtrlDependencies(array(self::$request, self::$response, self::$session));
+    
+    // The $session object can be get either 
+    // via the request object or via the controller object
+    self::$request->setSession(self::$session);
   }
 
   /**

@@ -15,13 +15,35 @@ class Request extends HttpFoundation\Request {
    */
   private $supported_request_parser = array();
 
-  function __construct() {
+  function __construct(array $query = array(), array $request = array(), array $attributes = array(), array $cookies = array(), array $files = array(), array $server = array(), $content = null) {
 
-    parent::__construct(
-      $_GET, $_POST, array(), $_COOKIE, $_FILES, $_SERVER
-    );
+    $query = empty($empty) ? $_GET : $query;
+    $request = empty($empty) ? $_POST : $request;
+    $cookies = empty($empty) ? $_COOKIE : $cookies;
+    $files = empty($empty) ? $_FILES : $files;
+    $server = empty($empty) ? $_SERVER : $server;
+
+    parent::__construct($query, $request, $attributes, $cookies, $files, $server, $content);
 
     $this->prepareRequestData();
+  }
+
+  /**
+   * @return Symfony\Component\HttpFoundation\ParameterBag
+   */
+  public function getParams() {
+
+    $parameter_bag = null;
+
+    if ($this->getMethod() === self::METHOD_GET) {
+      $this->request->add($this->query->all());
+      $parameter_bag = $this->request;
+    } else {
+      $this->query->add($this->request->all());
+      $parameter_bag = $this->query;
+    }
+
+    return $parameter_bag;
   }
 
   /**

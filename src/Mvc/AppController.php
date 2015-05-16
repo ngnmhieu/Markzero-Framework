@@ -6,8 +6,18 @@ use Markzero\Mvc\View;
 use Markzero\Http;
 
 class AppController {
+  /**
+   * @var Markzero\Http\Request
+   */
   private $request;
+  /**
+   * @var Markzero\Http\Response
+   */
   private $response;
+  /**
+   * @var Markzero\Http\session
+   */
+  private $session;
 
   /*
    * Every child class should call this constructor
@@ -15,20 +25,37 @@ class AppController {
    * @param Markzero\Http\Request 
    * @param Markzero\Http\Response  
    */
-  function __construct(Http\Request $request = null, Http\Response $response = null) {
+  function __construct(Http\Request $request = null, Http\Response $response = null, Http\Session $session = null) {
     $this->request  = $request;
     $this->response = $response;
+    $this->session  = $session;
   }
 
   /**
    * @return Markzero\Http\Request Application Request object
+   * @deprecated
    **/
   protected function request() { return $this->request; }
+  /**
+   * @return Markzero\Http\Response Application Response object
+   * @deprecated
+   **/
+  protected function response() { return $this->response; }
+
+  /**
+   * @return Markzero\Http\Request Application Request object
+   **/
+  protected function getRequest() { return $this->request; }
 
   /**
    * @return Markzero\Http\Response Application Response object
    **/
-  protected function response() { return $this->response; }
+  protected function getResponse() { return $this->response; }
+
+  /**
+   * @return Markzero\Http\Session Application Session object
+   **/
+  protected function getSession() { return $this->session; }
 
   /**
    * Shorthand for $this->response->respond_to(...);

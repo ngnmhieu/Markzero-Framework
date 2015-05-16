@@ -42,10 +42,7 @@ class RouteTest extends PHPUnit_Framework_TestCase {
   
     $route = new Route('/book/', 'SomeController', 'show', $this->getPositiveMatcher());
 
-    $response = Mockery::mock('Markzero\Http\Response');
-    $request = Mockery::mock('Markzero\Http\Request');
-
-    $route->go($request, $response);
+    $route->go();
   }
 
   public function test_getWebpath_withoutArgs() {

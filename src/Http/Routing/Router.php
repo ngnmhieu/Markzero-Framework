@@ -49,23 +49,36 @@ class Router {
    * @var Markzero\Http\Request
    */
   private $request;
+  
+  /**
+   * @var array Dependencies which will be passed to the controller constructor 
+   */
+  private $ctrl_dependencies;
 
   /**
    * @param Markzero\Http\Request $request
    * @param Markzero\Http\Response $response
    */
-  function __construct(Request $request = null, Response $response = null) {
+  function __construct(Request $request = null, Response $response = null, array $dependencies = array()) {
     $this->routes = array();
     $this->request  = $request;
     $this->response = $response;
+    $this->ctrl_dependencies = $dependencies;
   }
 
-  function setRequest(Request $request) {
+  public function setRequest(Request $request) {
     $this->request = $request;
   }
 
-  function setResponse(Response $response) {
+  public function setResponse(Response $response) {
     $this->response = $response;
+  }
+
+  /**
+   * @param array 
+   */
+  public function setCtrlDependencies(array $dependencies) {
+    $this->ctrl_dependencies = $dependencies;
   }
 
   /**
@@ -104,7 +117,7 @@ class Router {
       if ($route->matchPath($this->request->getPathInfo())) {
 
         try {
-          $route->go($this->request, $this->response);
+          $route->go($this->ctrl_dependencies);
           $this->response->respond();
 
         } catch(\RuntimeException $e) {

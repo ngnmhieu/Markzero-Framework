@@ -1,3 +1,5 @@
 [] How does user define his base url (eg: www.example.org/demo/app/) So that all url will be 'based' on that
 
-[] Where to configure trusted host?
+[] Where to configure trusted host? ( refer to *configurator )
+
+[] Using bootstrapers, configurators

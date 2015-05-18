@@ -3,3 +3,5 @@
 [] Where to configure trusted host? ( refer to *configurator )
 
 [] Using bootstrapers, configurators
+
+[] Redirection

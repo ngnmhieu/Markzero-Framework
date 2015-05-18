@@ -33,17 +33,6 @@ class AppController {
 
   /**
    * @return Markzero\Http\Request Application Request object
-   * @deprecated
-   **/
-  protected function request() { return $this->request; }
-  /**
-   * @return Markzero\Http\Response Application Response object
-   * @deprecated
-   **/
-  protected function response() { return $this->response; }
-
-  /**
-   * @return Markzero\Http\Request Application Request object
    **/
   protected function getRequest() { return $this->request; }
 
@@ -68,10 +57,18 @@ class AppController {
   /**
    * Render a view using a concrete AbstractView object (HtmlView, JsonView, ...)
    * @param Markzero\Mvc\View\AbstractView
-   * @return none
+   * @return Markzero\Http\Response
    */
   protected function render(View\AbstractView $view) {
-    $this->response->setContent($view->getContent());
+    return $this->response->setContent($view->getContent());
+  }
+
+  /**
+   * Shorthand for $this->response->redirect(...);
+   * See Markzero\Http\Response#redirect
+   */
+  protected function redirect() {
+    return call_user_func_array(array($this->response, 'redirect'), func_get_args());
   }
 
   /**

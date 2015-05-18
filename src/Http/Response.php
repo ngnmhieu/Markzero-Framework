@@ -37,7 +37,6 @@ class Response extends HttpFoundation\Response {
 
   /**
    * Setup a redirection
-   * _TODO: to Root?
    * @param string
    * @param string
    * @param array
@@ -47,7 +46,7 @@ class Response extends HttpFoundation\Response {
 
     $location = $this->router->getWebpaths($controller, $action, $params)[0];
 
-    // if it's not already a redirection, HTTP_FOUND 302 status code is set
+    // If it's not already a redirection, HTTP_FOUND 302 status code is set
     $status_code = $this->getStatusCode();
     if (!$this->isRedirection()) {
       $this->setStatusCode(Response::HTTP_FOUND);
@@ -58,9 +57,20 @@ class Response extends HttpFoundation\Response {
     return $this;
   }
 
-  public function redirectUrl() {
-    // _TODO: pending
-  }
+  /**
+   * @param string $location
+   */
+  // public function redirectUrl($location) {
+
+  //   $status_code = $this->getStatusCode();
+  //   if (!$this->isRedirection()) {
+  //     $this->setStatusCode(Response::HTTP_FOUND);
+  //   }
+  //     
+  //   $this->headers->set('Location', $location);
+
+  //   return $this;
+  // }
 
   /**
    * Register a responder for a corresponding format

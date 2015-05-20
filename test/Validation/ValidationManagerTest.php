@@ -1,6 +1,8 @@
 <?php
 use Markzero\Validation\Validator;
+use Markzero\Validation\Validator\FunctionValidator;
 use Markzero\Validation\ValidationManager;
+use Markzero\Validation\Exception\ValidationException;
 use \Mockery as m;
 
 class ValidationManagerTest extends \PHPUnit_Framework_TestCase {
@@ -94,7 +96,7 @@ class ValidationManagerTest extends \PHPUnit_Framework_TestCase {
     try {
       $strict = true;
       $vm->doValidate($strict);
-    } catch(Markzero\Validation\Exception\ValidationException $e) {
+    } catch(ValidationException $e) {
       $errors = $e->getErrors();
       $this->assertArrayNotHasKey('attribute2', $errors);
     }
@@ -112,9 +114,27 @@ class ValidationManagerTest extends \PHPUnit_Framework_TestCase {
     try {
       $strict = false;
       $vm->doValidate($strict);
-    } catch(Markzero\Validation\Exception\ValidationException $e) {
+    } catch(ValidationException $e) {
       $errors = $e->getErrors();
       $this->assertArrayHasKey('attribute2', $errors);
     }
   }
+
+  public function test_parseErrorsToMultidimensionalArray() {
+
+    $vm = new ValidationManager();
+    
+    try {
+      $vm->validate(function($vm) {
+        $vm->register('user[name]', new FunctionValidator(function(){return false;}), 'Error message name');
+      });
+    } catch (ValidationException $e) {
+      $errors = $e->getErrors();
+
+      $this->assertArrayHasKey('user', $errors);
+      $this->assertArrayHasKey('name', $errors['user']);
+    }
+
+  }
+
 }

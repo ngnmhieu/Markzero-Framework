@@ -70,11 +70,17 @@ class HtmlView extends AbstractView {
   /**
    * Include another view into the current view
    * @param string $name e.g 'book/footer'
+   * @param array 
    */
-  protected function partial($name) {
+  protected function partial($name, array $data = array()) {
+
     $view_path = $this->view_path;
     $template_file = $view_path."$name.html.php";
+
     extract($this->data); 
+
+    extract($data); 
+
     include($template_file);
   }
 }

@@ -14,7 +14,6 @@ abstract class AppModel {
    * Names of callbacks, which are invoked on the event PrePersist and Update
    */
   private $prePersistUpdateCallbacks = array('_validate');
-  private $prePersistCallbacks = array('_default'); // _TODO: consider constructor as the function for setting default value
   private $preUpdateCallbacks  = array();
 
 
@@ -55,12 +54,6 @@ abstract class AppModel {
       }
     }
   }
-
-  /**
-   * Set up default values for attributes
-   * Concrete models override this method to assign default values to attributes
-   */
-  abstract protected function _default();
 
   /**
    * Perform validation 

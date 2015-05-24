@@ -12,7 +12,8 @@ function preg_grep_keys(string $pattern, array $input, $flags = 0) {
 }
 
 /**
- *
+ * Make Multidimensional array One-Dimensional array
+ * @param array Array to be flatten
  */
 function array_flatten($array) {
   if (!is_array($array)) {

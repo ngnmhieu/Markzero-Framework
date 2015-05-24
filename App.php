@@ -57,9 +57,8 @@ class App {
    * Load system functions, helper functions ...
    */
   private static function loadFunctions() {
-    require_once(self::$CORE_PATH."src/Helpers/functions.php");
-    require_once(self::$CORE_PATH."src/Helpers/helpers.php");
-    require_once(self::$CORE_PATH."src/Helpers/ArrayHelper.php");
+    require_once(self::$CORE_PATH."src/Helpers/ViewHelpers.php");
+    require_once(self::$CORE_PATH."src/Helpers/ArrayHelpers.php");
   }
 
   /**

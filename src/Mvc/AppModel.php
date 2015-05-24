@@ -3,6 +3,7 @@ namespace Markzero\Mvc;
 
 use Markzero\App;
 use Markzero\Validation;
+use Markzero\Exception\AttributeNotFoundException;
 use Markzero\Validation\Exception\ValidationException;
 
 /**
@@ -14,6 +15,7 @@ abstract class AppModel {
    * Names of callbacks, which are invoked on the event PrePersist and Update
    */
   private $prePersistUpdateCallbacks = array('_validate');
+  private $prePersistCallbacks  = array();
   private $preUpdateCallbacks  = array();
 
 
@@ -220,6 +222,7 @@ abstract class AppModel {
    * these methods are required by doctrine
    **/
   function __call($name, $args) {
+
     if (preg_match('~get([A-Z].*)~', $name, $matches)) {
       $attr = lcfirst($matches[1]);
       return $this->{$attr};
@@ -227,8 +230,8 @@ abstract class AppModel {
       $attr = lcfirst($matches[1]);
       $this->{$attr} = $args[0];
       return $this->{$attr};
-    }
-    
+    } 
+
     $trace = debug_backtrace();
     throw new \BadMethodCallException(
       "Undefined method `$name()` in class `".get_class(new static)."`: ".
@@ -236,6 +239,19 @@ abstract class AppModel {
       ' Line ' . $trace[0]['line'],
       E_USER_NOTICE
     );
+  }
+
+  /**
+   * For dynamic attributes to work with isset()
+   */
+  function __isset($name) {
+    $is_defined = isset($this->{$name});
+    $is_readable = property_exists(get_called_class(), 'attr_reader')
+                && in_array($name, static::$attr_reader);
+    $is_accessible = property_exists(get_called_class(), 'attr_accessor')
+                && in_array($name, static::$attr_accessor);
+
+    return $is_defined && ($is_readable || $is_accessible);
   }
 
   /**

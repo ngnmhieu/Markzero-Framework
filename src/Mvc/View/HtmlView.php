@@ -2,8 +2,9 @@
 namespace Markzero\Mvc\View;
 
 class HtmlView extends AbstractView {
-  private $view_path;
+
   private static $DEFAULT_VIEW_PATH = null; 
+  private $view_path;
   private $data;
 
   /**
@@ -14,7 +15,7 @@ class HtmlView extends AbstractView {
    *          either through HtmlView::setDefaultViewPath
    *          or through the constructor
    */
-  function __construct(array $data, $name = null, $view_path = null) {
+  function __construct(array $data = array(), $name = null, $view_path = null) {
 
     // save the data (variables) that would be populated in the templates
     $this->data = $data;

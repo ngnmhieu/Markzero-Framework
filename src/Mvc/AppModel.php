@@ -167,16 +167,17 @@ abstract class AppModel {
     if (method_exists($this, $getter)) {
       return $this->{$getter}();
     } else if (property_exists(get_called_class(), $attr) 
-               && ((property_exists(get_called_class(), 'attr_reader') 
-                   && is_array(static::$attr_reader) 
-                   && in_array($attr, static::$attr_reader))
+               && ((property_exists(get_called_class(), 'readable') 
+                   && is_array(static::$readable) 
+                   && in_array($attr, static::$readable))
                  || 
-                   (property_exists(get_called_class(), 'attr_accessor') 
-                   && is_array(static::$attr_accessor) 
-                   && in_array($attr, static::$attr_accessor)))) {
+                   (property_exists(get_called_class(), 'accessible') 
+                   && is_array(static::$accessible) 
+                   && in_array($attr, static::$accessible)))) {
       return $this->{$attr};
     }
 
+    // _TODO: some trace does not have 'file'
     $trace = debug_backtrace();
     throw new AttributeNotFoundException(
        "Undefined attribute `$attr`:"
@@ -196,13 +197,13 @@ abstract class AppModel {
     if (method_exists($this, $setter)) {
       return call_user_func_array(array($this, $setter), func_get_args());
     } else if (property_exists(new static, $attr) 
-               && ((property_exists(get_called_class(), 'attr_writer') 
-                   && is_array(static::$attr_writer) 
-                   && in_array($attr, static::$attr_writer))
+               && ((property_exists(get_called_class(), 'writable') 
+                   && is_array(static::$writable) 
+                   && in_array($attr, static::$writable))
                  || 
-                   (property_exists(get_called_class(), 'attr_accessor') 
-                   && is_array(static::$attr_accessor) 
-                   && in_array($attr, static::$attr_accessor)))) {
+                   (property_exists(get_called_class(), 'accessible') 
+                   && is_array(static::$accessible) 
+                   && in_array($attr, static::$accessible)))) {
       $this->{$attr} = $value;
       return $value;
     }
@@ -245,11 +246,11 @@ abstract class AppModel {
    * For dynamic attributes to work with isset()
    */
   function __isset($name) {
-    $is_defined = isset($this->{$name});
-    $is_readable = property_exists(get_called_class(), 'attr_reader')
-                && in_array($name, static::$attr_reader);
-    $is_accessible = property_exists(get_called_class(), 'attr_accessor')
-                && in_array($name, static::$attr_accessor);
+    $is_defined = property_exists($this, $name);
+    $is_readable = property_exists(get_called_class(), 'readable')
+                && in_array($name, static::$readable);
+    $is_accessible = property_exists(get_called_class(), 'accessible')
+                && in_array($name, static::$accessible);
 
     return $is_defined && ($is_readable || $is_accessible);
   }
@@ -259,7 +260,7 @@ abstract class AppModel {
    * @return array
    */
   public function toArray() {
-    $attributes = array_merge(static::$attr_reader, static::$attr_accessor);
+    $attributes = array_merge(static::$readable, static::$accessible);
 
     $array = array();
     foreach ($attributes as $attr) {

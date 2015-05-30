@@ -12,7 +12,6 @@ class App {
   static $CORE_PATH;
   static $CONTROLLER_PATH;
   static $MODEL_PATH;
-  static $VIEW_PATH;
   static $PUBLIC_PATH;
 
   static $request;
@@ -47,9 +46,8 @@ class App {
     $parent_dir = dirname(dirname(__FILE__));
     self::$APP_PATH       = $parent_dir.'/';
     self::$CORE_PATH       = self::$APP_PATH."core/";
-    self::$CONTROLLER_PATH = self::$APP_PATH."app/controllers/";
-    self::$MODEL_PATH      = self::$APP_PATH."app/models/";
-    self::$VIEW_PATH       = self::$APP_PATH."app/views/";
+    self::$CONTROLLER_PATH = self::$APP_PATH."app/Controllers/";
+    self::$MODEL_PATH      = self::$APP_PATH."app/Models/";
     self::$PUBLIC_PATH     = self::$APP_PATH."public/";
   }
 

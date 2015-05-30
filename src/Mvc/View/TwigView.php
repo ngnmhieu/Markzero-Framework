@@ -51,6 +51,7 @@ class TwigView extends AbstractView
   }
 
   /**
+   * _TODO: separate out default configurations
    * Apply default configurations to \Twig_Environment object
    * like add functions, filters, tags, ...
    *

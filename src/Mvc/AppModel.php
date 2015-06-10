@@ -137,8 +137,8 @@ abstract class AppModel {
   /**
    * Proxy for Doctrine\ORM\EntityRepository#findOneBy
    */
-  static function findOneBy(array $criteria) {
-    return self::getRepo()->findOneBy($criteria);
+  static function findOneBy(array $criteria, array $orderBy = null) {
+    return self::getRepo()->findOneBy($criteria, $orderBy);
   }
 
   /**
@@ -193,15 +193,16 @@ abstract class AppModel {
   function __set($attr, $value) {
 
     $setter = 'set'.ucfirst($attr); // setter name
-
+    $klass = get_called_class();
+    
     if (method_exists($this, $setter)) {
       return call_user_func_array(array($this, $setter), func_get_args());
-    } else if (property_exists(new static, $attr) 
-               && ((property_exists(get_called_class(), 'writable') 
+    } else if (property_exists($klass, $attr) 
+               && ((property_exists($klass, 'writable') 
                    && is_array(static::$writable) 
                    && in_array($attr, static::$writable))
                  || 
-                   (property_exists(get_called_class(), 'accessible') 
+                   (property_exists($klass, 'accessible') 
                    && is_array(static::$accessible) 
                    && in_array($attr, static::$accessible)))) {
       $this->{$attr} = $value;

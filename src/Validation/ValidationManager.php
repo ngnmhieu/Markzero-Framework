@@ -29,15 +29,16 @@ class ValidationManager {
   /**
    * Execute a validation transaction, and clear all validators at the end
    * @param callable
+   * @param bool 
    * @throw Markzero\Validation\Exception\ValidationException 
    */
-  public function validate(callable $closure) {
+  public function validate(callable $closure, $strict = false) {
 
     // validators are be registered in the closure
     $closure($this);
 
     // run the validators
-    $this->doValidate();
+    $this->doValidate($strict);
 
     // if no Exception was thrown, clear all validators
     $this->clear();

@@ -177,13 +177,7 @@ abstract class AppModel {
       return $this->{$attr};
     }
 
-    // _TODO: some trace does not have 'file'
-    $trace = debug_backtrace();
-    throw new AttributeNotFoundException(
-       "Undefined attribute `$attr`:"
-      .' in ' . $trace[0]['file']
-      .' Line ' . $trace[0]['line']
-    );
+    throw new AttributeNotFoundException("Undefined attribute `$attr` accessed in object of class `".get_called_class()."`");
   }
 
   /**
@@ -209,12 +203,7 @@ abstract class AppModel {
       return $value;
     }
 
-    $trace = debug_backtrace();
-    throw new AttributeNotFoundException(
-       "Undefined attribute `$attr`:"
-      .' in ' . $trace[0]['file']
-      .' Line ' . $trace[0]['line']
-    );
+    throw new AttributeNotFoundException("Undefined attribute `$attr` accessed in object of class `".get_called_class()."`");
   }
 
   /**
@@ -234,13 +223,7 @@ abstract class AppModel {
       return $this->{$attr};
     } 
 
-    $trace = debug_backtrace();
-    throw new \BadMethodCallException(
-      "Undefined method `$name()` in class `".get_class(new static)."`: ".
-      ' in ' . $trace[0]['file'] .
-      ' Line ' . $trace[0]['line'],
-      E_USER_NOTICE
-    );
+    throw new \BadMethodCallException("Undefined method `$name()` accessed in object of class `".get_called_class()."`");
   }
 
   /**

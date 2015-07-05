@@ -3,7 +3,8 @@ use Markzero\Http\Response;
 
 class ResponseTest extends \PHPUnit_Framework_TestCase {
 
-  public function getNewResponse() {
+  public function getNewResponse()
+  {
 
     $router = \Mockery::mock('Markzero\Http\Routing\Router');
     $request = \Mockery::mock('Markzero\Http\Request');
@@ -11,18 +12,21 @@ class ResponseTest extends \PHPUnit_Framework_TestCase {
     return new Response($request, $router);
   }
 
-  public function getResponseForRedirection() {
+  public function getResponseForRedirection()
+  {
     $path = '/book/';
+
     $router = \Mockery::mock('Markzero\Http\Routing\Router', array(
       'getWebpaths' => array($path)
     ));
+
     $request = \Mockery::mock('Markzero\Http\Request');
 
     return new Response($request, $router);
   }
 
-  public function test_redirect_setCorrectRedirectUrl() {
-
+  public function test_redirect_setCorrectRedirectUrl()
+  {
     $response = $this->getResponseForRedirection();
 
     $response->redirect('BookController', 'index');
@@ -30,16 +34,26 @@ class ResponseTest extends \PHPUnit_Framework_TestCase {
     $this->assertEquals('/book/', $response->headers->get('Location'));
   }
 
-  public function test_redirect_setCorrectStatusCode() {
+  public function test_redirect_setCorrectStatusCode()
+  {
+    $response = $this->getResponseForRedirection();
 
+    $response->redirect('BookController', 'index', [], [], Response::HTTP_TEMPORARY_REDIRECT);
+
+    $this->assertEquals(Response::HTTP_TEMPORARY_REDIRECT, $response->getStatusCode());
+  }
+
+  public function test_redirect_setDefaultStatusCode()
+  {
     $response = $this->getResponseForRedirection();
 
     $response->redirect('BookController', 'index');
 
-    $this->assertEquals(Response::HTTP_FOUND, $response->getStatusCode());
+    $this->assertEquals(Response::DEFAULT_REDIRECT_STATUS_CODE, $response->getStatusCode());
   }
 
-  public function test_redirect_noChangeToAlreadySetRedirectionStatus() {
+  public function test_redirect_noChangeToAlreadySetRedirectionStatus() 
+  {
     $response = $this->getResponseForRedirection();
 
     $response->setStatusCode(Response::HTTP_MOVED_PERMANENTLY);
@@ -49,8 +63,8 @@ class ResponseTest extends \PHPUnit_Framework_TestCase {
     $this->assertNotEquals( Response::HTTP_FOUND,$response->getStatusCode());
   }
 
-  public function test_respond_noResponder() {
-
+  public function test_respond_noResponder()
+  {
     $response = $this->getNewResponse(); 
 
     $response->respond();
@@ -58,8 +72,8 @@ class ResponseTest extends \PHPUnit_Framework_TestCase {
     $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
   }
 
-  public function test_respond_mediatypeNotSupported() {
-
+  public function test_respond_mediatypeNotSupported()
+  {
     $router = \Mockery::mock('Markzero\Http\Routing\Router');
     $request = \Mockery::mock('Markzero\Http\Request', array(
       'getAcceptableContentTypes' => array('application/xml'),

@@ -87,7 +87,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
     $router = $this->getRouter();
 
     $router->map('get', '/book/index', 'BookController', 'index');
-    $webpaths = $router->getWebpaths('BookController', 'index', [], ['keyword' => 'abc']);  
+    $webpaths = $router->getWebpaths('BookController', 'index', [], ['keyword' => 'abc']);
 
     $this->assertContains('/book/index?keyword=abc', $webpaths);
   }

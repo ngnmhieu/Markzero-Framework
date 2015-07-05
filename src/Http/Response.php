@@ -24,10 +24,16 @@ class Response extends HttpFoundation\Response {
   private $responders;
 
   /**
+   * @const default Http status in a redirect response if not specified
+   */
+  const DEFAULT_REDIRECT_STATUS_CODE = Response::HTTP_FOUND;
+
+  /**
    * @param Markzero\Http\Request
    * @param Markzero\Http\Routing\Router
    */
-  function __construct(Request $request, Router $router) {
+  function __construct(Request $request, Router $router) 
+  {
     $this->request       = $request;
     $this->router        = $router;
     $this->responders    = array();
@@ -37,19 +43,29 @@ class Response extends HttpFoundation\Response {
 
   /**
    * Setup a redirection
+   * Modifies $headers by setting Location to the target location
+   * Modifies $statusCode to the given
+   *
    * @param string
    * @param string
-   * @param array
+   * @param array arguments to be replaced in the url
+   * @param array query string parameters
+   * @param int a valid http status code
    * @return Markzero\Http\Response 
    */
-  public function redirect($controller, $action, array $params = array()) {
+  public function redirect($controller, $action, array $args = [], array $query_params = [], $status_code = null)
+  {
 
-    $location = $this->router->getWebpaths($controller, $action, $params)[0];
+    $location = $this->router->getWebpaths($controller, $action, $args, $query_params)[0];
 
-    // If it's not already a redirection, HTTP_FOUND 302 status code is set
-    $status_code = $this->getStatusCode();
-    if (!$this->isRedirection()) {
-      $this->setStatusCode(Response::HTTP_FOUND);
+    if ($status_code != null) {
+
+      $this->setStatusCode($status_code);
+
+    } else if (!$this->isRedirection()) { // if status code hasn't already set yet
+
+      $this->setStatusCode(Response::DEFAULT_REDIRECT_STATUS_CODE);
+
     }
       
     $this->headers->set('Location', $location);
@@ -60,17 +76,19 @@ class Response extends HttpFoundation\Response {
   /**
    * @param string $location
    */
-  // public function redirectUrl($location) {
+  public function redirectUrl($location)
+  {
 
-  //   $status_code = $this->getStatusCode();
-  //   if (!$this->isRedirection()) {
-  //     $this->setStatusCode(Response::HTTP_FOUND);
-  //   }
-  //     
-  //   $this->headers->set('Location', $location);
+    $status_code = $this->getStatusCode();
 
-  //   return $this;
-  // }
+    if (!$this->isRedirection()) {
+      $this->setStatusCode(Response::HTTP_FOUND);
+    }
+
+    $this->headers->set('Location', $location);
+
+    return $this;
+  }
 
   /**
    * Register a responder for a corresponding format
@@ -78,7 +96,9 @@ class Response extends HttpFoundation\Response {
    * @param callable
    * @return Markzero\Http\Response current object
    */
-  public function respondTo($format, callable $responder) { if ($this->responders === null) {
+  public function respondTo($format, callable $responder) 
+  { 
+    if ($this->responders === null) {
       $this->responders = array();
     }
 
@@ -95,10 +115,10 @@ class Response extends HttpFoundation\Response {
    * @param bool send response without any content
    * @return Markzero\Http\Response current object
    */
-  public function respond($no_content = false) {
+  public function respond($no_content = false)
+  {
     $request       = $this->request;
     $responders    = $this->responders;
-
 
     if ($no_content) {
       $this->send();
@@ -126,7 +146,6 @@ class Response extends HttpFoundation\Response {
       }
     }
 
-
     // Check if request accept any kind of content-type `*/*`
     if (in_array('*/*', $accept_mimes)) {
       $first_responder = reset($responders);
@@ -151,7 +170,8 @@ class Response extends HttpFoundation\Response {
    * Set Access-Control-* Headers for Cross-Domain Request
    * @return Markzero\Http\Response current object
    */
-  public function setAccessControlHeaders() {
+  public function setAccessControlHeaders() 
+  {
     $request = $this->request;
 
     if (!$request->isCrossDomain() || !$request->isCrossDomainAllowed()) {
@@ -161,7 +181,6 @@ class Response extends HttpFoundation\Response {
     $origin = $this->request->headers->get('Origin');
     $this->headers->set('Access-Control-Allow-Origin', $origin);
     $this->headers->set('Access-Control-Allow-Headers', 'Content-Type, Accept');
-    // _TODO: extensibility? How to add more methods when needed
     $this->headers->set('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE');
     $this->headers->set('Access-Control-Allow-Credentials', 'true');
 

@@ -25,7 +25,8 @@ class AppController {
    * @param Markzero\Http\Request 
    * @param Markzero\Http\Response  
    */
-  function __construct(Http\Request $request = null, Http\Response $response = null, Http\Session $session = null) {
+  function __construct(Http\Request $request = null, Http\Response $response = null, Http\Session $session = null) 
+  {
     $this->request  = $request;
     $this->response = $response;
     $this->session  = $session;
@@ -50,7 +51,8 @@ class AppController {
    * Shorthand for $this->response->respondTo(...);
    * See Markzero\Http\Response#respondTo
    */
-  protected function respondTo() {
+  protected function respondTo() 
+  {
     return call_user_func_array(array($this->response, 'respondTo'), func_get_args());
   }
 
@@ -59,7 +61,8 @@ class AppController {
    * @param Markzero\Mvc\View\AbstractView
    * @return Markzero\Http\Response
    */
-  protected function render(View\AbstractView $view) {
+  protected function render(View\AbstractView $view) 
+  {
     return $this->response->setContent($view->getContent());
   }
 
@@ -67,14 +70,16 @@ class AppController {
    * Shorthand for $this->response->redirect(...);
    * See Markzero\Http\Response#redirect
    */
-  protected function redirect() {
+  protected function redirect() 
+  {
     return call_user_func_array(array($this->response, 'redirect'), func_get_args());
   }
 
   /**
    * @return string Name of current controller
    */
-  protected function name() {
+  protected function name() 
+  {
     preg_match("/([a-zA-Z]+)Controller/", get_class($this), $matches);
     $controller = strtolower($matches[1]);
     return $controller;

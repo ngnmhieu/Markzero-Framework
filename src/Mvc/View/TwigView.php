@@ -60,8 +60,7 @@ class TwigView extends AbstractView
   protected static function defaultConfigure(\Twig_Environment $twig) 
   {
     $functions = array(
-      'webpath'     => 'webpath',
-      'new_webpath' => 'new_webpath'
+      'webpath' => 'webpath'
     );
 
     foreach ($functions as $name => $callable) {

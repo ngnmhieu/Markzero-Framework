@@ -11,20 +11,6 @@ function selected($a, $b)
 }
 
 /**
- * @param string $route_id
- * @param array $params
- */
-function webpath($route_id, array $params = array()) 
-{
-  $route_comp  = explode('#',$route_id);
-  $controller = $route_comp[0];
-  $action     = $route_comp[1];
-
-  // return the first webpath found
-  return App::$router->getWebpaths($controller, $action, $params)[0];
-}
-
-/**
  * Get Webpath for the given controller and action
  *
  * $ctrl_str is given in form:
@@ -36,7 +22,7 @@ function webpath($route_id, array $params = array())
  * @param string action name
  * @param array  optional arguments to the action method
  */
-function new_webpath($ctrl_str, $action, array $args = array()) 
+function webpath($ctrl_str, $action, array $args = array()) 
 {
   $parts = explode('::', $ctrl_str);
 

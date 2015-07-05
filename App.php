@@ -29,7 +29,8 @@ class App {
    * - loading configurations
    * - and dispatch the request from client
    */
-  static function bootstrap() {
+  static function bootstrap() 
+  {
     self::initPath();
     self::loadClasses();
     self::initClasses();
@@ -42,7 +43,8 @@ class App {
   /**
    * Initializes the paths in the application
    */
-  private static function initPath() {
+  private static function initPath() 
+  {
     $parent_dir = dirname(dirname(__FILE__));
     self::$APP_PATH       = $parent_dir.'/';
     self::$CORE_PATH       = self::$APP_PATH."core/";
@@ -54,7 +56,8 @@ class App {
   /**
    * Load system functions, helper functions ...
    */
-  private static function loadFunctions() {
+  private static function loadFunctions() 
+  {
     require_once(self::$CORE_PATH."src/Helpers/ViewHelpers.php");
     require_once(self::$CORE_PATH."src/Helpers/ArrayHelpers.php");
   }
@@ -63,7 +66,8 @@ class App {
    * Loads important classes for the application
    * like Session, Router, Database,...
    */
-  private static function initClasses() {
+  private static function initClasses() 
+  {
     self::$session  = new Http\Session();
     self::$router   = new Http\Routing\Router();
     self::$request  = new Http\Request();
@@ -84,7 +88,8 @@ class App {
    * configurations are located in config/ directory.
    * important configurations are among others: application wide config, database,...
    */
-  private static function loadConfig() {
+  private static function loadConfig() 
+  {
     // Global application configurations
     self::$config = new Data\StaticData(self::$APP_PATH."config/");
 
@@ -106,35 +111,32 @@ class App {
   /**
    * routes.php defines routes for the Router
    */
-  private static function loadRoutes() {
+  private static function loadRoutes() 
+  {
     require_once(self::$APP_PATH. "config/routes.php");
   }
 
   /**
    * Loads files that contain important classes
    */
-  private static function loadClasses() { 
+  private static function loadClasses() 
+  {
     // autoload internal classes and third-party libraries for the framework
     require_once(self::$CORE_PATH. "vendor/autoload.php");
 
     // autoload third-party libraries for the app
-    if (file_exists(self::$APP_PATH. "vendor/autoload.php")) {
+    if (file_exists(self::$APP_PATH. "vendor/autoload.php"))
       require_once(self::$APP_PATH. "vendor/autoload.php");
-    }
-
-    // load all models
-    self::loadRecursive(self::$MODEL_PATH, '/^[A-Z][A-Za-z_\-.]*\.php$/');
-    
-    // Load all controllers
-    self::loadRecursive(self::$CONTROLLER_PATH, '/^[A-Z][A-Za-z_\-.]*\.php$/');
 
   }
 
   /**
+   * _TODO: not used anymore
    * @param string Directory where files should be loaded
    * @param string File's name will be matched against this regex
    */
-  private static function loadRecursive($path, $regex = null) {
+  private static function loadRecursive($path, $regex = null) 
+  {
     $regex = $regex === null ? '~^[^/?*:;{}\\]+\.php$~' : $regex;
 
     foreach (scandir($path) as $file) {
@@ -153,7 +155,8 @@ class App {
    * Load application-specific static data 
    * data is in json formats
    */
-  private static function loadStaticData() {
+  private static function loadStaticData() 
+  {
     $data_dir = self::$APP_PATH."data";
     self::$data = new Data\StaticData($data_dir);
   }   

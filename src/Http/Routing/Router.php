@@ -275,15 +275,4 @@ class Router {
   public function delete($route_string, $controller, $action) {
     return $this->map('delete', $route_string, $controller, $action);
   }
-  
-  /* 
-   * draw() method serves as DSL (Domain Specific Language) 
-   * @param callable $func | "draws" routes for application, 
-   *                       |  $func takes a Router object
-   * @return Router the current Router object
-   */  
-  public function draw($func) {
-    $func($this);
-    return $this;
-  }
 }

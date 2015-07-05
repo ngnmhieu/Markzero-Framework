@@ -204,7 +204,7 @@ class Router {
    * @throw InvalidArgumentException when $controller or $action is not string
    *        RuntimeException if no path is found
    */
-  public function getWebpaths($controller, $action, array $args = array()) 
+  public function getWebpaths($controller, $action, array $args = [], array $query_params = []) 
   {
     if(!is_string($controller)) {
       throw new \InvalidArgumentException('Argument $controller must be a string: Router#getWebpath.');
@@ -219,8 +219,8 @@ class Router {
     if (!array_key_exists($route_id, $this->webpaths) || empty($this->webpaths[$route_id]))
       throw new \RuntimeException("No web path is found for path name: ". $route_id);
     
-    return array_map(function($route) use ($args) {
-      return $route->getWebpath($args);
+    return array_map(function($route) use ($args, $query_params) {
+      return $route->getWebpath($args, $query_params);
     }, $this->webpaths[$route_id]);
   }
 

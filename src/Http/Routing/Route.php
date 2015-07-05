@@ -3,7 +3,8 @@ namespace Markzero\Http\Routing;
 
 use Markzero\Http\Routing\RouteMatcher\AbstractRouteMatcher;
 
-class Route {
+class Route
+{
 
   /**
    * @var Markzero\Http\Routing\RouteMatcher\AbstractRouteMatcher 
@@ -28,7 +29,8 @@ class Route {
    * @param string Action to be executed
    * @param Markzero\Http\Routing\RouteMatcher\AbstractRouteMatcher 
    */
-  public function __construct($route_string, $controller, $action, AbstractRouteMatcher $matcher) {
+  public function __construct($route_string, $controller, $action, AbstractRouteMatcher $matcher)
+  {
     $this->route_string  = $route_string;
     $this->controller    = $controller;
     $this->action        = $action;
@@ -40,7 +42,8 @@ class Route {
    * @param string Path to be matched against the Route's pattern
    * @return bool
    */
-  public function matchPath($path) {
+  public function matchPath($path)
+  {
     return $this->matcher->match($path);
   }
 
@@ -50,7 +53,8 @@ class Route {
    * @param array Dependencies of the controller
    * @throw \RuntimeException
    */
-  public function go(array $controller_dependencies = array()) {
+  public function go(array $controller_dependencies = array())
+  {
 
     if (!class_exists($this->controller)) {
       throw new \RuntimeException("Controller '".$this->controller."' cannot be instantiated");
@@ -70,14 +74,29 @@ class Route {
    * Return the web path with populated arguments 
    * @param array Arguments to be populated
    */
-  public function getWebpath(array $arguments = array()) {
-    if (count($arguments) === 0) {
-      return $this->route_string;
-    }
+  public function getWebpath(array $arguments = [], array $query_params = [])
+  {
+    $query_string = $this->generateQueryString($query_params);
+
+    if (count($arguments) === 0)
+      return $this->route_string.$query_string;
 
     $patterns = array_fill(0, count($arguments), '~\(.*?\)~');
 
-    return preg_replace($patterns, $arguments, $this->route_string, 1);
+    return preg_replace($patterns, $arguments, $this->route_string, 1).$query_string;
   }
 
+  /**
+   * Return url-encoded query string for the given parameters
+   *
+   * @param array Query String parameters
+   * @return string
+   */
+  private function generateQueryString(array $params)
+  {
+    if (empty($params))
+      return '';
+
+    return '?'.http_build_query($params);
+  }
 }

@@ -10,7 +10,8 @@ use Markzero\Validation\Exception\ValidationException;
  * @MappedSuperClass
  * @HasLifecycleCallbacks
  */
-abstract class AppModel {
+abstract class AppModel 
+{
   /**
    * Names of callbacks, which are invoked on the event PrePersist and Update
    */
@@ -25,7 +26,8 @@ abstract class AppModel {
    * @PrePersist
    * @PreUpdate
    */
-  public final function _prePersistAndUpdate() {
+  public final function _prePersistAndUpdate()
+  {
     foreach ($this->prePersistUpdateCallbacks as $callback) {
       if (method_exists($this, $callback)) {
         $this->{$callback}();
@@ -37,7 +39,8 @@ abstract class AppModel {
    * Run all the PrePersist callback in order
    * @PrePersist
    */
-  public final function _prePersist() {
+  public final function _prePersist()
+  {
     foreach ($this->prePersistCallbacks as $callback) {
       if (method_exists($this, $callback)) {
         $this->{$callback}();
@@ -49,7 +52,8 @@ abstract class AppModel {
    * Run all the PreUpdate callback in order
    * @PreUpdate
    */
-  public final function _preUpdate() {
+  public final function _preUpdate()
+  {
     foreach ($this->preUpdateCallbacks as $callback) {
       if (method_exists($this, $callback)) {
         $this->{$callback}();
@@ -67,7 +71,8 @@ abstract class AppModel {
   /**
    * @return boolean | is this entity valid
    */
-  public function isValid() {
+  public function isValid()
+  {
     try {
       $this->_validate();
     } catch (ValidationException $e) {
@@ -79,7 +84,8 @@ abstract class AppModel {
   /**
    * Get a new ValidationManager object
    */
-  static function createValidationManager() {
+  static function createValidationManager()
+  {
     return new Validation\ValidationManager();
   }
 
@@ -87,14 +93,16 @@ abstract class AppModel {
    * Return the application EntityManager
    * @return Doctrine\ORM\EntityManager
    */
-  static function getEntityManager() {
+  static function getEntityManager()
+  {
     return App::$em;
   }
 
   /**
    * Proxy for Doctrine\ORM\EntityRepository#find
    **/
-  static function find($id, $lock_mode = \Doctrine\DBAL\LockMode::NONE, $lock_version = null) {
+  static function find($id, $lock_mode = \Doctrine\DBAL\LockMode::NONE, $lock_version = null)
+  {
     return self::getRepo()->find($id, $lock_mode, $lock_version);;
   }
 
@@ -102,80 +110,135 @@ abstract class AppModel {
    * Proxy for Doctrine\ORM\EntityRepository#findAll
    * find all entities
    **/
-  static function findAll() {
+  static function findAll()
+  {
     return self::getRepo()->findAll();
   }
 
   /**
    * Proxy for Doctrine\ORM\EntityRepository#createQueryBuilder
    */
-  static function createQueryBuilder($alias) {
+  static function createQueryBuilder($alias)
+  {
     return self::getRepo()->createQueryBuilder($alias);
   }
 
   /**
    * Proxy for Doctrine\ORM\EntityRepository#createNamedQuery
    */
-  static function createNamedQuery($queryName) {
+  static function createNamedQuery($queryName)
+  {
     return self::getRepo()->createNamedQuery($queryName);
   }
 
   /**
    * Proxy for Doctrine\ORM\EntityRepository#clear
    */
-  static function clear() {
+  static function clear()
+  {
     return self::getRepo()->clear();
   }
 
   /**
    * Proxy for Doctrine\ORM\EntityRepository#findBy
    */
-  static function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null) {
+  static function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+  {
     return self::getRepo()->findBy($criteria, $orderBy, $limit, $offset);
   }
 
   /**
    * Proxy for Doctrine\ORM\EntityRepository#findOneBy
    */
-  static function findOneBy(array $criteria, array $orderBy = null) {
+  static function findOneBy(array $criteria, array $orderBy = null)
+  {
     return self::getRepo()->findOneBy($criteria, $orderBy);
   }
 
   /**
    * Proxy for Doctrine\ORM\EntityRepository#getEntityName
    */
-  static function getEntityName() {
+  static function getEntityName()
+  {
     return self::getRepo()->getEntityName();
   }
 
   /**
    * Get the repository with the name of the current model
    **/
-  static function getRepo() {
+  static function getRepo() 
+  {
     $model = get_called_class();
+
     return self::getEntityManager()->getRepository($model);
   }
+
+  /**
+   * Delete an entity with the given $id
+   *
+   * @param int $id
+   * @throws Markzero\Http\Exception\ResourceNotFoundException
+   */
+  public static function delete($id)
+  {
+    $object = self::find($id);
+
+    if ($object === null)
+    {
+      throw new ResourceNotFoundException();
+    }
+
+    $object->destroy();
+  }
+
+  /**
+   * Delete current entity
+   * @throw Exception
+   */
+  public function destroy()
+  {
+    $em = self::getEntityManager();
+
+    $conn = $em->getConnection();
+
+    $conn->beginTransaction();
+
+    try {
+      $em->remove($this); 
+
+      $em->flush();
+      $conn->commit();
+
+    } catch(Exception $e) {
+
+      $conn->rollback();
+      throw $e;
+    }
+  }
+
+
 
   /**
    * Call getter for attributes if defined
    * otherwise return the attribute
    **/
-  function __get($attr) {
+  function __get($attr)
+  {
 
     $getter = 'get'.ucfirst($attr); // getter name
 
     if (method_exists($this, $getter)) {
       return $this->{$getter}();
     } else if (property_exists(get_called_class(), $attr) 
-               && ((property_exists(get_called_class(), 'readable') 
-                   && is_array(static::$readable) 
-                   && in_array($attr, static::$readable))
-                 || 
-                   (property_exists(get_called_class(), 'accessible') 
-                   && is_array(static::$accessible) 
-                   && in_array($attr, static::$accessible)))) {
-      return $this->{$attr};
-    }
+      && ((property_exists(get_called_class(), 'readable') 
+      && is_array(static::$readable) 
+      && in_array($attr, static::$readable))
+      || 
+      (property_exists(get_called_class(), 'accessible') 
+      && is_array(static::$accessible) 
+      && in_array($attr, static::$accessible)))) {
+        return $this->{$attr};
+      }
 
     throw new AttributeNotFoundException("Undefined attribute `$attr` accessed in object of class `".get_called_class()."`");
   }
@@ -184,24 +247,25 @@ abstract class AppModel {
    * Call setter for attributes if defined
    * otherwise set the attribute to the given value
    **/
-  function __set($attr, $value) {
+  function __set($attr, $value)
+  {
 
     $setter = 'set'.ucfirst($attr); // setter name
     $klass = get_called_class();
-    
+
     if (method_exists($this, $setter)) {
       return call_user_func_array(array($this, $setter), func_get_args());
     } else if (property_exists($klass, $attr) 
-               && ((property_exists($klass, 'writable') 
-                   && is_array(static::$writable) 
-                   && in_array($attr, static::$writable))
-                 || 
-                   (property_exists($klass, 'accessible') 
-                   && is_array(static::$accessible) 
-                   && in_array($attr, static::$accessible)))) {
-      $this->{$attr} = $value;
-      return $value;
-    }
+      && ((property_exists($klass, 'writable') 
+      && is_array(static::$writable) 
+      && in_array($attr, static::$writable))
+      || 
+      (property_exists($klass, 'accessible') 
+      && is_array(static::$accessible) 
+      && in_array($attr, static::$accessible)))) {
+        $this->{$attr} = $value;
+        return $value;
+      }
 
     throw new AttributeNotFoundException("Undefined attribute `$attr` accessed in object of class `".get_called_class()."`");
   }
@@ -212,7 +276,8 @@ abstract class AppModel {
    * although we already have mechanism for accessing attribute,
    * these methods are required by doctrine
    **/
-  function __call($name, $args) {
+  function __call($name, $args)
+  {
 
     if (preg_match('~get([A-Z].*)~', $name, $matches)) {
       $attr = lcfirst($matches[1]);
@@ -229,12 +294,13 @@ abstract class AppModel {
   /**
    * For dynamic attributes to work with isset()
    */
-  function __isset($name) {
+  function __isset($name)
+  {
     $is_defined = property_exists($this, $name);
     $is_readable = property_exists(get_called_class(), 'readable')
-                && in_array($name, static::$readable);
+      && in_array($name, static::$readable);
     $is_accessible = property_exists(get_called_class(), 'accessible')
-                && in_array($name, static::$accessible);
+      && in_array($name, static::$accessible);
 
     return $is_defined && ($is_readable || $is_accessible);
   }
@@ -243,7 +309,8 @@ abstract class AppModel {
    * Return array containing attributes of the model
    * @return array
    */
-  public function toArray() {
+  public function toArray()
+  {
     $attributes = array_merge(static::$readable, static::$accessible);
 
     $array = array();

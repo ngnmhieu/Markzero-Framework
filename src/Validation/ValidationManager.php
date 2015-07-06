@@ -8,13 +8,15 @@ use Markzero\Validation\Validator\AbstractValidator;
  * Manage registration and performing validation 
  * using registered validators
  */
-class ValidationManager {
+class ValidationManager 
+{
   /**
    * @var array Contain registered validators
    */
   private $validators;
   
-  public function __construct() {
+  public function __construct() 
+  {
     $this->validators = array();
   }
 
@@ -22,7 +24,8 @@ class ValidationManager {
    * Mostly used for testing
    * @return array Registered Validators
    */
-  public function getValidators() {
+  public function getValidators() 
+  {
     return $this->validators;
   }
 
@@ -32,7 +35,8 @@ class ValidationManager {
    * @param bool 
    * @throw Markzero\Validation\Exception\ValidationException 
    */
-  public function validate(callable $closure, $strict = false) {
+  public function validate(callable $closure, $strict = false) 
+  {
 
     // validators are be registered in the closure
     $closure($this);
@@ -52,7 +56,8 @@ class ValidationManager {
    * @param string  $error_message custom error message
    * @return $this return itself enables chaining method calls
    */
-  public function register($field_name, AbstractValidator $validator, $error_message = "") {
+  public function register($field_name, AbstractValidator $validator, $error_message = "") 
+  {
     if ($error_message)
       $validator->setMessage($error_message);
 
@@ -72,7 +77,8 @@ class ValidationManager {
    *                otherwise ValidationException is only thrown after all validators are run.
    * @throw Markzero\Validation\Exception\ValidationException
    */
-  public function doValidate($strict = false) {
+  public function doValidate($strict = false) 
+  {
     $errors = array(); // contains error messages
 
     foreach ($this->validators as $field_name => $validators) {
@@ -94,14 +100,13 @@ class ValidationManager {
     if (!empty($errors)) {
       throw new ValidationException($errors);
     }
-
-
   }
 
   /**
    * Clear all registered validators
    */
-  public function clear() {
+  public function clear()
+  {
     $this->validators = array();
   }
 }

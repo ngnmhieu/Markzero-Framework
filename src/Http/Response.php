@@ -50,21 +50,22 @@ class Response extends HttpFoundation\Response {
    * @param string
    * @param array arguments to be replaced in the url
    * @param array query string parameters
-   * @param int a valid http status code
+   * @param int a valid Http status code
+   * @param string Http status message
    * @return Markzero\Http\Response 
    */
-  public function redirect($controller, $action, array $args = [], array $query_params = [], $status_code = null)
+  public function redirect($controller, $action, array $args = [], array $query_params = [], $status_code = null, $status_message = null)
   {
 
     $location = $this->router->getWebpaths($controller, $action, $args, $query_params)[0];
 
     if ($status_code != null) {
 
-      $this->setStatusCode($status_code);
+      $this->setStatusCode($status_code, $status_message);
 
     } else if (!$this->isRedirection()) { // if status code hasn't already set yet
 
-      $this->setStatusCode(Response::DEFAULT_REDIRECT_STATUS_CODE);
+      $this->setStatusCode(Response::DEFAULT_REDIRECT_STATUS_CODE, $status_message);
 
     }
       

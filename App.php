@@ -10,7 +10,6 @@ use Markzero\Http;
 class App {
   static $APP_PATH;
   static $CORE_PATH;
-  static $CONTROLLER_PATH;
   static $MODEL_PATH;
   static $PUBLIC_PATH;
 
@@ -48,7 +47,6 @@ class App {
     $parent_dir = dirname(dirname(__FILE__));
     self::$APP_PATH       = $parent_dir.'/';
     self::$CORE_PATH       = self::$APP_PATH."core/";
-    self::$CONTROLLER_PATH = self::$APP_PATH."app/Controllers/";
     self::$MODEL_PATH      = self::$APP_PATH."app/Models/";
     self::$PUBLIC_PATH     = self::$APP_PATH."public/";
   }
@@ -128,27 +126,6 @@ class App {
     if (file_exists(self::$APP_PATH. "vendor/autoload.php"))
       require_once(self::$APP_PATH. "vendor/autoload.php");
 
-  }
-
-  /**
-   * _TODO: not used anymore
-   * @param string Directory where files should be loaded
-   * @param string File's name will be matched against this regex
-   */
-  private static function loadRecursive($path, $regex = null) 
-  {
-    $regex = $regex === null ? '~^[^/?*:;{}\\]+\.php$~' : $regex;
-
-    foreach (scandir($path) as $file) {
-
-      $filepath = $path.'/'.$file;
-      if ($file !== '.' && $file !== '..' && is_dir($filepath)) {
-        self::loadRecursive($filepath, $regex);
-      } else if (preg_match($regex, $file)) {
-        require_once($filepath);
-      }
-
-    }
   }
 
   /* 

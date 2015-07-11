@@ -64,12 +64,15 @@ abstract class AppModel
   /**
    * Perform validation 
    * Concrete models override this method to perform specific validations
-   * @throw Markzero\Validation\Exception\ValidationException ($array_errors)
+   *
+   * @throw Markzero\Validation\Exception\ValidationException
    */
   abstract protected function _validate();
 
   /**
-   * @return boolean | is this entity valid
+   * If _validate doesn't throw ValidationException then the entity is valid
+   *
+   * @return boolean is this entity valid
    */
   public function isValid()
   {
@@ -78,6 +81,7 @@ abstract class AppModel
     } catch (ValidationException $e) {
       return false;
     }
+
     return true;
   }
 
@@ -100,15 +104,22 @@ abstract class AppModel
 
   /**
    * Proxy for Doctrine\ORM\EntityRepository#find
+   *
+   * @return object|null Null is returned if the entity cannot be found or $id is null
    **/
   static function find($id, $lock_mode = \Doctrine\DBAL\LockMode::NONE, $lock_version = null)
   {
+    if ($id == null)
+      return null;
+
     return self::getRepo()->find($id, $lock_mode, $lock_version);;
   }
 
   /**
    * Proxy for Doctrine\ORM\EntityRepository#findAll
    * find all entities
+   *
+   * @return array The entities.
    **/
   static function findAll()
   {
@@ -183,8 +194,7 @@ abstract class AppModel
   {
     $object = self::find($id);
 
-    if ($object === null)
-    {
+    if ($object === null) {
       throw new ResourceNotFoundException();
     }
 

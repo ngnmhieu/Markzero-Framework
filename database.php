@@ -3,10 +3,10 @@ use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
 use Markzero\App;
 
-$env  = App::$config->app->env;
-$db = App::$config->database->{$env}; // database configurations
+$env    = App::$config->app->env;
+$db     = App::$config->database->{$env}; // database configurations
 $is_dev = $env == 'development';
-$path   = array(App::$MODEL_PATH, App::$CORE_PATH.'mvc');
+$path   = array(App::$MODEL_PATH, App::$CORE_PATH.'src/Mvc/');
 
 $config = Setup::createAnnotationMetadataConfiguration($path, $is_dev);
 $connection = array(

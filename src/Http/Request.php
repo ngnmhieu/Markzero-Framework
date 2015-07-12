@@ -70,9 +70,12 @@ class Request extends HttpFoundation\Request {
    */
   private function getRequestParser($content_type) {
 
-    if (0 === strpos($content_type, 'application/json')) {
+    if (0 === strpos($content_type, 'application/json')) 
+    {
       return new RequestParser\JsonRequestParser();
-    } else if (0 === strpos($content_type, 'application/xml')) {
+    } 
+    else if (0 === strpos($content_type, 'application/xml')) 
+    {
       return new RequestParser\XmlRequestParser();
     }
 
@@ -134,5 +137,14 @@ class Request extends HttpFoundation\Request {
     }
 
     return false;
+  }
+
+  /**
+   * Return uploaded files wrapped in FileBag
+   * @return Symfony\Component\HttpFoundation\FileBag
+   */
+  public function getFiles()
+  {
+    return $this->files;
   }
 }

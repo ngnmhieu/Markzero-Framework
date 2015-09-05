@@ -30,7 +30,6 @@ class ValidationManager
   }
 
   /**
-   * _TODO: consider make it static
    * Execute a validation transaction, and clear all validators at the end
    * @param callable
    * @param bool 

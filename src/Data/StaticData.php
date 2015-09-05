@@ -7,13 +7,15 @@ namespace Markzero\Data;
  * e.g: "database/info.json" => $data->database->info
  *      "tumblr/api/key.json" => $data->tumblr->api->key
  */
-class StaticData {
+class StaticData 
+{
   private $data; // stdClass: stores all the loaded data
 
   /**
    * @param string Directory where data are stored
    */
-  public function __construct($directory) {
+  public function __construct($directory) 
+  {
     $this->data = $this->recursiveLoadData($directory);
   }
 
@@ -23,7 +25,8 @@ class StaticData {
    * @param string $dir | directory where data are stored
    * @return stdClass Object that contain json_decoded result
    */
-  private function recursiveLoadData($dir) {
+  private function recursiveLoadData($dir) 
+  {
     $result = new \stdClass(); 
 
     $cdir = scandir($dir); 
@@ -41,7 +44,8 @@ class StaticData {
     return $result; 
   }
 
-  public function __get($name) {
+  public function __get($name)
+  {
     return $this->data->{$name};
   }
 

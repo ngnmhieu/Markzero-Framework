@@ -1,9 +1,13 @@
-[] How does user define his base url (eg: www.example.org/demo/app/) So that all url will be 'based' on that
+How does user define his base url (eg: www.example.org/demo/app/) So that all url will be 'based' on that
 
-[] Where to configure trusted host? ( refer to *configurator )
+Where to configure trusted host? ( refer to *configurator )
 
-[] Using bootstrapers, configurators
+Using bootstrapers, configurators
 
-[] Redirection
+Redirection
 
-[] Dependency Injection Container
+Dependency Injection Container
+
+Namespace for routes
+
+Rewrite magic method __get __set using reflection API

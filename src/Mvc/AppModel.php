@@ -88,7 +88,7 @@ abstract class AppModel
   /**
    * Get a new ValidationManager object
    */
-  static function createValidationManager()
+  protected static function createValidationManager()
   {
     return new Validation\ValidationManager();
   }
@@ -97,7 +97,7 @@ abstract class AppModel
    * Return the application EntityManager
    * @return Doctrine\ORM\EntityManager
    */
-  static function getEntityManager()
+  protected static function getEntityManager()
   {
     return App::$em;
   }
@@ -107,7 +107,7 @@ abstract class AppModel
    *
    * @return object|null Null is returned if the entity cannot be found or $id is null
    **/
-  static function find($id, $lock_mode = \Doctrine\DBAL\LockMode::NONE, $lock_version = null)
+  public static function find($id, $lock_mode = \Doctrine\DBAL\LockMode::NONE, $lock_version = null)
   {
     if ($id == null)
       return null;
@@ -121,7 +121,7 @@ abstract class AppModel
    *
    * @return array The entities.
    **/
-  static function findAll()
+  public static function findAll()
   {
     return self::getRepo()->findAll();
   }
@@ -129,7 +129,7 @@ abstract class AppModel
   /**
    * Proxy for Doctrine\ORM\EntityRepository#createQueryBuilder
    */
-  static function createQueryBuilder($alias)
+  protected static function createQueryBuilder($alias)
   {
     return self::getRepo()->createQueryBuilder($alias);
   }
@@ -137,23 +137,15 @@ abstract class AppModel
   /**
    * Proxy for Doctrine\ORM\EntityRepository#createNamedQuery
    */
-  static function createNamedQuery($queryName)
+  protected static function createNamedQuery($queryName)
   {
     return self::getRepo()->createNamedQuery($queryName);
   }
 
   /**
-   * Proxy for Doctrine\ORM\EntityRepository#clear
-   */
-  static function clear()
-  {
-    return self::getRepo()->clear();
-  }
-
-  /**
    * Proxy for Doctrine\ORM\EntityRepository#findBy
    */
-  static function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+  public static function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
   {
     return self::getRepo()->findBy($criteria, $orderBy, $limit, $offset);
   }
@@ -161,7 +153,7 @@ abstract class AppModel
   /**
    * Proxy for Doctrine\ORM\EntityRepository#findOneBy
    */
-  static function findOneBy(array $criteria, array $orderBy = null)
+  public static function findOneBy(array $criteria, array $orderBy = null)
   {
     return self::getRepo()->findOneBy($criteria, $orderBy);
   }
@@ -169,15 +161,15 @@ abstract class AppModel
   /**
    * Proxy for Doctrine\ORM\EntityRepository#getEntityName
    */
-  static function getEntityName()
+  public static function getEntityName()
   {
     return self::getRepo()->getEntityName();
   }
 
   /**
    * Get the repository with the name of the current model
-   **/
-  static function getRepo() 
+   */
+  protected static function getRepo() 
   {
     $model = get_called_class();
 
@@ -194,9 +186,8 @@ abstract class AppModel
   {
     $object = self::find($id);
 
-    if ($object === null) {
+    if ($object === null)
       throw new ResourceNotFoundException();
-    }
 
     $object->destroy();
   }

@@ -122,10 +122,8 @@ class ValidationManagerTest extends \PHPUnit_Framework_TestCase {
 
   public function test_parseErrorsToMultidimensionalArray() {
 
-    $vm = new ValidationManager();
-    
     try {
-      $vm->validate(function($vm) {
+      ValidationManager::validate(function($vm) {
         $vm->register('user[name]', new FunctionValidator(function(){return false;}), 'Error message name');
       });
     } catch (ValidationException $e) {

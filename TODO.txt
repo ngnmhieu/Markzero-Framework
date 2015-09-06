@@ -2,12 +2,14 @@ How does user define his base url (eg: www.example.org/demo/app/) So that all ur
 
 Where to configure trusted host? ( refer to *configurator )
 
-Using bootstrapers, configurators
+Using bootstrapers, configurator
 
-Redirection
+Return Redirection or Content
 
 Dependency Injection Container
 
 Namespace for routes
 
 Rewrite magic method __get __set using reflection API
+
+Event system
